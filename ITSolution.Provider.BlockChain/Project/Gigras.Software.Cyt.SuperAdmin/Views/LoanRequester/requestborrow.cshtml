@@ -1,0 +1,57 @@
+﻿<div id="meta-container">
+    <h1>Login with MetaMask</h1>
+    <button id="loginMetaMaskButton">Login with MetaMask</button>
+    <p id="metamaskstatus" class="status-disconnected">Please connect to MetaMask to log in.</p>
+</div>
+<div id="main-container" class="container mt-4">
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-xxl">
+            <!--begin::Card-->
+            <div class="card card-flush">
+                <!--begin::Card header-->
+                <div class="card-header mt-6">
+                    <!--begin::Card title-->
+                    <div class="card-title">
+                        <!--begin::Search-->
+                        <div class="d-flex align-items-center position-relative my-1 me-5">
+                            <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                            <span class="svg-icon svg-icon-1 position-absolute ms-6">
+                                <i class="fa fa-search"></i>
+                            </span>
+                            <!--end::Svg Icon-->
+                            <input type="text" data-kt-category-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Requested Borrow" />
+                        </div>
+                        <!--end::Search-->
+                    </div>
+                    <!--end::Card title-->
+                </div>
+                <!--end::Card header-->
+                <!--begin::Card body-->
+                <div class="card-body pt-0">
+                    <!--begin::Table-->
+                    <div class="table-responsive">
+                        <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_category_table">
+                            <thead>
+                                <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                                    <th class="min-w-125px">#</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Loan Amt</th>
+                                    <th>Duration</th>
+                                    <th>InterestRate</th>
+                                    <th class="text-end min-w-50px">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="fw-bold text-gray-600">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--end::Card-->
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/sadmin/function/blockchain-validate.js"></script>
+<script src="~/js/sadmin/function/request-borrow.js"></script>

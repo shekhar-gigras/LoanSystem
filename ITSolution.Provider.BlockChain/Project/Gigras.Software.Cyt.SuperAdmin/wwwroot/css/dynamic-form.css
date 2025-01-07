@@ -1,0 +1,43 @@
+﻿/* Custom CSS for full-page background heading */
+body{
+    font-size:16px !important;
+}
+.full-page-heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    background: linear-gradient(135deg, #007bff, #6610f2);
+    color: white;
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+#form-wrapper {
+    display: block; /* Initially hidden */
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+    #form-wrapper h3 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+.form-group {
+    margin: 10px 10px 10px 10px;
+}
+
+select {
+    -webkit-appearance: none; /* Remove default styling in Webkit browsers (Safari, Chrome) */
+    -moz-appearance: none; /* Remove default styling in Firefox */
+    appearance: none; /* Standard syntax to remove default styling */
+    padding-right: 20px; /* Add some padding to the right to accommodate the arrow */
+    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zY3JlZW5zY2FwZSIgdmlld0JveD0iMCAwIDEgMCI+PHBhdGggZD0iTTEgMCAwIDEgMSIgc3R5bGU9ImZpbGw6YmxhY2siLz48L3N2Zz4=') no-repeat right 10px center;
+    background-size: 12px; /* Adjust size of the arrow */
+}

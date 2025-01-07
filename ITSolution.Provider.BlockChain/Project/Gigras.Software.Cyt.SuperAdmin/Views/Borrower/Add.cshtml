@@ -1,0 +1,119 @@
+﻿@using Gigras.Software.Database.Cyt.Entity.Models
+@using Gigras.Software.Generic.DynamicControl
+@inject Gigras.Software.Database.CytContext context
+@model Form
+@{
+    if (Model != null)
+    {
+        ViewBag.Title = Model.FormName + " Form";
+    }
+    int stateid = Model!.StateId == null ? 0 : Model.StateId.Value!;
+    // if (Model.NavigationGroup!.ToLower() == "blank")
+    // {
+    //     Layout = "~/Views/Shared/_BlankLayout.cshtml";
+    // }
+}
+<style>
+    
+</style>
+
+@if (Model != null)
+{
+    <div class="full-page-heading">
+        @Model.FormDescription
+    </div>
+    <div id="meta-container">
+        <h1>Login with MetaMask</h1>
+        <button id="loginMetaMaskButton">Login with MetaMask</button>
+        <p id="metamaskstatus" class="status-disconnected">Please connect to MetaMask to log in.</p>
+    </div>
+    <div id="main-container" class="container mt-4">
+        @* <h3>@Model.FormDescription</h3> *@
+        <form method="post" action="/sadmin/borrower/submit-form" name="frmCreateAccount" id="frmCreateAccount" enctype="multipart/form-data">
+            <input type="hidden" name="SystemFormId" id="SystemFormId" value="@Model.Id" />
+            <input type="hidden" name="UserId" id="UserId" value="@(ViewBag.UserId == null?0:ViewBag.UserId)" />
+            @foreach (var formsection in Model.FormsSections!
+           .Where(x => x.FormFields.Count > 0)   // Filter out sections with no form fields
+           .OrderBy(x => x.SortOrder))
+            {
+                <div class="card mb-4">
+                    <div class="card-header bg-secondary text-white py-3" style="border-radius: 0.5rem 0.5rem 0 0;min-height:0px !important;">
+                        <h3 class="mb-1" style="font-weight: 600;">@formsection.SectionName</h3>
+                        @* <p class="mb-0" style="font-size: 0.9rem; opacity: 0.9;">@formsection.SectionDescription</p> *@
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach (var field in formsection!.FormFields!.OrderBy(x => x.FieldOrder))
+                            {
+                                string fieldKey = field.FieldType.FieldName.Replace(" ", "_");
+                                field.FieldValue = Model.FieldValues != null &&
+                                (Model.FieldValues.TryGetValue(fieldKey, out var value) ||
+                                Model.FieldValues.TryGetValue(field.FieldType.FieldName, out value))
+                                ? value?.ToString()
+                                : null;
+
+
+                                @Html.DynamicHtmlControl(field, context, stateid)
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <button type="submit" id="btnRegister" name="btnRegister" class="btn btn-primary">Submit</button>
+                    <button type="reset" class="btn btn-primary">Reset</button>
+                    @if (Model.NavigationGroup!.ToLower() != "blank")
+                    {
+                        <button type="button" class="btn btn-secondary" onclick="window.history.back();" id="btnBackBorrow" name="btnBackBorrow">Back</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-secondary" onclick="parent.closeColorbox()" id="btnCloseBorrow" name="btnCloseBorrow">Close</button>
+                    }
+                </div>
+                <div class="col-md-4 mb-3">
+                </div>
+            </div>
+
+        </form>
+    </div>
+}
+else
+{
+    <h3>No Form Found</h3>
+}
+
+<script src="~/js/sadmin/validation.js"></script>
+<script src="~/js/sadmin/form.js"></script>
+<script src="~/js/sadmin/module/blockchain.js"></script>
+<script>
+    function handleBackButtonClick() {
+        // Check if Colorbox is active
+        if (typeof $.colorbox !== "undefined" && $("#cboxOverlay").is(":visible")) {
+            // If Colorbox is active, close it
+            parent.closeColorbox()
+        } else {
+       // Otherwise, navigate back in history
+            window.history.back();
+        }
+    }
+</script>
+
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:100%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Full-size Image</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
+                <img id="modalImage" src="" alt="Full-size Image" style="max-width: 100%; height: auto;">
+            </div>
+        </div>
+    </div>
+</div>

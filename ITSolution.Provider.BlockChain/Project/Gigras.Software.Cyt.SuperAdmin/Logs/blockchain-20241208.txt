@@ -1,0 +1,210 @@
+2024-12-08 11:39:48.089 +05:30 [INF] User profile is available. Using 'C:\Users\Administrator\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2024-12-08 11:39:48.323 +05:30 [INF] Now listening on: http://localhost:5248
+2024-12-08 11:39:48.375 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-08 11:39:48.377 +05:30 [INF] Hosting environment: Development
+2024-12-08 11:39:48.378 +05:30 [INF] Content root path: D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin
+2024-12-08 11:39:49.764 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/ - null null
+2024-12-08 11:39:49.771 +05:30 [INF] Processing request for /
+2024-12-08 11:39:49.835 +05:30 [INF] Executing endpoint 'HTTP: GET /'
+2024-12-08 11:39:49.837 +05:30 [INF] Executed endpoint 'HTTP: GET /'
+2024-12-08 11:39:49.842 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/ - 302 0 null 79.1608ms
+2024-12-08 11:39:49.849 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin - null null
+2024-12-08 11:39:49.851 +05:30 [INF] Processing request for /sadmin
+2024-12-08 11:39:49.897 +05:30 [INF] Executing endpoint 'Gigras.Software.Cyt.SuperAdmin.Controllers.HomeController.Index (Gigras.Software.Cyt.SuperAdmin)'
+2024-12-08 11:39:49.925 +05:30 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Gigras.Software.Cyt.SuperAdmin.Controllers.HomeController (Gigras.Software.Cyt.SuperAdmin).
+2024-12-08 11:39:49.930 +05:30 [INF] Login action triggered with ReturnUrl: {ReturnUrl}
+2024-12-08 11:39:49.933 +05:30 [INF] User is authenticated, redirecting to ReturnUrl: {ReturnUrl}
+2024-12-08 11:40:17.998 +05:30 [INF] Executing ViewResult, running view Index.
+2024-12-08 11:40:20.049 +05:30 [INF] Executed ViewResult - view Index executed in 30103.089ms.
+2024-12-08 11:40:20.054 +05:30 [INF] Executed action Gigras.Software.Cyt.SuperAdmin.Controllers.HomeController.Index (Gigras.Software.Cyt.SuperAdmin) in 30125.3821ms
+2024-12-08 11:40:20.056 +05:30 [INF] Executed endpoint 'Gigras.Software.Cyt.SuperAdmin.Controllers.HomeController.Index (Gigras.Software.Cyt.SuperAdmin)'
+2024-12-08 11:40:20.061 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin - 200 null text/html; charset=utf-8 30212.6211ms
+2024-12-08 11:40:20.071 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/lib/bootstrap/dist/css/bootstrap.min.css - null null
+2024-12-08 11:40:20.072 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/Gigras.Software.Cyt.SuperAdmin.styles.css?v=D3El3Su9A6woJFNWpaUcp_0xJnvsz2vTtSRViT1nytc - null null
+2024-12-08 11:40:20.072 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/css/superadminsite.css?v=pAGv4ietcJNk_EwsQZ5BN9-K4MuNYS2a9wl4Jw-q9D0 - null null
+2024-12-08 11:40:20.083 +05:30 [INF] Processing request for /lib/bootstrap/dist/css/bootstrap.min.css
+2024-12-08 11:40:20.087 +05:30 [INF] Processing request for /Gigras.Software.Cyt.SuperAdmin.styles.css
+2024-12-08 11:40:20.091 +05:30 [INF] Processing request for /css/superadminsite.css
+2024-12-08 11:40:20.128 +05:30 [INF] Sending file. Request path: '/Gigras.Software.Cyt.SuperAdmin.styles.css'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\obj\Debug\net8.0\scopedcss\bundle\Gigras.Software.Cyt.SuperAdmin.styles.css'
+2024-12-08 11:40:20.130 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/Gigras.Software.Cyt.SuperAdmin.styles.css?v=D3El3Su9A6woJFNWpaUcp_0xJnvsz2vTtSRViT1nytc - 200 1158 text/css 58.5672ms
+2024-12-08 11:40:20.138 +05:30 [INF] Sending file. Request path: '/css/superadminsite.css'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\css\superadminsite.css'
+2024-12-08 11:40:20.138 +05:30 [INF] Sending file. Request path: '/lib/bootstrap/dist/css/bootstrap.min.css'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\lib\bootstrap\dist\css\bootstrap.min.css'
+2024-12-08 11:40:20.141 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/css/superadminsite.css?v=pAGv4ietcJNk_EwsQZ5BN9-K4MuNYS2a9wl4Jw-q9D0 - 200 362 text/css 68.9959ms
+2024-12-08 11:40:20.141 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/lib/bootstrap/dist/css/bootstrap.min.css - 200 162720 text/css 70.7079ms
+2024-12-08 11:40:20.153 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/plugins/custom/fullcalendar/fullcalendar.bundle.css - null null
+2024-12-08 11:40:20.153 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/plugins/global/plugins.bundle.css - null null
+2024-12-08 11:40:20.161 +05:30 [INF] Processing request for /sadmin/plugins/global/plugins.bundle.css
+2024-12-08 11:40:20.157 +05:30 [INF] Processing request for /sadmin/plugins/custom/fullcalendar/fullcalendar.bundle.css
+2024-12-08 11:40:20.154 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/css/style.bundle.css - null null
+2024-12-08 11:40:20.170 +05:30 [INF] Processing request for /sadmin/css/style.bundle.css
+2024-12-08 11:40:20.176 +05:30 [INF] Sending file. Request path: '/sadmin/plugins/custom/fullcalendar/fullcalendar.bundle.css'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\plugins\custom\fullcalendar\fullcalendar.bundle.css'
+2024-12-08 11:40:20.185 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/plugins/custom/fullcalendar/fullcalendar.bundle.css - 200 25299 text/css 32.2361ms
+2024-12-08 11:40:20.189 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/css/dynamic-form.css?v=05Vl9URlQ44bVNx6z3oi31ROHNPmq1UCLaaG3GXWiZQ - null null
+2024-12-08 11:40:20.211 +05:30 [INF] Sending file. Request path: '/sadmin/plugins/global/plugins.bundle.css'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\plugins\global\plugins.bundle.css'
+2024-12-08 11:40:20.211 +05:30 [INF] Processing request for /css/dynamic-form.css
+2024-12-08 11:40:20.221 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/plugins/global/plugins.bundle.css - 200 411060 text/css 67.2867ms
+2024-12-08 11:40:20.224 +05:30 [INF] Sending file. Request path: '/css/dynamic-form.css'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\css\dynamic-form.css'
+2024-12-08 11:40:20.226 +05:30 [INF] Sending file. Request path: '/sadmin/css/style.bundle.css'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\css\style.bundle.css'
+2024-12-08 11:40:20.229 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/lib/jquery/dist/jquery.min.js - null null
+2024-12-08 11:40:20.230 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/css/dynamic-form.css?v=05Vl9URlQ44bVNx6z3oi31ROHNPmq1UCLaaG3GXWiZQ - 200 1385 text/css 41.0397ms
+2024-12-08 11:40:20.231 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/css/style.bundle.css - 200 996368 text/css 77.0761ms
+2024-12-08 11:40:20.234 +05:30 [INF] Processing request for /lib/jquery/dist/jquery.min.js
+2024-12-08 11:40:20.254 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/lib/bootstrap/dist/js/bootstrap.bundle.min.js - null null
+2024-12-08 11:40:20.258 +05:30 [INF] Processing request for /lib/bootstrap/dist/js/bootstrap.bundle.min.js
+2024-12-08 11:40:20.289 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/js/superadminsite.js?v=hRQyftXiu1lLX2P9Ly9xa4gHJgLeR1uGN5qegUobtGo - null null
+2024-12-08 11:40:20.292 +05:30 [INF] Processing request for /js/superadminsite.js
+2024-12-08 11:40:20.294 +05:30 [INF] Sending file. Request path: '/js/superadminsite.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\js\superadminsite.js'
+2024-12-08 11:40:20.296 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/js/superadminsite.js?v=hRQyftXiu1lLX2P9Ly9xa4gHJgLeR1uGN5qegUobtGo - 200 231 text/javascript 6.3183ms
+2024-12-08 11:40:20.298 +05:30 [INF] Sending file. Request path: '/lib/bootstrap/dist/js/bootstrap.bundle.min.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js'
+2024-12-08 11:40:20.302 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/lib/bootstrap/dist/js/bootstrap.bundle.min.js - 200 78468 text/javascript 48.0516ms
+2024-12-08 11:40:20.307 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/plugins/global/plugins.bundle.js - null null
+2024-12-08 11:40:20.309 +05:30 [INF] Sending file. Request path: '/lib/jquery/dist/jquery.min.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\lib\jquery\dist\jquery.min.js'
+2024-12-08 11:40:20.312 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/lib/jquery/dist/jquery.min.js - 200 89501 text/javascript 83.8935ms
+2024-12-08 11:40:20.311 +05:30 [INF] Processing request for /sadmin/plugins/global/plugins.bundle.js
+2024-12-08 11:40:20.319 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/js/scripts.bundle.js - null null
+2024-12-08 11:40:20.321 +05:30 [INF] Processing request for /sadmin/js/scripts.bundle.js
+2024-12-08 11:40:20.324 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/plugins/custom/datatables/datatables.bundle.js - null null
+2024-12-08 11:40:20.326 +05:30 [INF] Processing request for /sadmin/plugins/custom/datatables/datatables.bundle.js
+2024-12-08 11:40:20.415 +05:30 [INF] Sending file. Request path: '/sadmin/js/scripts.bundle.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\js\scripts.bundle.js'
+2024-12-08 11:40:20.417 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/js/scripts.bundle.js - 200 81541 text/javascript 98.0726ms
+2024-12-08 11:40:20.441 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/js/custom/widgets.js - null null
+2024-12-08 11:40:20.444 +05:30 [INF] Processing request for /sadmin/js/custom/widgets.js
+2024-12-08 11:40:20.451 +05:30 [INF] Sending file. Request path: '/sadmin/plugins/custom/datatables/datatables.bundle.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\plugins\custom\datatables\datatables.bundle.js'
+2024-12-08 11:40:20.453 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/plugins/custom/datatables/datatables.bundle.js - 200 2462272 text/javascript 129.3915ms
+2024-12-08 11:40:20.467 +05:30 [INF] Sending file. Request path: '/sadmin/js/custom/widgets.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\js\custom\widgets.js'
+2024-12-08 11:40:20.468 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/js/custom/widgets.js - 200 32555 text/javascript 27.8962ms
+2024-12-08 11:40:20.480 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/images/logo.jpg - null null
+2024-12-08 11:40:20.480 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/js/custom/apps/chat/chat.js - null null
+2024-12-08 11:40:20.484 +05:30 [INF] Processing request for /images/logo.jpg
+2024-12-08 11:40:20.487 +05:30 [INF] Processing request for /sadmin/js/custom/apps/chat/chat.js
+2024-12-08 11:40:20.494 +05:30 [INF] Sending file. Request path: '/images/logo.jpg'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\images\logo.jpg'
+2024-12-08 11:40:20.497 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/images/logo.jpg - 200 10937 image/jpeg 17.0124ms
+2024-12-08 11:40:20.504 +05:30 [INF] Sending file. Request path: '/sadmin/js/custom/apps/chat/chat.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\js\custom\apps\chat\chat.js'
+2024-12-08 11:40:20.507 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/js/custom/apps/chat/chat.js - 200 1094 text/javascript 26.8576ms
+2024-12-08 11:40:20.604 +05:30 [INF] Sending file. Request path: '/sadmin/plugins/global/plugins.bundle.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\plugins\global\plugins.bundle.js'
+2024-12-08 11:40:20.609 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/plugins/global/plugins.bundle.js - 200 2121733 text/javascript 301.7504ms
+2024-12-08 11:40:21.107 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/images/logo.jpg - null null
+2024-12-08 11:40:21.244 +05:30 [INF] Processing request for /images/logo.jpg
+2024-12-08 11:40:21.251 +05:30 [INF] Sending file. Request path: '/images/logo.jpg'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\images\logo.jpg'
+2024-12-08 11:40:21.252 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/images/logo.jpg - 200 10937 image/jpeg 145.3217ms
+2024-12-08 11:40:21.518 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/plugins/global/fonts/bootstrap-icons/bootstrap-icons.woff2?856008caa5eb66df68595e734e59580d - null null
+2024-12-08 11:40:21.526 +05:30 [INF] Processing request for /sadmin/plugins/global/fonts/bootstrap-icons/bootstrap-icons.woff2
+2024-12-08 11:40:21.542 +05:30 [INF] Sending file. Request path: '/sadmin/plugins/global/fonts/bootstrap-icons/bootstrap-icons.woff2'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\plugins\global\fonts\bootstrap-icons\bootstrap-icons.woff2'
+2024-12-08 11:40:21.544 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/plugins/global/fonts/bootstrap-icons/bootstrap-icons.woff2?856008caa5eb66df68595e734e59580d - 200 90528 font/woff2 25.3847ms
+2024-12-08 11:40:56.950 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/dynamic-fieldoption - null null
+2024-12-08 11:40:56.958 +05:30 [INF] Processing request for /sadmin/dynamic-fieldoption
+2024-12-08 11:40:56.982 +05:30 [INF] Executing endpoint 'Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm.DynamicFieldOptionController.Index (Gigras.Software.Cyt.SuperAdmin)'
+2024-12-08 11:40:56.999 +05:30 [INF] Route matched with {action = "Index", controller = "DynamicFieldOption"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm.DynamicFieldOptionController (Gigras.Software.Cyt.SuperAdmin).
+2024-12-08 11:40:58.534 +05:30 [WRN] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2024-12-08 11:41:00.728 +05:30 [INF] Executed DbCommand (77ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [i].[Id], [i].[Condition], [i].[CreatedAt], [i].[CreatedBy], [i].[IsActive], [i].[IsDelete], [i].[IsDynamic], [i].[OptionName], [i].[SourceTable], [i].[UpdatedAt], [i].[UpdatedBy]
+FROM [IT_DynamicFieldOptions] AS [i]
+2024-12-08 11:41:01.846 +05:30 [INF] Executing ViewResult, running view Index.
+2024-12-08 11:41:02.009 +05:30 [INF] Executed ViewResult - view Index executed in 1084.4562ms.
+2024-12-08 11:41:02.014 +05:30 [INF] Executed action Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm.DynamicFieldOptionController.Index (Gigras.Software.Cyt.SuperAdmin) in 5013.4563ms
+2024-12-08 11:41:02.023 +05:30 [INF] Executed endpoint 'Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm.DynamicFieldOptionController.Index (Gigras.Software.Cyt.SuperAdmin)'
+2024-12-08 11:41:02.042 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/css/superadminsite.css?v=pAGv4ietcJNk_EwsQZ5BN9-K4MuNYS2a9wl4Jw-q9D0 - null null
+2024-12-08 11:41:02.124 +05:30 [INF] Processing request for /css/superadminsite.css
+2024-12-08 11:41:02.044 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/Gigras.Software.Cyt.SuperAdmin.styles.css?v=D3El3Su9A6woJFNWpaUcp_0xJnvsz2vTtSRViT1nytc - null null
+2024-12-08 11:41:02.054 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/plugins/global/plugins.bundle.css - null null
+2024-12-08 11:41:02.122 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/dynamic-fieldoption - 200 null text/html; charset=utf-8 5172.0484ms
+2024-12-08 11:41:02.170 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/lib/bootstrap/dist/css/bootstrap.min.css - null null
+2024-12-08 11:41:02.172 +05:30 [INF] Processing request for /lib/bootstrap/dist/css/bootstrap.min.css
+2024-12-08 11:41:02.138 +05:30 [INF] Sending file. Request path: '/css/superadminsite.css'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\css\superadminsite.css'
+2024-12-08 11:41:02.183 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/css/superadminsite.css?v=pAGv4ietcJNk_EwsQZ5BN9-K4MuNYS2a9wl4Jw-q9D0 - 200 362 text/css 141.2177ms
+2024-12-08 11:41:02.188 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/css/dynamic-form.css?v=05Vl9URlQ44bVNx6z3oi31ROHNPmq1UCLaaG3GXWiZQ - null null
+2024-12-08 11:41:02.104 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/css/style.bundle.css - null null
+2024-12-08 11:41:02.119 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/plugins/custom/fullcalendar/fullcalendar.bundle.css - null null
+2024-12-08 11:41:02.183 +05:30 [INF] Sending file. Request path: '/lib/bootstrap/dist/css/bootstrap.min.css'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\lib\bootstrap\dist\css\bootstrap.min.css'
+2024-12-08 11:41:02.168 +05:30 [INF] Processing request for /sadmin/plugins/global/plugins.bundle.css
+2024-12-08 11:41:02.165 +05:30 [INF] Processing request for /Gigras.Software.Cyt.SuperAdmin.styles.css
+2024-12-08 11:41:02.203 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/lib/bootstrap/dist/css/bootstrap.min.css - 200 162720 text/css 32.5993ms
+2024-12-08 11:41:02.196 +05:30 [INF] Processing request for /sadmin/css/style.bundle.css
+2024-12-08 11:41:02.239 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/lib/jquery/dist/jquery.min.js - null null
+2024-12-08 11:41:02.200 +05:30 [INF] Processing request for /sadmin/plugins/custom/fullcalendar/fullcalendar.bundle.css
+2024-12-08 11:41:02.192 +05:30 [INF] Processing request for /css/dynamic-form.css
+2024-12-08 11:41:02.243 +05:30 [INF] Processing request for /lib/jquery/dist/jquery.min.js
+2024-12-08 11:41:02.218 +05:30 [INF] Sending file. Request path: '/Gigras.Software.Cyt.SuperAdmin.styles.css'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\obj\Debug\net8.0\scopedcss\bundle\Gigras.Software.Cyt.SuperAdmin.styles.css'
+2024-12-08 11:41:02.247 +05:30 [INF] Sending file. Request path: '/css/dynamic-form.css'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\css\dynamic-form.css'
+2024-12-08 11:41:02.250 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/Gigras.Software.Cyt.SuperAdmin.styles.css?v=D3El3Su9A6woJFNWpaUcp_0xJnvsz2vTtSRViT1nytc - 200 1158 text/css 205.5892ms
+2024-12-08 11:41:02.250 +05:30 [INF] Sending file. Request path: '/sadmin/plugins/custom/fullcalendar/fullcalendar.bundle.css'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\plugins\custom\fullcalendar\fullcalendar.bundle.css'
+2024-12-08 11:41:02.255 +05:30 [INF] Sending file. Request path: '/lib/jquery/dist/jquery.min.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\lib\jquery\dist\jquery.min.js'
+2024-12-08 11:41:02.255 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/css/dynamic-form.css?v=05Vl9URlQ44bVNx6z3oi31ROHNPmq1UCLaaG3GXWiZQ - 200 1385 text/css 67.4531ms
+2024-12-08 11:41:02.268 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/lib/bootstrap/dist/js/bootstrap.bundle.min.js - null null
+2024-12-08 11:41:02.279 +05:30 [INF] Processing request for /lib/bootstrap/dist/js/bootstrap.bundle.min.js
+2024-12-08 11:41:02.273 +05:30 [INF] Sending file. Request path: '/sadmin/css/style.bundle.css'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\css\style.bundle.css'
+2024-12-08 11:41:02.273 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/plugins/custom/fullcalendar/fullcalendar.bundle.css - 200 25299 text/css 154.4882ms
+2024-12-08 11:41:02.274 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/lib/jquery/dist/jquery.min.js - 200 89501 text/javascript 35.5399ms
+2024-12-08 11:41:02.288 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/js/scripts.bundle.js - null null
+2024-12-08 11:41:02.285 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/css/style.bundle.css - 200 996368 text/css 185.8158ms
+2024-12-08 11:41:02.277 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/plugins/global/plugins.bundle.js - null null
+2024-12-08 11:41:02.239 +05:30 [INF] Sending file. Request path: '/sadmin/plugins/global/plugins.bundle.css'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\plugins\global\plugins.bundle.css'
+2024-12-08 11:41:02.291 +05:30 [INF] Sending file. Request path: '/lib/bootstrap/dist/js/bootstrap.bundle.min.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js'
+2024-12-08 11:41:02.292 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/plugins/custom/datatables/datatables.bundle.js - null null
+2024-12-08 11:41:02.294 +05:30 [INF] Processing request for /sadmin/js/scripts.bundle.js
+2024-12-08 11:41:02.297 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/js/custom/widgets.js - null null
+2024-12-08 11:41:02.320 +05:30 [INF] Processing request for /sadmin/plugins/global/plugins.bundle.js
+2024-12-08 11:41:02.321 +05:30 [INF] Processing request for /sadmin/js/custom/widgets.js
+2024-12-08 11:41:02.320 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/lib/bootstrap/dist/js/bootstrap.bundle.min.js - 200 78468 text/javascript 52.3655ms
+2024-12-08 11:41:02.339 +05:30 [INF] Sending file. Request path: '/sadmin/js/custom/widgets.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\js\custom\widgets.js'
+2024-12-08 11:41:02.326 +05:30 [INF] Sending file. Request path: '/sadmin/js/scripts.bundle.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\js\scripts.bundle.js'
+2024-12-08 11:41:02.320 +05:30 [INF] Processing request for /sadmin/plugins/custom/datatables/datatables.bundle.js
+2024-12-08 11:41:02.320 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/plugins/global/plugins.bundle.css - 200 411060 text/css 250.8045ms
+2024-12-08 11:41:02.371 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/js/custom/widgets.js - 200 32555 text/javascript 74.6324ms
+2024-12-08 11:41:02.370 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/js/custom/apps/chat/chat.js - null null
+2024-12-08 11:41:02.396 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/js/sadmin/dynamic.js - null null
+2024-12-08 11:41:02.372 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/js/scripts.bundle.js - 200 81541 text/javascript 84.2139ms
+2024-12-08 11:41:02.384 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/js/superadminsite.js?v=hRQyftXiu1lLX2P9Ly9xa4gHJgLeR1uGN5qegUobtGo - null null
+2024-12-08 11:41:02.410 +05:30 [INF] Processing request for /js/superadminsite.js
+2024-12-08 11:41:02.398 +05:30 [INF] Sending file. Request path: '/sadmin/plugins/custom/datatables/datatables.bundle.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\plugins\custom\datatables\datatables.bundle.js'
+2024-12-08 11:41:02.402 +05:30 [INF] Processing request for /js/sadmin/dynamic.js
+2024-12-08 11:41:02.400 +05:30 [INF] Processing request for /sadmin/js/custom/apps/chat/chat.js
+2024-12-08 11:41:02.407 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/images/logo.jpg - null null
+2024-12-08 11:41:02.412 +05:30 [INF] Sending file. Request path: '/js/superadminsite.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\js\superadminsite.js'
+2024-12-08 11:41:02.413 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/plugins/custom/datatables/datatables.bundle.js - 200 2462272 text/javascript 121.0717ms
+2024-12-08 11:41:02.393 +05:30 [INF] Sending file. Request path: '/sadmin/plugins/global/plugins.bundle.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\plugins\global\plugins.bundle.js'
+2024-12-08 11:41:02.416 +05:30 [INF] Sending file. Request path: '/sadmin/js/custom/apps/chat/chat.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\js\custom\apps\chat\chat.js'
+2024-12-08 11:41:02.418 +05:30 [INF] Processing request for /images/logo.jpg
+2024-12-08 11:41:02.421 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/js/superadminsite.js?v=hRQyftXiu1lLX2P9Ly9xa4gHJgLeR1uGN5qegUobtGo - 200 231 text/javascript 36.7516ms
+2024-12-08 11:41:02.429 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/js/custom/apps/chat/chat.js - 200 1094 text/javascript 59.1039ms
+2024-12-08 11:41:02.427 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/plugins/global/plugins.bundle.js - 200 2121733 text/javascript 150.7133ms
+2024-12-08 11:41:02.431 +05:30 [INF] Sending file. Request path: '/images/logo.jpg'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\images\logo.jpg'
+2024-12-08 11:41:02.441 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/images/logo.jpg - 200 10937 image/jpeg 34.1378ms
+2024-12-08 11:41:02.443 +05:30 [INF] Sending file. Request path: '/js/sadmin/dynamic.js'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\js\sadmin\dynamic.js'
+2024-12-08 11:41:02.446 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/js/sadmin/dynamic.js - 200 8267 text/javascript 50.8373ms
+2024-12-08 11:41:02.489 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/plugins/global/fonts/bootstrap-icons/bootstrap-icons.woff2?856008caa5eb66df68595e734e59580d - null null
+2024-12-08 11:41:02.489 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/plugins/global/fonts/@fortawesome/fa-solid-900.woff2 - null null
+2024-12-08 11:41:02.493 +05:30 [INF] Processing request for /sadmin/plugins/global/fonts/bootstrap-icons/bootstrap-icons.woff2
+2024-12-08 11:41:02.496 +05:30 [INF] Processing request for /sadmin/plugins/global/fonts/@fortawesome/fa-solid-900.woff2
+2024-12-08 11:41:02.502 +05:30 [INF] Sending file. Request path: '/sadmin/plugins/global/fonts/bootstrap-icons/bootstrap-icons.woff2'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\plugins\global\fonts\bootstrap-icons\bootstrap-icons.woff2'
+2024-12-08 11:41:02.504 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/plugins/global/fonts/bootstrap-icons/bootstrap-icons.woff2?856008caa5eb66df68595e734e59580d - 200 90528 font/woff2 14.682ms
+2024-12-08 11:41:02.511 +05:30 [INF] Sending file. Request path: '/sadmin/plugins/global/fonts/@fortawesome/fa-solid-900.woff2'. Physical path: 'D:\Jaspreet\ITSolution.Provider.BlockChain\Project\Gigras.Software.Cyt.SuperAdmin\wwwroot\sadmin\plugins\global\fonts\@fortawesome\fa-solid-900.woff2'
+2024-12-08 11:41:02.514 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5248/sadmin/plugins/global/fonts/@fortawesome/fa-solid-900.woff2 - 200 78268 font/woff2 24.8795ms
+2024-12-08 11:45:48.865 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5248/sadmin/borrower/Hamburg - null null
+2024-12-08 11:45:48.874 +05:30 [INF] Processing request for /sadmin/borrower/Hamburg
+2024-12-08 11:45:48.918 +05:30 [INF] Executing endpoint 'Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm.BorrowerController.IndexForm (Gigras.Software.Cyt.SuperAdmin)'
+2024-12-08 11:45:48.938 +05:30 [INF] Route matched with {action = "IndexForm", controller = "Borrower"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] IndexForm(System.String) on controller Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm.BorrowerController (Gigras.Software.Cyt.SuperAdmin).
+2024-12-08 11:45:49.450 +05:30 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2024-12-08 11:45:49.706 +05:30 [INF] Executed DbCommand (131ms) [Parameters=[@__formname_0='Hamburg' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT [i5].[Id], [i5].[CityId], [i5].[CountryId], [i5].[CreatedAt], [i5].[CreatedBy], [i5].[FormDescription], [i5].[FormName], [i5].[IsActive], [i5].[IsDelete], [i5].[StateId], [i5].[UpdatedAt], [i5].[UpdatedBy], [s1].[Id], [s1].[CreatedAt], [s1].[CreatedBy], [s1].[FormId], [s1].[IsActive], [s1].[IsDelete], [s1].[SectionDescription], [s1].[SectionName], [s1].[SortOrder], [s1].[UpdatedAt], [s1].[UpdatedBy], [s1].[Id0], [s1].[CreatedAt0], [s1].[CreatedBy0], [s1].[CssClass], [s1].[FieldOrder], [s1].[FieldTypeId], [s1].[IsActive0], [s1].[IsDelete0], [s1].[JavaScript], [s1].[SectionId], [s1].[UpdatedAt0], [s1].[UpdatedBy0], [s1].[Id00], [s1].[BlockChainFieldId], [s1].[ComparerFieldId], [s1].[CreatedAt00], [s1].[CreatedBy00], [s1].[CtrlType], [s1].[FieldDescription], [s1].[FieldName], [s1].[FieldTypeOptionId], [s1].[HasOptions], [s1].[IsActive00], [s1].[IsDelete00], [s1].[MaxLength], [s1].[MaxValue], [s1].[MinValue], [s1].[RangeEnd], [s1].[RangeStart], [s1].[RequiresScript], [s1].[UpdatedAt00], [s1].[UpdatedBy00], [s1].[Id1], [s1].[CreatedAt1], [s1].[CreatedBy1], [s1].[FieldTypeId0], [s1].[FieldValidationId], [s1].[IsActive1], [s1].[IsDelete1], [s1].[UpdatedAt1], [s1].[UpdatedBy1], [s1].[Id000], [s1].[CreatedAt000], [s1].[CreatedBy000], [s1].[ErrorMessage], [s1].[IsActive000], [s1].[IsDelete000], [s1].[UpdatedAt000], [s1].[UpdatedBy000], [s1].[ValidationName], [s1].[ValidationType], [s1].[ValidationValue]
+FROM (
+    SELECT TOP(1) [i].[Id], [i].[CityId], [i].[CountryId], [i].[CreatedAt], [i].[CreatedBy], [i].[FormDescription], [i].[FormName], [i].[IsActive], [i].[IsDelete], [i].[StateId], [i].[UpdatedAt], [i].[UpdatedBy]
+    FROM [IT_DynamicForms] AS [i]
+    WHERE REPLACE([i].[FormName], N' ', N'-') = @__formname_0
+) AS [i5]
+LEFT JOIN (
+    SELECT [i0].[Id], [i0].[CreatedAt], [i0].[CreatedBy], [i0].[FormId], [i0].[IsActive], [i0].[IsDelete], [i0].[SectionDescription], [i0].[SectionName], [i0].[SortOrder], [i0].[UpdatedAt], [i0].[UpdatedBy], [s0].[Id] AS [Id0], [s0].[CreatedAt] AS [CreatedAt0], [s0].[CreatedBy] AS [CreatedBy0], [s0].[CssClass], [s0].[FieldOrder], [s0].[FieldTypeId], [s0].[IsActive] AS [IsActive0], [s0].[IsDelete] AS [IsDelete0], [s0].[JavaScript], [s0].[SectionId], [s0].[UpdatedAt] AS [UpdatedAt0], [s0].[UpdatedBy] AS [UpdatedBy0], [s0].[Id0] AS [Id00], [s0].[BlockChainFieldId], [s0].[ComparerFieldId], [s0].[CreatedAt0] AS [CreatedAt00], [s0].[CreatedBy0] AS [CreatedBy00], [s0].[CtrlType], [s0].[FieldDescription], [s0].[FieldName], [s0].[FieldTypeOptionId], [s0].[HasOptions], [s0].[IsActive0] AS [IsActive00], [s0].[IsDelete0] AS [IsDelete00], [s0].[MaxLength], [s0].[MaxValue], [s0].[MinValue], [s0].[RangeEnd], [s0].[RangeStart], [s0].[RequiresScript], [s0].[UpdatedAt0] AS [UpdatedAt00], [s0].[UpdatedBy0] AS [UpdatedBy00], [s0].[Id1], [s0].[CreatedAt1], [s0].[CreatedBy1], [s0].[FieldTypeId0], [s0].[FieldValidationId], [s0].[IsActive1], [s0].[IsDelete1], [s0].[UpdatedAt1], [s0].[UpdatedBy1], [s0].[Id00] AS [Id000], [s0].[CreatedAt00] AS [CreatedAt000], [s0].[CreatedBy00] AS [CreatedBy000], [s0].[ErrorMessage], [s0].[IsActive00] AS [IsActive000], [s0].[IsDelete00] AS [IsDelete000], [s0].[UpdatedAt00] AS [UpdatedAt000], [s0].[UpdatedBy00] AS [UpdatedBy000], [s0].[ValidationName], [s0].[ValidationType], [s0].[ValidationValue]
+    FROM [IT_DynamicFormsSection] AS [i0]
+    LEFT JOIN (
+        SELECT [i1].[Id], [i1].[CreatedAt], [i1].[CreatedBy], [i1].[CssClass], [i1].[FieldOrder], [i1].[FieldTypeId], [i1].[IsActive], [i1].[IsDelete], [i1].[JavaScript], [i1].[SectionId], [i1].[UpdatedAt], [i1].[UpdatedBy], [i2].[Id] AS [Id0], [i2].[BlockChainFieldId], [i2].[ComparerFieldId], [i2].[CreatedAt] AS [CreatedAt0], [i2].[CreatedBy] AS [CreatedBy0], [i2].[CtrlType], [i2].[FieldDescription], [i2].[FieldName], [i2].[FieldTypeOptionId], [i2].[HasOptions], [i2].[IsActive] AS [IsActive0], [i2].[IsDelete] AS [IsDelete0], [i2].[MaxLength], [i2].[MaxValue], [i2].[MinValue], [i2].[RangeEnd], [i2].[RangeStart], [i2].[RequiresScript], [i2].[UpdatedAt] AS [UpdatedAt0], [i2].[UpdatedBy] AS [UpdatedBy0], [s].[Id] AS [Id1], [s].[CreatedAt] AS [CreatedAt1], [s].[CreatedBy] AS [CreatedBy1], [s].[FieldTypeId] AS [FieldTypeId0], [s].[FieldValidationId], [s].[IsActive] AS [IsActive1], [s].[IsDelete] AS [IsDelete1], [s].[UpdatedAt] AS [UpdatedAt1], [s].[UpdatedBy] AS [UpdatedBy1], [s].[Id0] AS [Id00], [s].[CreatedAt0] AS [CreatedAt00], [s].[CreatedBy0] AS [CreatedBy00], [s].[ErrorMessage], [s].[IsActive0] AS [IsActive00], [s].[IsDelete0] AS [IsDelete00], [s].[UpdatedAt0] AS [UpdatedAt00], [s].[UpdatedBy0] AS [UpdatedBy00], [s].[ValidationName], [s].[ValidationType], [s].[ValidationValue]
+        FROM [IT_DynamicFormFields] AS [i1]
+        LEFT JOIN [IT_DynamicFieldTypes] AS [i2] ON [i1].[FieldTypeId] = [i2].[Id]
+        LEFT JOIN (
+            SELECT [i3].[Id], [i3].[CreatedAt], [i3].[CreatedBy], [i3].[FieldTypeId], [i3].[FieldValidationId], [i3].[IsActive], [i3].[IsDelete], [i3].[UpdatedAt], [i3].[UpdatedBy], [i4].[Id] AS [Id0], [i4].[CreatedAt] AS [CreatedAt0], [i4].[CreatedBy] AS [CreatedBy0], [i4].[ErrorMessage], [i4].[IsActive] AS [IsActive0], [i4].[IsDelete] AS [IsDelete0], [i4].[UpdatedAt] AS [UpdatedAt0], [i4].[UpdatedBy] AS [UpdatedBy0], [i4].[ValidationName], [i4].[ValidationType], [i4].[ValidationValue]
+            FROM [IT_DynamicFieldTypeValidaion] AS [i3]
+            LEFT JOIN [IT_DynamicFieldValidations] AS [i4] ON [i3].[FieldValidationId] = [i4].[Id]
+        ) AS [s] ON [i2].[Id] = [s].[FieldTypeId]
+    ) AS [s0] ON [i0].[Id] = [s0].[SectionId]
+) AS [s1] ON [i5].[Id] = [s1].[FormId]
+ORDER BY [i5].[Id], [s1].[Id], [s1].[Id0], [s1].[Id00], [s1].[Id1]
+2024-12-08 11:45:50.186 +05:30 [INF] Executing ViewResult, running view ~/Views/Borrower/index.cshtml.

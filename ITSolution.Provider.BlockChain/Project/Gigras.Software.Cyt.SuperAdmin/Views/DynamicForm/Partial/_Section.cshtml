@@ -1,0 +1,59 @@
+﻿<!-- Modal for Sections -->
+<div class="modal fade" id="sectionModal" tabindex="-1" aria-labelledby="sectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title full-page-heading" id="sectionModalLabel">Manage Sections</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="formContainer" style="display: none;">
+                    <h5 id="formHeading">Add New Section</h5>
+                    <form id="SectionForm" name="SectionForm" method="post">
+                        <input type="hidden" class="form-control" id="FormId" name="FormId" />
+                        <input type="hidden" class="form-control" id="Id" name="Id" value="0" />
+                        <div class="mb-3">
+                            <label for="sectionName" class="form-label">Section Name</label>
+                            <input type="text" class="form-control" id="SectionName" name="SectionName" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="sectionDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="SectionDescription" name="SectionDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="FieldOrder" class="form-label">Order</label>
+                            <input type="number" step="1" value="1" class="form-control" id="SortOrder" name="SortOrder" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideForm()">Discard</button>
+                    </form>
+                </div>
+                <!-- Add Button above the table -->
+                <button class="btn btn-primary mb-3" id="addButton">Add Section</button>
+
+                <!-- Section List -->
+                <div class="section-list">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Section Name</th>
+                                <th>Description</th>
+                                <th>Order</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sectionListBody">
+                            <!-- Sections will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/sadmin/dynamic-field-section.js"></script>

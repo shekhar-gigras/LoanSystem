@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\Foundation\Gigras.Software.Cyt.Repositories\Gigras.Software.Cyt.Repositories.csproj" />
+    <ProjectReference Include="..\..\Foundation\Gigras.Software.Database.Cyt.Entity\Gigras.Software.Database.Cyt.Entity.csproj" />
+    <ProjectReference Include="..\Gigras.Software.Generic.Services\Gigras.Software.Generic.Services.csproj" />
+
+  </ItemGroup>
+
+</Project>

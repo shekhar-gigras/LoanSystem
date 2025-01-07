@@ -1,0 +1,175 @@
+﻿@using Gigras.Software.Database.Cyt.Entity.Models
+@model IEnumerable<Form>
+@{
+    ViewBag.Title = "Field Form";
+}
+<div class="full-page-heading">
+    Form Master
+</div>
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <!--begin::Container-->
+    <div id="kt_content_container" class="container-xxl">
+        <!--begin::Card-->
+        <div class="card card-flush">
+            <!--begin::Card header-->
+            <div class="card-header mt-6">
+                <!--begin::Card title-->
+                <div class="card-title">
+                    <!--begin::Search-->
+                    <div class="d-flex align-items-center position-relative my-1 me-5">
+                        <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                        <span class="svg-icon svg-icon-1 position-absolute ms-6">
+                            <i class="fa fa-search"></i>
+                        </span>
+                        <!--end::Svg Icon-->
+                        <input type="text" data-kt-category-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Category" />
+                    </div>
+                    <!--end::Search-->
+                </div>
+                <!--end::Card title-->
+                <!--begin::Card toolbar-->
+                <div class="card-toolbar">
+                    <!--begin::Button-->
+                    <button type="button" class="btn btn-light-primary" onclick="location.href='@Url.Action("Add")'">
+                        <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+                        <span class="svg-icon svg-icon-3">
+                            <i class="fa fa-plus"></i>
+                        </span>
+                        <!--end::Svg Icon-->
+                        Add Form
+                    </button>
+                    <!--end::Button-->
+                </div>
+                <!--end::Card toolbar-->
+            </div>
+            <!--end::Card header-->
+            <!--begin::Card body-->
+            <div class="card-body pt-0">
+                <!--begin::Table-->
+                <div class="table-responsive">
+                    <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_category_table">
+                        <thead>
+                            <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                                <th class="min-w-125px">#</th>
+                                <th>Form Name</th>
+                                <th>Description</th>
+                                <th>Country</th>
+                                <th>State</th>
+                                <th>City</th>
+                                 <th>Url</th>
+                               <th>Active</th>
+                                <th class="text-end min-w-100px">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="fw-bold text-gray-600">
+                            @foreach (var field in Model)
+                            {
+                                var url = @field.FormName;
+                                if (field.StateId != null)
+                                {
+                                    if (field.CityId != null)
+                                    {
+                                        url = "city/" + @field.City.CityName;
+                                    }
+                                    else
+                                    {
+                                        url = "state/" + @field.State.StateName;
+                                    }
+                                }
+                                else
+                                {
+                                    if (field.CountryId != null)
+                                    {
+                                        url = "country/" + @field.Country.CountryName;
+                                    }
+                                    else
+                                    {
+                                        url = @field.FormName;
+                                    }
+                                }
+                                <tr>
+                                    <td>@field.Id</td>
+                                    <td>@field.FormName</td>
+                                    <td>@field.FormDescription</td>
+                                    <td>@field.Country?.CountryName</td>
+                                    <td>@field.State?.StateName</td>
+                                    <td>@field.City?.CityName</td>
+                                    <td>@(field.IsActive ? "Active" : "Inactive")</td>
+                                    <td>
+                                            <a href="/sadmin/borrower/@url" target="_blank">Open Form</a>
+                                    </td>
+                                    <td class="text-end">
+                                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 copy-btn" data-id="@field.Id" onclick="OpenCopyFormModal(@field.Id)">
+                                            <span class="icon">
+                                                <i class="fas fa-copy"></i>
+                                            </span>
+                                        </button>
+                                        <!-- Edit Button -->
+                                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3"
+                                                onclick="location.href='@Url.Action("Edit", new { id = field.Id })'">
+                                            <span class="icon">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </span>
+                                        </button>
+                                        <!-- Delete Button -->
+                                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px"
+                                                onclick="if(confirm('Are you sure you want to delete this item?')) location.href='@Url.Action("Delete", new { id = field.Id, isDelete = !field.IsDelete })'">
+                                            <span class="icon">
+                                                <i class="@(field.IsDelete ? "fas fa-trash-alt text-danger" : "fas fa-trash-alt text-success")"></i>
+                                            </span>
+                                        </button>
+
+                                        <!-- Toggle Status Button -->
+                                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3"
+                                                onclick="location.href='@Url.Action("ToggleFieldTypeStatus", new { id = field.Id, isActive = !field.IsActive })'">
+                                            <span class="icon">
+                                                <i class="@(field.IsActive ? "fas fa-check-circle text-success" : "fas fa-times-circle text-danger")"></i>
+                                            </span>
+                                        </button>
+
+                                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" onclick="openSectionModal(@field.Id)">
+                                            <span class="icon">
+                                                <i class="fas fa-plus-circle text-primary"></i>
+                                            </span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--end::Card-->
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="copyFormModal" tabindex="-1" aria-labelledby="copyFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="copyFormModalLabel">Copy Form</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="copyForm">
+                    <div class="mb-3">
+                        <label for="newFormName" class="form-label">New Form Name</label>
+                        <input type="text" class="form-control" id="newFormName" placeholder="Enter new form name" required>
+                    </div>
+                    <input type="hidden" id="currentFormId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="saveCopyButton" name="saveCopyButton">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Views/DynamicForm/Partial/_Section.cshtml");
+@await Html.PartialAsync("~/Views/DynamicForm/Partial/_Field.cshtml");
+<script src="~/js/sadmin/grid.js"></script>
+<script src="~/js/sadmin/dynamic.js"></script>
