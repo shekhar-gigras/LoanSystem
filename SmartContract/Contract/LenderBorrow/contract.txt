@@ -1,0 +1,299 @@
+ // SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract MultiLoanContract {
+    // State variables
+    address public lender;
+    uint256 private borrowerCount;
+    address[] private activeBorrowers;
+    address[] private requestedBorrowers;
+    uint256 public penaltyRate; // Penalty rate in percentage
+
+    //----------This is the containor for the Loan taken by the borrower -----
+    struct Loan {
+        uint256 loanAmount;
+        uint256 interestRate; // Interest rate in percentage
+        uint256 totalRepayment;
+        uint256 remainingRepayment;
+        uint256 emiAmount;
+        uint256 emiCount;
+        uint256 emisPaid;
+        uint256 nextEmiDueDate;
+        bool isLoanFunded;
+        bool isLoanRepaid;
+    }
+    mapping(address => Loan) public loans; //Like dictionary-- storing data with key as MatamaskId & value as UserLoan Details
+
+    // Events
+    event LoanFunded(address indexed lender, uint256 amount);
+    event LoanRequested(
+        address indexed borrower,
+        uint256 amount,
+        uint256 interestRate
+    );
+    event LoanRepaid(address indexed borrower, uint256 amount);
+    event ContractFunded(address indexed lender, uint256 amount);
+    event BorrowerRemoved(address indexed borrower);
+    event LoanRequestRejected(address indexed borrower);
+    event EMIPayment(address indexed borrower, uint256 emiAmount);
+    event FullRepayment(address indexed borrower, uint256 amount);
+    event PenaltyApplied(address indexed borrower, uint256 penaltyAmount);
+    event panaltyRatechanged(address indexed lender, uint256 panaltyRate);
+
+    // Modifiers
+    modifier onlyLender() {
+        require(msg.sender == lender, "Only lender can call this function");
+        _;
+    }
+
+    modifier onlyBorrower() {
+        require(
+            msg.sender != lender,
+            "Only the borrower can call this function"
+        );
+        _;
+    }
+
+    // Constructor
+    constructor(uint256 _penaltyRate) {
+        lender = msg.sender; // Deployer is the lender
+        borrowerCount = 0;
+        penaltyRate = _penaltyRate; // Initialize penalty rate
+    }
+
+    // Function: Change lender
+    function changeLender(address _address) external onlyLender {
+        lender = _address;
+    }
+
+    // Function: Fund the contract
+    function fundContract() external payable onlyLender {
+        emit ContractFunded(lender, msg.value);
+    }
+
+    // Function: Approve and fund the loan for a borrower
+    function approveLoan(address _borrower) external onlyLender {
+        Loan storage loan = loans[_borrower];
+        require(loan.loanAmount > 0, "No loan requested by this borrower");
+        require(!loan.isLoanFunded, "Loan is already funded");
+        require(
+            address(this).balance >= loan.loanAmount,
+            "Contract does not have sufficient funds"
+        );
+
+        loan.isLoanFunded = true;
+        borrowerCount++;
+        // loan.nextEmiDueDate= block.timestamp + 30 days;//30 days in sec
+        payable(_borrower).transfer(loan.loanAmount);
+
+        // Move borrower from requested to active list
+        for (uint256 i = 0; i < requestedBorrowers.length; i++) {
+            if (requestedBorrowers[i] == _borrower) {
+                requestedBorrowers[i] = requestedBorrowers[
+                    requestedBorrowers.length - 1
+                ];
+                requestedBorrowers.pop();
+                break;
+            }
+        }
+
+        activeBorrowers.push(_borrower);
+
+        emit LoanFunded(_borrower, loan.loanAmount);
+    }
+
+    //take out the funds from contract
+    function takeOutContractFunds(uint256 _amount) public onlyLender {
+        require(address(this).balance > 0, "No funds are available");
+        if (_amount > 0) {
+            payable(lender).transfer(_amount);
+        } else {
+            payable(lender).transfer(address(this).balance);
+        }
+    }
+
+    // Function: Check the contract balance
+    function checkBalanceOfSmartContract()
+        public
+        view
+        onlyLender
+        returns (uint256)
+    {
+        return address(this).balance;
+    }
+
+    // Function: Check the balance of the lender
+    function getLenderBalance() public view onlyLender returns (uint256) {
+        return lender.balance;
+    }
+
+    // Function: Get the list of active borrowers
+    function getActiveBorrowers()
+        public
+        view
+        onlyLender
+        returns (address[] memory)
+    {
+        return activeBorrowers;
+    }
+
+    // Function: Get the list of requested borrowers
+    function getRequestedBorrowers()
+        public
+        view
+        onlyLender
+        returns (address[] memory)
+    {
+        return requestedBorrowers;
+    }
+
+    //change the penaltyRate
+    function changePenaltyRate(uint256 _penaltyRate) external onlyLender {
+        penaltyRate = _penaltyRate;
+        emit panaltyRatechanged(msg.sender, _penaltyRate);
+    }
+
+    //--------------------------------------------------------below are allow for borrow or lender
+    // Function: Request a loan
+    function requestLoan(
+        uint256 _loanAmount,
+        uint256 _interestRate,
+        uint256 _repaymentDurationInMonths
+    ) external {
+        require(msg.sender != lender, "Lender cannot request a loan");
+        require(
+            loans[msg.sender].loanAmount == 0,
+            "Loan already exists for this borrower"
+        );
+
+        uint256 totalRepayment = _loanAmount +
+            (_loanAmount * _interestRate) /
+            100;
+        uint256 emiAmount = totalRepayment / _repaymentDurationInMonths;
+
+        loans[msg.sender] = Loan({
+            loanAmount: _loanAmount,
+            interestRate: _interestRate,
+            totalRepayment: totalRepayment,
+            remainingRepayment: totalRepayment,
+            emiAmount: emiAmount,
+            emiCount: _repaymentDurationInMonths,
+            emisPaid: 0,
+            nextEmiDueDate: block.timestamp + 30 days, //30 days in sec
+            isLoanFunded: false,
+            isLoanRepaid: false
+        });
+
+        requestedBorrowers.push(msg.sender);
+        emit LoanRequested(msg.sender, _loanAmount, _interestRate);
+    }
+
+    // Function: Pay EMI
+    function payEMI() external payable onlyBorrower {
+        Loan storage loan = loans[msg.sender];
+        require(loan.isLoanFunded, "Loan is not yet funded");
+        require(!loan.isLoanRepaid, "Loan is already repaid");
+        require(loan.emisPaid < loan.emiCount, "All EMIs already paid");
+
+        if (block.timestamp > loan.nextEmiDueDate) {
+            uint256 missedEmis = (block.timestamp - loan.nextEmiDueDate) /
+                30 days;
+            uint256 penalty = (loan.emiAmount *
+                penaltyRate *
+                (missedEmis + 1)) / 100;
+            loan.remainingRepayment += penalty;
+            emit PenaltyApplied(msg.sender, penalty);
+        }
+
+        require(msg.value == loan.emiAmount, "Incorrect EMI amount");
+
+        loan.remainingRepayment -= msg.value;
+        loan.emisPaid++;
+        loan.nextEmiDueDate = block.timestamp + 30 days;
+
+        // Check if the loan is fully repaid after the last EMI
+        if (loan.emisPaid == loan.emiCount && loan.remainingRepayment == 0) {
+            loan.isLoanRepaid = true;
+            for (uint256 i = 0; i < activeBorrowers.length; i++) {
+                if (activeBorrowers[i] == msg.sender) {
+                    activeBorrowers[i] = activeBorrowers[
+                        activeBorrowers.length - 1
+                    ];
+                    activeBorrowers.pop();
+                    borrowerCount--;
+                    emit BorrowerRemoved(msg.sender);
+                    break;
+                }
+            }
+            delete loans[msg.sender];
+        }
+
+        payable(lender).transfer(msg.value);
+        emit EMIPayment(msg.sender, msg.value);
+    }
+
+    // Function: Full repayment
+    function fullRepayment() external payable onlyBorrower {
+        Loan storage loan = loans[msg.sender];
+        require(loan.isLoanFunded, "Loan is not yet funded");
+        require(!loan.isLoanRepaid, "Loan is already repaid");
+
+        if (block.timestamp > loan.nextEmiDueDate) {
+            uint256 missedEmis = (block.timestamp - loan.nextEmiDueDate) /
+                30 days;
+            uint256 penalty = (loan.remainingRepayment *
+                penaltyRate *
+                (missedEmis + 1)) / 100;
+            loan.remainingRepayment += penalty;
+            emit PenaltyApplied(msg.sender, penalty);
+        }
+
+        require(
+            msg.value == loan.remainingRepayment,
+            "Incorrect repayment amount"
+        );
+
+        loan.isLoanRepaid = true;
+        loan.remainingRepayment = 0;
+
+        for (uint256 i = 0; i < activeBorrowers.length; i++) {
+            if (activeBorrowers[i] == msg.sender) {
+                activeBorrowers[i] = activeBorrowers[
+                    activeBorrowers.length - 1
+                ];
+                activeBorrowers.pop();
+                borrowerCount--;
+                emit BorrowerRemoved(msg.sender);
+                break;
+            }
+        }
+
+        delete loans[msg.sender];
+        payable(lender).transfer(msg.value);
+        emit FullRepayment(msg.sender, msg.value);
+    }
+
+    // Function: Check if repayment is overdue for a borrower
+    function isRepaymentOverdue(address _borrower) public view returns (bool) {
+        Loan storage loan = loans[_borrower];
+        return block.timestamp > loan.nextEmiDueDate && !loan.isLoanRepaid;
+    }
+
+    // Function: Take out all contract funds
+
+    // Function: Check the balance of a specific borrower
+    function getBorrowerBalance(address _borrower)
+        public
+        view
+        returns (uint256)
+    {
+        return _borrower.balance;
+    }
+
+    // Function: Get the count of all borrowers
+    function getBorrowerCount() public view returns (uint256) {
+        return borrowerCount;
+    }
+}
+
+
