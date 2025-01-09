@@ -354,3 +354,60 @@ CREATE TABLE [dbo].[IT_DynamicBlockChainField](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+CREATE TABLE BorrowerLoans (
+	Id	INT PRIMARY KEY,
+    loanId uniqueidentifier, -- Unique identifier for the loan
+    MetaMaskID nvarchar(500), -- Unique identifier for the loan
+    initialMonthlyPayment DECIMAL(18, 2)  NULL, -- Initial monthly payment
+    firstPaymentDate DATE  NULL, -- First payment date
+    maturityDate DATE  NULL, -- Loan maturity date
+    paymentAddress VARCHAR(255)  NULL, -- Payment address
+    gracePeriod INT  NULL, -- Grace period in days
+    lateChargePercentage DECIMAL(5, 2)  NULL, -- Late charge percentage
+    indexType VARCHAR(255)  NULL, -- Index (e.g., LIBOR, SOFR)
+    margin DECIMAL(18, 2)  NULL, -- Margin for the loan
+    allowsPrepayment bit  NULL, -- Prepayment allowed or not
+    defaultNoticePeriod INT  NULL, -- Default notice period in days
+    noteDate DATE  NULL, -- Note date
+	CountryName VARCHAR(100)  NULL, -- Property city
+    CityName VARCHAR(100)  NULL, -- Property city
+    StateName VARCHAR(50)  NULL, -- Property state
+    propertyAddress VARCHAR(255)  NULL, -- Full property address
+    principalAmount DECIMAL(18, 2)  NULL, -- Principal amount of the loan
+    lenderName VARCHAR(255)  NULL, -- Name of the lender
+    initialInterestRate DECIMAL(5, 2)  NULL, -- Initial interest rate
+    changeDate DATE  NULL, -- Interest rate change date
+    maxRateOnFirstChange DECIMAL(5, 2)  NULL, -- Maximum rate on first change
+    minRateOnFirstChange DECIMAL(5, 2)  NULL, -- Minimum rate on first change
+    -- Uncomment below if needed
+    MaxOverallRate DECIMAL(5, 2), -- Maximum overall rate
+    MinOverallRate DECIMAL(5, 2)  -- Minimum overall rate
+);
+
+CREATE TABLE LoanDetails (
+	Id	INT PRIMARY KEY,
+    loanId uniqueidentifier, -- Unique identifier for the loan
+    MetaMaskID nvarchar(500), -- Unique identifier for the loan
+    NoteDate DATE,
+    State NVARCHAR(50),
+    City NVARCHAR(50),
+    PropertyAddress NVARCHAR(MAX),
+    PrincipalAmount DECIMAL(15, 2),
+    LenderName NVARCHAR(100),
+    InterestRate DECIMAL(5, 2),
+    EMIPaymentDate DATE,
+    DayOfMonth INT,
+    MaturityDate DATE,
+    PaymentLocation NVARCHAR(MAX),
+    CalendarDays INT,
+    LateChargePercentage DECIMAL(5, 2),
+    MonthlyPaymentAmount DECIMAL(15, 2),
+    ChangeInterestRateDate DATE,
+    Margin DECIMAL(5, 2),
+    CurrentIndex DECIMAL(5, 2),
+    MaxInterestRateFirstChangeDate DECIMAL(5, 2),
+    MinInterestRateFirstChangeDate DECIMAL(5, 2),
+    MaxSubsequentInterestRateAfterChangeDate DECIMAL(5, 2),
+    MinSubsequentInterestRateAfterChangeDate DECIMAL(5, 2)
+);

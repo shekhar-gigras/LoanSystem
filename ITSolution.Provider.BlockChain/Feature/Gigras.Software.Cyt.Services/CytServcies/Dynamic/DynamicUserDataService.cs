@@ -35,15 +35,13 @@ namespace Gigras.Software.Cyt.Services.CytServcies
         // Additional methods specific to DynamicForm
         public async Task<List<DynamicUserData>> GetUserDataList(string csc)
         {
+            //&& ((userdetail.Roles.Contains("User") && cv.CreatedBy.ToString() == userdetail.UserId) || userdetail.Roles.Contains("Admin"))
             var userdetail = await _cytAdminService.GetUserDetails();
-            var data = await _Repository.GetAllAsync(cv => cv.IsActive && !cv.IsDelete && ((userdetail.Roles.Contains("User") && cv.CreatedBy.ToString() == userdetail.UserId) || userdetail.Roles.Contains("Admin")),
+            var data = await _Repository.GetAllAsync(cv => cv.IsActive && !cv.IsDelete ,
                                    new Expression<Func<DynamicUserData, object?>>[] { x => x.Form!, y => y.Form!.Country, y => y.Form!.State, y => y.Form!.City }
                                    );
             data = data.Where(cv =>
-                (cv.Form?.Country?.CountryName?.ToLower() ?? string.Empty) == csc.ToLower() ||
-                (cv.Form?.State?.StateName?.ToLower() ?? string.Empty) == csc.ToLower() ||
-                (cv.Form?.City?.CityName?.ToLower() ?? string.Empty) == csc.ToLower() ||
-                (cv.Form?.FormName?.ToLower() ?? string.Empty) == csc.ToLower()
+                (cv.Form?.FormName!.Replace(" ", "-")?.ToLower() ?? string.Empty) == csc.ToLower()
             ).ToList();
             return data;
         }
@@ -75,8 +73,8 @@ namespace Gigras.Software.Cyt.Services.CytServcies
 
         private async Task<DynamicUserData> Add(Dictionary<string, string> fieldValues)
         {
-            fieldValues["SystemFormId"] = (!fieldValues.ContainsKey("SystemFormId") || (fieldValues.ContainsKey("SystemFormId") && string.IsNullOrEmpty(fieldValues["SystemFormId"])) ? "0" : fieldValues["SystemFormId"]);
-            var formid = Convert.ToInt32(fieldValues["SystemFormId"]);
+            fieldValues["FormId"] = (!fieldValues.ContainsKey("FormId") || (fieldValues.ContainsKey("FormId") && string.IsNullOrEmpty(fieldValues["FormId"])) ? "0" : fieldValues["FormId"]);
+            var formid = Convert.ToInt32(fieldValues["FormId"]);
             var json = JsonConvert.SerializeObject(fieldValues);
             fieldValues["MetaMaskID"] = (!fieldValues.ContainsKey("MetaMaskID") || (fieldValues.ContainsKey("MetaMaskID") && string.IsNullOrEmpty(fieldValues["MetaMaskID"])) ? null : fieldValues["MetaMaskID"]);
             var lookup = new DynamicUserData()
@@ -85,9 +83,9 @@ namespace Gigras.Software.Cyt.Services.CytServcies
                 FormId = formid,
                 UserData = json,
                 CreatedAt = DateTime.Now,
-                CreatedBy = Convert.ToInt32(await _cytAdminService.GetUserId()),
+                CreatedBy = await _cytAdminService.GetUserName(),
                 UpdatedAt = DateTime.Now,
-                UpdatedBy = Convert.ToInt32(await _cytAdminService.GetUserId()),
+                UpdatedBy = await _cytAdminService.GetUserName(),
                 IsActive = true,
                 IsDelete = false,
                 OldUserId = formid
@@ -104,7 +102,7 @@ namespace Gigras.Software.Cyt.Services.CytServcies
                 objLook.IsDelete = true;
                 await _Repository.UpdateAsync(objLook);
             }
-
+            objLook = await Add(fieldValues);
             return objLook!;
         }
 

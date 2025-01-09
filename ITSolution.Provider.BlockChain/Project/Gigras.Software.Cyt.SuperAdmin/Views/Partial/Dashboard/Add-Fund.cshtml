@@ -1,0 +1,38 @@
+﻿<div class="col-md-6">
+    <div class="card custom-card text-white">
+        <div class="card-header border-0 pt-9">
+            <div class="card-title m-0">
+                <div class="symbol symbol-50px w-50px">
+                    <i class="fas fa-handshake fa-3x"></i>
+                </div>
+            </div>
+            <div class="card-toolbar">
+                <button class="btn btn-light fw-bolder px-4 py-3" id="addButton">Add</button>
+            </div>
+        </div>
+        <div class="card-body p-9">
+            <div class="fs-3 fw-bolder">Add Fund</div>
+            <div class="fs-5" id="current-balance">Current Balance: 0</div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="addFundModal" tabindex="-1" aria-labelledby="addFundModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addFundModalLabel">Add Funds</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label for="amount">Enter Amount to Add Smart Contract:</label>
+                <input type="number" class="form-control" id="amount" placeholder="Enter amount" required />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="addFundButton">Add Funds</button>
+            </div>
+        </div>
+    </div>
+</div>

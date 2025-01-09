@@ -10,6 +10,9 @@ namespace Gigras.Software.Database.Cyt.Entity.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        public string? Version { get; set; }
+        public bool IsLender { get; set; }
+
         [Column(TypeName = "text")]
         public string? Abi { get; set; }
 

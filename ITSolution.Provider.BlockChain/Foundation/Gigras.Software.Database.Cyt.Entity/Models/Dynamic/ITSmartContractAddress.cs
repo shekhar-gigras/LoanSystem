@@ -10,6 +10,10 @@ namespace Gigras.Software.Database.Cyt.Entity.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        public bool IsLender { get; set; }
+
+        public string? Version { get; set; }
+
         [Required]
         [StringLength(500)]
         public string? ContractAddress { get; set; }

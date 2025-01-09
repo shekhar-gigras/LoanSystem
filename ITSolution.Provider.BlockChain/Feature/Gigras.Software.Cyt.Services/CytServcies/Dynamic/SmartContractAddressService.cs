@@ -30,8 +30,8 @@ namespace Gigras.Software.Cyt.Services.CytServcies
 
         public async Task<List<SmartContractAddress>> GetList()
         {
-            var data = await _SmartContractAddressRepository.GetAllAsync(x => !x.IsDelete);
-            return data;
+            var data = await _SmartContractAddressRepository.GetAllAsync();
+            return data.ToList();
         }
 
         public async Task<SmartContractAddress> SubmitData(Dictionary<string, string> fieldValues)
@@ -43,13 +43,16 @@ namespace Gigras.Software.Cyt.Services.CytServcies
 
         private async Task<SmartContractAddress> Add(Dictionary<string, string> fieldValues)
         {
+            var IsLender = Convert.ToBoolean(fieldValues["IsLender"].ToString());
             foreach (var obj in await _SmartContractAddressRepository.GetAllAsync(x => !x.IsDelete && x.IsActive))
             {
                 obj.IsActive = false;
-                obj.IsDelete = true;
+                obj.IsDelete = false;
             }
             var lookup = new SmartContractAddress()
             {
+                Version = fieldValues["Version"].ToString(),
+                IsLender = IsLender,
                 ContractAddress = fieldValues["ContractAddress"].ToString(),
                 CreatedBy = await _cytAdminService.GetUserName(),
                 CreatedAt = DateTime.Now,
@@ -63,7 +66,7 @@ namespace Gigras.Software.Cyt.Services.CytServcies
 
         public async Task<SmartContractAddress> GetData(int id)
         {
-            var data = await _SmartContractAddressRepository.GetByIdAsync(id, x => x.IsActive && !x.IsDelete);
+            var data = await _SmartContractAddressRepository.GetByIdAsync(id);
             return data;
         }
 

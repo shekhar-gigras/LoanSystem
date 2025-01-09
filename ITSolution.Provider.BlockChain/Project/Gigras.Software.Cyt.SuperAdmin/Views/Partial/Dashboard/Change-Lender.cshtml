@@ -1,0 +1,38 @@
+﻿<div class="col-md-6">
+    <div class="card custom-card text-white">
+        <div class="card-header border-0 pt-9">
+            <div class="card-title m-0">
+                <div class="symbol symbol-50px w-50px">
+                    <i class="fas fa-university fa-3x"></i>
+                </div>
+            </div>
+            <div class="card-toolbar">
+                <button class="btn btn-light fw-bolder px-4 py-3" id="changeLendderButton" onclick="ChangeLendder()">Change</button>
+            </div>
+        </div>
+        <div class="card-body p-9">
+            <div class="fs-3 fw-bolder">Change Lendder</div>
+            <div class="fs-5 text-red" id="lendder-address">Loading....</div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="changeLenderModal" tabindex="-1" aria-labelledby="changeLenderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changeLenderModalLabel">Change Lender</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label for="newLenderAddress">Enter New Lender Address:</label>
+                <input type="text" class="form-control" id="newLenderAddress" placeholder="Enter wallet address" required />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="changeLenderButton">Change Lender</button>
+            </div>
+        </div>
+    </div>
+</div>

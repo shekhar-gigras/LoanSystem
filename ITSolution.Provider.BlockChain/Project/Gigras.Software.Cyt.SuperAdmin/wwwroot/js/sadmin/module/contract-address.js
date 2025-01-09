@@ -23,11 +23,18 @@
                                         <i class="fa fa-eye"></i>
                                      </span>
                                     </button>
-                                   <button
-                                        class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 edit-btn"
-                                        data-id="${lookup.id}">
+                                    <button class="btn btn-icon btn-active-light-primary w-30px h-30px" onclick="deleteRecord(${lookup.id},'contractaddress')">
                                         <span class="icon">
-                                            <i class="fas fa-pencil-alt"></i>
+                                           ${lookup.isDelete
+                ? "<i class='btn-danger fas fa-trash-alt'></i>"
+                : "<i class='btn-success fas fa-trash-alt'></i>"}
+                                        </span>
+                                    </button>
+                                    <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3"
+                                            data-status="${lookup.isActive}"
+                                            onclick="toggleStatus(this, ${lookup.id},'contractaddress')">
+                                        <span class="icon">
+                                            <i class="${lookup.isActive ? "fas fa-check text-success" : "fas fa-times text-danger"}"></i>
                                         </span>
                                     </button>
                                 </td>

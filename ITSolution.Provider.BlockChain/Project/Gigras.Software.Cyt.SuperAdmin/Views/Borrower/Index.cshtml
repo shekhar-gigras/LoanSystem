@@ -1,34 +1,14 @@
 ﻿@{
     var csc = "";
     var mode = "";
-    @if (ViewBag.Country != null)
-    {
-        ViewBag.Title = $"{ViewBag.Country} List";
-        csc = ViewBag.Country;
-        mode = "countryform";
-    }
-    else if (ViewBag.State != null)
-    {
-        ViewBag.Title = $"{ViewBag.State}List";
-        csc = ViewBag.State;
-        mode = "stateform";
-    }
-    else if (ViewBag.City != null)
-    {
-        ViewBag.Title = $"{ViewBag.City} List";
-        csc = ViewBag.City;
-        mode = "cityform";
-    }
-    else
-    {
-        ViewBag.Title = $"{ViewBag.FormDescription} List";
-        csc = ViewBag.FormName;
-        mode = "form";
-    }
+
+    ViewBag.Title = $"{ViewBag.FormDescription}";
+    csc = ViewBag.FormName;
+    mode = "form";
 }
 
-<div class="full-page-heading">
-    @ViewBag.Title
+<div class="full-page-heading text-center">
+    @Html.Raw(ViewBag.Title)
 </div>
 <div class="post d-flex flex-column-fluid" id="kt_post">
     <!--begin::Container-->
@@ -51,20 +31,23 @@
                     <!--end::Search-->
                 </div>
                 <!--end::Card title-->
-                <!--begin::Card toolbar-->
-                <div class="card-toolbar">
-                    <!--begin::Button-->
-                    <button type="button" class="btn btn-light-primary" onclick="location.href='/sadmin/borrower/@mode/@csc'">
-                        <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
-                        <span class="svg-icon svg-icon-3">
-                            <i class="fa fa-plus"></i>
-                        </span>
-                        <!--end::Svg Icon-->
-                        Add  @ViewBag.FormDescription
-                    </button>
-                    <!--end::Button-->
-                </div>
-                <!--end::Card toolbar-->
+                @if (ViewBag.FormDescription == null || (ViewBag.FormDescription != null && !ViewBag.FormDescription.ToLower().Contains("transaction")))
+                {
+                    <!--begin::Card toolbar-->
+                    <div class="card-toolbar">
+                        <!--begin::Button-->
+                        <button type="button" class="btn btn-light-primary" onclick="location.href='/sadmin/borrower/@mode/@csc'">
+                            <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+                            <span class="svg-icon svg-icon-3">
+                                <i class="fa fa-plus"></i>
+                            </span>
+                            <!--end::Svg Icon-->
+                            Add  @Html.Raw(ViewBag.FormDescription)
+                        </button>
+                        <!--end::Button-->
+                    </div>
+                    <!--end::Card toolbar-->
+                }
             </div>
             <!--end::Card header-->
             <!--begin::Card body-->
@@ -75,11 +58,8 @@
                         <thead>
                             <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                                 <th class="min-w-125px">#</th>
-                                <th>Form ID</th>
+                                <th>Created By</th>
                                 <th>Created At</th>
-                                <th>Status</th>
-                                <th>Data</th>
-
                                 <th class="text-end min-w-50px">Actions</th>
                             </tr>
                         </thead>
@@ -94,9 +74,9 @@
 </div>
 
 <div id="jsonModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="jsonModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: auto; ">
+    <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 80% ">
         <div class="modal-content">
-            <div class="modal-header">        
+            <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -105,7 +85,6 @@
                         <h3 class="mb-1" style="font-weight: 600;">View Data</h3>
                     </div>
                     <div class="card-body" id="jsonData">
-
                     </div>
                 </div>
             </div>
@@ -122,4 +101,49 @@
 <script src="~/js/sadmin/module/user-data.js"></script>
 <script src="~/js/sadmin/module/abi.js"></script>
 <script src="~/js/sadmin/module/contract-address.js"></script>
+<script src="~/js/sadmin/module/loan-data.js"></script>
+<script src="~/js/sadmin/module/dashboard.js"></script>
 
+<script>
+     async function GetShortLendderInfo() {
+        if (typeof loanContract == 'undefined')
+            await checkMetaMaskConnection();
+        else {
+            if (typeof window.ethereum !== 'undefined') {
+                const accounts = await ethereum.request({ method: 'eth_accounts' });
+                if (accounts.length > 0) {
+                    Swal.fire({
+                        title: "Please wait.. we are getting the all information.",
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+                    try {
+                        let isprocess = await loanContract.IsLendder();
+                        if (isprocess) {
+                            let balance = await loanContract.getContractBalance();
+                            if (balance != null) {
+                                PreviousBalance = balance;
+                                document.getElementById('header-smart-contract-balance').textContent = "Smart Contract Balance : " + balance;
+                            } else {
+                                document.getElementById('header-smart-contract-balance').textContent = "Smart Contract Balance : " + 0;
+                            }
+                            let totalborrower = await loanContract.getActiveBorrowers();
+                            if (totalborrower != null) {
+                                document.getElementById('header-total-active-borrow').textContent = "Total Active Borrow : " + totalborrower.length;
+                            }
+                            else {
+                                document.getElementById('header-total-active-borrow').textContent = "Total Active Borrow : " + 0;
+                            }
+                            Swal.close();
+                        }
+                    }
+                    catch {
+                    }
+                }
+            }
+        }
+    }
+</script>

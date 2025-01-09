@@ -32,6 +32,8 @@ namespace Gigras.Software.Cyt.Services
             services.AddScoped<IDynamicUserDataService, DynamicUserDataService>();
             services.AddScoped<ISmartContractAbiService, SmartContractAbiService>();
             services.AddScoped<ISmartContractAddressService, SmartContractAddressService>();
+            services.AddScoped<IBorrowerLoanService, BorrowerLoanService>();
+            services.AddScoped<ILoanDetailsService, LoanDetailsService>();
         }
     }
 }

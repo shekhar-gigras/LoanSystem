@@ -27,6 +27,8 @@ namespace Gigras.Software.Cyt.Repositories
             services.AddScoped<IDynamicUserDataRepository, DynamicUserDataRepository>();
             services.AddScoped<ISmartContractAbiRepository, SmartContractAbiRepository>();
             services.AddScoped<ISmartContractAddressRepository, SmartContractAddressRepository>();
+            services.AddScoped<IBorrowerLoanRepository, BorrowerLoanRepository>();
+            services.AddScoped<ILoanDetailsRepository, LoanDetailsRepository>();
         }
     }
 }

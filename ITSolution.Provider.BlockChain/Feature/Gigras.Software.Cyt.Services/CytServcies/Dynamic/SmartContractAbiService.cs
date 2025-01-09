@@ -30,8 +30,8 @@ namespace Gigras.Software.Cyt.Services.CytServcies
 
         public async Task<List<SmartContractAbi>> GetList()
         {
-            var data = await _SmartContractAbiRepository.GetAllAsync(x => !x.IsDelete);
-            return data;
+            var data = await _SmartContractAbiRepository.GetAllAsync();
+            return data.ToList();
         }
 
         public async Task<SmartContractAbi> SubmitData(Dictionary<string, string> fieldValues)
@@ -43,13 +43,17 @@ namespace Gigras.Software.Cyt.Services.CytServcies
 
         private async Task<SmartContractAbi> Add(Dictionary<string, string> fieldValues)
         {
+            var IsLender = Convert.ToBoolean(fieldValues["IsLender"].ToString());
+
             foreach (var obj in await _SmartContractAbiRepository.GetAllAsync(x => !x.IsDelete && x.IsActive))
             {
                 obj.IsActive = false;
-                obj.IsDelete = true;
+                obj.IsDelete = false;
             }
             var lookup = new SmartContractAbi()
             {
+                Version = fieldValues["Version"].ToString(),
+                IsLender = IsLender,
                 Abi = fieldValues["Abi"].ToString(),
                 CreatedBy = await _cytAdminService.GetUserName(),
                 CreatedAt = DateTime.Now,
@@ -63,7 +67,7 @@ namespace Gigras.Software.Cyt.Services.CytServcies
 
         public async Task<SmartContractAbi> GetData(int id)
         {
-            var data = await _SmartContractAbiRepository.GetByIdAsync(id, x => x.IsActive && !x.IsDelete);
+            var data = await _SmartContractAbiRepository.GetByIdAsync(id);
             return data;
         }
 

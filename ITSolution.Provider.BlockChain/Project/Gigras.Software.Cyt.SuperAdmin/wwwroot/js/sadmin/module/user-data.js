@@ -13,15 +13,12 @@
         });
 
         const jsonSubset = JSON.stringify(jsonSubsetData);
-
-        // Append the user data to the table
-        tbody.append(`
+            // Append the user data to the table
+            tbody.append(`
                     <tr>
                         <td>${user.id}</td>
-                        <td>${user.form?.formName || 'N/A'}</td>
+                        <td>${user.createdBy}</td>
                         <td>${new Date(user.createdAt).toLocaleString()}</td>
-                        <td>${user.isActive ? 'Active' : 'Inactive'}</td>
-                        <td>${jsonSubset}</td>
                         <td>
                             <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 view-json" data-id="${user.id}">
                               <span class="icon">
@@ -59,7 +56,7 @@ function createTableFromJson(jsonData) {
         //}
 
         table += `
-                <div class="col-3 mb-3">
+                <div class="col-12 mb-12">
                     <label><strong>${formattedKey}</strong></label>
                     <p>${formatValue(value)}</p>
                 </div>

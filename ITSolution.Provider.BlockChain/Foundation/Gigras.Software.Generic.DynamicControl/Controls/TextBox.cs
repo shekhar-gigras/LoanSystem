@@ -37,6 +37,16 @@ namespace Gigras.Software.Generic.DynamicControl.Controls
                 {
                     Field.FieldValue = (DateTime.TryParse(Field.FieldValue?.ToString(), out var date) ? date.ToString("yyyy-MM-dd") : string.Empty);
                 }
+                else
+                {
+                    if (Field.FieldValue == null)
+                    {
+                        if (!string.IsNullOrEmpty(Field.FieldType.DefaultValue))
+                        {
+                            Field.FieldValue = Field.FieldType.DefaultValue;
+                        }
+                    }
+                }
                 htmlStringBuilder.AppendLine($@"
                         <div class='{Field.CssClass} mb-3'
                                 {(FieldType == "hidden" ? "style='display:none;'" : string.Empty)}
@@ -48,8 +58,6 @@ namespace Gigras.Software.Generic.DynamicControl.Controls
                            {(Field.FieldType.MaxLength.HasValue ? "maxlength=" + Field.FieldType.MaxLength : string.Empty)}
                              {(Field.FieldType.MinValue.HasValue ? "minvalue=" + Field.FieldType.MinValue : string.Empty)}
                               {(Field.FieldType.MaxValue.HasValue ? "minvalue=" + Field.FieldType.MaxValue : string.Empty)}
-                                 {(!string.IsNullOrEmpty(Field.FieldType.DefaultValue) ? "value=" + Field.FieldType.DefaultValue : string.Empty)}
-
                                  value='{Field.FieldValue ?? string.Empty}'
                             />
                             {validationErrorLabel}

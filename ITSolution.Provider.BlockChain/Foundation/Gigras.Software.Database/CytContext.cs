@@ -28,6 +28,8 @@ public partial class CytContext : DbContext
     public DbSet<DynamicUserData> DynamicUserData { get; set; }
     public DbSet<SmartContractAbi> SmartContractAbi { get; set; }
     public DbSet<SmartContractAddress> SmartContractAddress { get; set; }
+    public DbSet<BorrowerLoan> BorrowerLoan { get; set; }
+    public DbSet<LoanDetails> LoanDetails { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

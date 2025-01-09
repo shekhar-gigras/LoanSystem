@@ -6,39 +6,23 @@ class LoanContract {
         this.contract = new this.web3.eth.Contract(abi, contractAddress);
     }
 
+    async getlendderAddress() {
+        try {
+            let lenderaddress = await this.contract.methods.lender().call();
+            return lenderaddress;
+        } catch {
+            return null;
+        }
+    }
+
     async IsLendder() {
         try {
-            this.showLoader();
             let address = await this.getAddress();
             await this.contract.methods.checkBalanceOfSmartContract().call({
                 from: address // Ensure this is the lender's address
             });
-            console.log('Welcome Lendder:', address);
-            this.hideLoader();
-            //Swal.fire({
-            //    text: "Welcome Lendder",
-            //    icon: "success",
-            //    buttonsStyling: false,
-            //    confirmButtonText: "Ok, got it!",
-            //    customClass: {
-            //        confirmButton: "btn fw-bold btn-primary"
-            //    }
-            //});
             return true;
-        } catch (error) {
-            this.hideLoader();
-            console.error('Error checking is lendder:', error.message);
-            Swal.fire({
-                text: `Please login as a lender`,
-                icon: "error",
-                buttonsStyling: false,
-                confirmButtonText: "Ok, got it!",
-                customClass: {
-                    confirmButton: "btn fw-bold btn-primary"
-                }
-            }).then(() => {
-                location.href = "/sadmin";
-            });
+        } catch  {
             return false;
         }
     }
@@ -49,30 +33,10 @@ class LoanContract {
             const balance = await this.contract.methods.checkBalanceOfSmartContract().call({
                 from: address // Ensure this is the lender's address
             });
-            let balanceEther = this.web3.utils.fromWei(balance, 'ether');
-            console.log('Contract balance:', balanceEther);
-            Swal.fire({
-                text: `Contract Balance is :${balance}`,
-                icon: "success",
-                buttonsStyling: false,
-                confirmButtonText: "Ok, got it!",
-                customClass: {
-                    confirmButton: "btn fw-bold btn-primary"
-                }
-            });
+            //let balanceEther = this.web3.utils.fromWei(balance, 'ether');
             return balance;
-        } catch (error) {
-            console.error('Error getting contract balance:', error.message);
-            Swal.fire({
-                text: `Lender can be use this functionality, Please login as a lender`,
-                icon: "error",
-                buttonsStyling: false,
-                confirmButtonText: "Ok, got it!",
-                customClass: {
-                    confirmButton: "btn fw-bold btn-primary"
-                }
-            });
-            return 0;
+        } catch  {
+            return null;
         }
     }
 
@@ -83,67 +47,23 @@ class LoanContract {
 
             // Call fundContract method
             await this.contract.methods.fundContract()
-                .send({ from: lenderAddress, value: web3.utils.toWei(amount.toString(), 'wei') });
-            console.log('Contract funded successfully!');
-            Swal.fire({
-                text: `Add fund ${amount} Successfully`,
-                icon: "success",
-                buttonsStyling: false,
-                confirmButtonText: "Ok, got it!",
-                customClass: {
-                    confirmButton: "btn fw-bold btn-primary"
-                }
-            });
+                .send({ from: lenderAddress, value: this.web3.utils.toWei(amount.toString(), 'wei') });
             return true
-        } catch (error) {
-            console.error('Error funding contract:', error.message);
-            Swal.fire({
-                text: `Error getting Add fundcntract: :${error.message}`,
-                icon: "error",
-                buttonsStyling: false,
-                confirmButtonText: "Ok, got it!",
-                customClass: {
-                    confirmButton: "btn fw-bold btn-primary"
-                }
-            });
+        } catch  {
             return false;
         }
     }
 
     async changeLender(newLenderAddress) {
         try {
-            this.showLoader("Changing lender...");
             const currentAddress = await this.getAddress();
 
             // Change lender
             await this.contract.methods.changeLender(newLenderAddress).send({
                 from: currentAddress // Only the current lender can call this
             });
-
-            console.log('Lender changed successfully to:', newLenderAddress);
-            Swal.fire({
-                text: `Lender changed successfully to: ${newLenderAddress}`,
-                icon: "success",
-                buttonsStyling: false,
-                confirmButtonText: "Ok, got it!",
-                customClass: {
-                    confirmButton: "btn fw-bold btn-primary"
-                }
-            });
-            this.hideLoader();
             return true;
-        } catch (error) {
-            this.hideLoader();
-            console.error('Error changing lender:', error.message);
-            Swal.fire({
-                text: `Error changing lender: ${error.message}`,
-                icon: "error",
-                buttonsStyling: false,
-                confirmButtonText: "Ok, got it!",
-                customClass: {
-                    confirmButton: "btn fw-bold btn-primary"
-                }
-            });
+        } catch  {
             return false;
         }
     }
@@ -199,29 +119,9 @@ class LoanContract {
             // Convert the balance to Ether for better readability
             let balanceEther = this.web3.utils.fromWei(balanceWei, "ether");
             balanceEther = parseFloat(balanceEther).toFixed(4);
-
-            console.log(`Lender balance: ${balanceEther} ether`);
-            Swal.fire({
-                text: `Lender Balance: ${balanceEther} ether`,
-                icon: "success",
-                buttonsStyling: false,
-                confirmButtonText: "Ok, got it!",
-                customClass: {
-                    confirmButton: "btn fw-bold btn-primary"
-                }
-            });
             return balanceEther;
         } catch (error) {
             console.error('Error fetching lender balance:', error.message);
-            Swal.fire({
-                text: `Error fetching lender balance: ${error.message}`,
-                icon: "error",
-                buttonsStyling: false,
-                confirmButtonText: "Ok, got it!",
-                customClass: {
-                    confirmButton: "btn fw-bold btn-primary"
-                }
-            });
             return null;
         }
     }
@@ -234,21 +134,9 @@ class LoanContract {
             const requestedBorrowers = await this.contract.methods.getRequestedBorrowers().call({
                 from: lenderAddress // Only the lender can access this data
             });
-
-            console.log('Requested Borrowers:', requestedBorrowers);
             return requestedBorrowers;
-        } catch (error) {
-            console.error('Error fetching requested borrowers:', error.message);
-            Swal.fire({
-                text: `Error fetching requested borrowers: ${error.message}`,
-                icon: "error",
-                buttonsStyling: false,
-                confirmButtonText: "Ok, got it!",
-                customClass: {
-                    confirmButton: "btn fw-bold btn-primary"
-                }
-            });
-            return [];
+        } catch  {
+            return null;
         }
     }
 
@@ -381,10 +269,8 @@ class LoanContract {
             const accounts = await this.web3.eth.getAccounts();
             const lenderAddress = accounts[0];
             const activeBorrowers = await this.contract.methods.getActiveBorrowers().call({ from: lenderAddress });
-            console.log('Active borrowers:', activeBorrowers);
             return activeBorrowers;
         } catch (error) {
-            console.error('Error getting active borrowers:', error.message);
             return [];
         }
     }
@@ -437,24 +323,9 @@ class LoanContract {
 
             // Send the transaction to take out funds
             const receipt = await this.contract.methods.takeOutContractFunds().send({ from: lenderAddress });
-
-            // Show success message (could be enhanced with a library like SweetAlert2)
-            console.log("Funds successfully withdrawn:", receipt);
-
-            await Swal.fire({
-                title: "Success!",
-                text: "The funds have been successfully withdrawn.",
-                icon: "success",
-            });
-        } catch (error) {
-            // Handle any errors
-            console.error("Error withdrawing funds:", error.message);
-
-            await Swal.fire({
-                title: "Error!",
-                text: `Failed to withdraw funds: ${error.message}`,
-                icon: "error",
-            });
+            return true;
+        } catch {
+            return false;
         }
     }
 

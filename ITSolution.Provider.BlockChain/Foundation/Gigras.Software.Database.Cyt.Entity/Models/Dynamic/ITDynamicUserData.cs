@@ -19,9 +19,9 @@ namespace Gigras.Software.Database.Cyt.Entity.Models
 
         public DateTime? UpdatedAt { get; set; } = DateTime.Now;
 
-        public int? CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
 
-        public int? UpdatedBy { get; set; }
+        public string? UpdatedBy { get; set; }
 
         public bool IsActive { get; set; } = true;
 

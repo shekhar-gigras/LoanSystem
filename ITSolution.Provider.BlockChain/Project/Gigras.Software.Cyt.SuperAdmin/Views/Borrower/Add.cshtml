@@ -7,6 +7,11 @@
     {
         ViewBag.Title = Model.FormName + " Form";
     }
+    var LoanId =  Model != null && Model!.FieldValues != null &&
+                                (Model.FieldValues.TryGetValue("LoanId", out var value) ||
+                                Model.FieldValues.TryGetValue("LoanId", out value))
+                                ? value?.ToString()
+                                : Guid.NewGuid().ToString();
     int stateid = Model!.StateId == null ? 0 : Model.StateId.Value!;
     // if (Model.NavigationGroup!.ToLower() == "blank")
     // {
@@ -20,39 +25,42 @@
 @if (Model != null)
 {
     <div class="full-page-heading">
-        @Model.FormDescription
+        @Html.Raw(Model.FormDescription)
     </div>
     <div id="meta-container">
         <h1>Login with MetaMask</h1>
-        <button id="loginMetaMaskButton">Login with MetaMask</button>
+        <button id="loginMetaMaskButton">Login For Lender In MetaMask</button>
         <p id="metamaskstatus" class="status-disconnected">Please connect to MetaMask to log in.</p>
     </div>
     <div id="main-container" class="container mt-4">
         @* <h3>@Model.FormDescription</h3> *@
         <form method="post" action="/sadmin/borrower/submit-form" name="frmCreateAccount" id="frmCreateAccount" enctype="multipart/form-data">
-            <input type="hidden" name="SystemFormId" id="SystemFormId" value="@Model.Id" />
-            <input type="hidden" name="UserId" id="UserId" value="@(ViewBag.UserId == null?0:ViewBag.UserId)" />
+            <input type="hidden" name="FormId" id="FormId" value="@Model.Id" />
+            <input type="hidden" name="LoanId" id="LoanId" value="@LoanId" />
             @foreach (var formsection in Model.FormsSections!
-           .Where(x => x.FormFields.Count > 0)   // Filter out sections with no form fields
+           .Where(x => x.FormFields!.Count > 0)   // Filter out sections with no form fields
            .OrderBy(x => x.SortOrder))
             {
                 <div class="card mb-4">
                     <div class="card-header bg-secondary text-white py-3" style="border-radius: 0.5rem 0.5rem 0 0;min-height:0px !important;">
-                        <h3 class="mb-1" style="font-weight: 600;">@formsection.SectionName</h3>
+                        <h3 class="mb-1" style="font-weight: 600;">@Html.Raw(formsection.SectionDescription)</h3>
                         @* <p class="mb-0" style="font-size: 0.9rem; opacity: 0.9;">@formsection.SectionDescription</p> *@
                     </div>
                     <div class="card-body">
                         <div class="row">
                             @foreach (var field in formsection!.FormFields!.OrderBy(x => x.FieldOrder))
                             {
-                                string fieldKey = field.FieldType.FieldName.Replace(" ", "_");
+                                string fieldKey = field.FieldType!.FieldName!.Replace(" ", "_");
                                 field.FieldValue = Model.FieldValues != null &&
                                 (Model.FieldValues.TryGetValue(fieldKey, out var value) ||
                                 Model.FieldValues.TryGetValue(field.FieldType.FieldName, out value))
                                 ? value?.ToString()
                                 : null;
 
-
+                                if (fieldKey == "Margin")
+                                {
+                                    
+                                }
                                 @Html.DynamicHtmlControl(field, context, stateid)
                             }
                         </div>
@@ -88,7 +96,7 @@ else
 
 <script src="~/js/sadmin/validation.js"></script>
 <script src="~/js/sadmin/form.js"></script>
-<script src="~/js/sadmin/module/blockchain.js"></script>
+<script src="~/js/sadmin/module/dashboard.js"></script>
 <script>
     function handleBackButtonClick() {
         // Check if Colorbox is active
@@ -98,6 +106,49 @@ else
         } else {
        // Otherwise, navigate back in history
             window.history.back();
+        }
+    }
+
+
+    async function GetShortLendderInfo() {
+        if (typeof loanContract == 'undefined')
+            await checkMetaMaskConnection();
+        else {
+            if (typeof window.ethereum !== 'undefined') {
+                const accounts = await ethereum.request({ method: 'eth_accounts' });
+                if (accounts.length > 0) {
+                    Swal.fire({
+                        title: "Please wait.. we are getting the all information.",
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+                    try {
+                        let isprocess = await loanContract.IsLendder();
+                        if (isprocess) {
+                            let balance = await loanContract.getContractBalance();
+                            if (balance != null) {
+                                PreviousBalance = balance;
+                                document.getElementById('header-smart-contract-balance').textContent = "Smart Contract Balance : " + balance;
+                            } else {
+                                document.getElementById('header-smart-contract-balance').textContent = "Smart Contract Balance : " + 0;
+                            }
+                            let totalborrower = await loanContract.getActiveBorrowers();
+                            if (totalborrower != null) {
+                                document.getElementById('header-total-active-borrow').textContent = "Total Active Borrow : " + totalborrower.length;
+                            }
+                            else {
+                                document.getElementById('header-total-active-borrow').textContent = "Total Active Borrow : " + 0;
+                            }
+                            Swal.close();
+                        }
+                    }
+                    catch {
+                    }
+                }
+            }
         }
     }
 </script>

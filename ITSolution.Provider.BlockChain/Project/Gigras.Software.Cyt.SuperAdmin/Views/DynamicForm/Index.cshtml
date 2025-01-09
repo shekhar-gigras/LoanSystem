@@ -56,37 +56,15 @@
                                 <th>Country</th>
                                 <th>State</th>
                                 <th>City</th>
-                                 <th>Url</th>
-                               <th>Active</th>
+                                <th>Url</th>
+                                <th>Active</th>
                                 <th class="text-end min-w-100px">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="fw-bold text-gray-600">
-                            @foreach (var field in Model)
+                            @foreach (var field in Model.Where(x => x.Id < 17 || x.Id > 24))
                             {
                                 var url = @field.FormName;
-                                if (field.StateId != null)
-                                {
-                                    if (field.CityId != null)
-                                    {
-                                        url = "city/" + @field.City.CityName;
-                                    }
-                                    else
-                                    {
-                                        url = "state/" + @field.State.StateName;
-                                    }
-                                }
-                                else
-                                {
-                                    if (field.CountryId != null)
-                                    {
-                                        url = "country/" + @field.Country.CountryName;
-                                    }
-                                    else
-                                    {
-                                        url = @field.FormName;
-                                    }
-                                }
                                 <tr>
                                     <td>@field.Id</td>
                                     <td>@field.FormName</td>
@@ -96,7 +74,7 @@
                                     <td>@field.City?.CityName</td>
                                     <td>@(field.IsActive ? "Active" : "Inactive")</td>
                                     <td>
-                                            <a href="/sadmin/borrower/@url" target="_blank">Open Form</a>
+                                        <a href="/sadmin/borrower/@url" target="_blank">Open Form</a>
                                     </td>
                                     <td class="text-end">
                                         <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 copy-btn" data-id="@field.Id" onclick="OpenCopyFormModal(@field.Id)">
