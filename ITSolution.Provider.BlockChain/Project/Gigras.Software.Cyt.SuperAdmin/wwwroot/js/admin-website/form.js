@@ -1,21 +1,26 @@
 ﻿$('#frmCreateAccount').on("submit", async function (e) {
     e.preventDefault(); // Prevent the default form submission
     const formData = new FormData(this); // Collect all form data, including files
-    let isprocess = await loanContract.IsLendder();
-    if (isprocess) {
-        Swal.fire("error", "Please login as a lender", "error")
-    }
-    formData.set("MetaMaskID", await loanContract.getAddress());
-    // Validate form fields (native HTML5 validation)
     if (!this.checkValidity()) {
         Swal.fire("Error", "Please fill out all required fields.", "error");
         return; // Stop further execution
     }
-
-    // Prepare form data, including file inputs
-    const actionUrl = $(this).attr("action"); // Get the form's action URL
     showLoader();
 
+    formData.set("MetaMaskID", await loanContract.getAddress());
+    let loanid = $("#frmCreateAccount").data("loanid");
+
+    let data = await getLoanDetails(loanid, formData);
+    let status = await loanContract.AddUpdateLoanDetail(loanid,data);
+    if (!status) {
+        Swal.fire("Error", "Error to submit the data in smart contract", "error")
+        hideLoader();
+    }  
+    let formgroup = $("#frmCreateAccount").data("formgroup");
+    let formid = $("#frmCreateAccount").data("formid");
+    const baseUrl = `/sadmin/Borrower`;
+    const basedataUrl = `${baseUrl}/${formgroup}/${formid}/${loanid}`;
+    const actionUrl = `${basedataUrl}/submit-form`; // Get the form's action URL
     // Perform the AJAX request
     $.ajax({
         url: actionUrl, // Use the form's action attribute
@@ -42,55 +47,12 @@
     });
 });
 
-// Function to validate TinyMCE editors and set form data
-function validateAndSetTinyMCEEditors(formData) {
-    let isValid = true;
-
-    // Loop through all TinyMCE editors
-    tinymce.editors.forEach(editor => {
-        const editorId = editor.id; // Get the ID of the TinyMCE instance
-        const content = editor.getContent().trim(); // Get the trimmed content
-        const editorElement = document.getElementById(editorId); // Get the original textarea or input
-
-        // Check if the editor has the 'required' attribute
-        if (editorElement.hasAttribute("required")) {
-            const errorMessage = editorElement.getAttribute("data-error") || `Please enter a value for ${editorId}`;
-
-            if (!content) {
-                Swal.fire("Error", errorMessage, "error");
-                isValid = false; // Mark as invalid
-                return; // Skip further processing for this editor
-            }
-        }
-
-        // If valid, add content to formData
-        formData.set(editorId, content);
-    });
-
-    return isValid; // Return validation status
-}
-
 $('#btnRegister').on("keydown", function (e) {
     if (e.key === "Enter") {
         e.preventDefault(); // Prevent default form submission behavior
         $("#frmCreateAccount").trigger('submit'); // Trigger form submission
     }
 });
-
-function showLoader(message = "Please wait...") {
-    Swal.fire({
-        title: message,
-        didOpen: () => {
-            Swal.showLoading();
-        },
-        allowOutsideClick: false,
-        allowEscapeKey: false
-    });
-}
-
-function hideLoader() {
-    Swal.close();
-}
 function deleteRecord(id, module) {
     // Display confirmation dialog using SweetAlert2
     Swal.fire({

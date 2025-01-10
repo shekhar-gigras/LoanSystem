@@ -41,6 +41,9 @@ namespace Gigras.Software.Database.Cyt.Entity.Models
         public int? RangeStart { get; set; }
 
         public int? RangeEnd { get; set; }
+        [MaxLength]
+        public string? JavaScript { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;

@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    var usettype = User.IsInRole("Admin") ? "admin" : "user";
 }
 
 <div id="meta-container">
@@ -7,49 +8,58 @@
     <button id="loginMetaMaskButton">Login For Lender In MetaMask</button>
     <p id="metamaskstatus" class="status-disconnected">Please connect to MetaMask to log in.</p>
 </div>
-<br/>
-<div id="kt_content_container" class="container-xxl dashboard">
+<br />
+<div id="kt_content_container" class="container-xxl dashboard-@usettype">
     <div class="row g-6 g-xl-9">
         <!-- Card 1 -->
-        @await Html.PartialAsync("~/Views/Partial/Dashboard/Change-Lender.cshtml")
+        @if (User.IsInRole("Admin"))
+        {
+            @await Html.PartialAsync("~/Views/Partial/Dashboard/Change-Lender.cshtml")
+        }
         @await Html.PartialAsync("~/Views/Partial/Dashboard/SmartContract-Fund.cshtml")
-        @await Html.PartialAsync("~/Views/Partial/Dashboard/Add-Fund.cshtml")
-        @await Html.PartialAsync("~/Views/Partial/Dashboard/TakeOut-Fund.cshtml")
-        @await Html.PartialAsync("~/Views/Partial/Dashboard/Lender-Balance.cshtml")
+        @if (User.IsInRole("Admin"))
+        {
+            @await Html.PartialAsync("~/Views/Partial/Dashboard/Add-Fund.cshtml")
+            @await Html.PartialAsync("~/Views/Partial/Dashboard/TakeOut-Fund.cshtml")
+            @await Html.PartialAsync("~/Views/Partial/Dashboard/Lender-Balance.cshtml")
+       }
         @await Html.PartialAsync("~/Views/Partial/Dashboard/Active-Borrower.cshtml")
-        @await Html.PartialAsync("~/Views/Partial/Dashboard/Request-Borrower.cshtml")
+        @* @await Html.PartialAsync("~/Views/Partial/Dashboard/Request-Borrower.cshtml") *@
     </div>
 </div>
 <script>
-        document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
         const cards = document.querySelectorAll(".custom-card");
 
         // Predefined colors
         const colors = [
-                "#FF5733", // Red-Orange
+            "#FF5733", // Red-Orange
             "#33FF57", // Green
             "#3357FF", // Blue
             "#F7DC6F", // Yellow
             "#9B59B6", // Purple
-                "#5DADE2", // Light Blue
+            "#5DADE2", // Light Blue
             "#E74C3C", // Red
         ];
 
         // Apply fixed colors to cards
-            cards.forEach((card, index) => {
+        cards.forEach((card, index) => {
             const color = colors[index % colors.length]; // Cycle through colors
             card.style.backgroundColor = color;
         });
     });
 
 </script>
-<script src="~/js/sadmin/module/dashboard/lender-info.js"></script>
-<script src="~/js/sadmin/module/dashboard/smart-contract.js"></script>
-<script src="~/js/sadmin/module/dashboard/change-lender.js"></script>
-<script src="~/js/sadmin/module/dashboard/lender-balance.js"></script>
-<script src="~/js/sadmin/module/dashboard/add-fund.js"></script>
-<script src="~/js/sadmin/module/dashboard/active-borrower.js"></script>
-<script src="~/js/sadmin/module/dashboard/takeout-fund.js"></script>
-<script src="~/js/sadmin/module/dashboard/requestd-borrower.js"></script>
-<script src="~/js/sadmin/module/dashboard.js"></script>
+<script src="~/js/contract/dashboard/lender-info.js"></script>
+<script src="~/js/contract/dashboard/smart-contract.js"></script>
+@if (User.IsInRole("Admin"))
+{
+    <script src="~/js/contract/dashboard/change-lender.js"></script>
+    <script src="~/js/contract/dashboard/add-fund.js"></script>
+    <script src="~/js/contract/dashboard/takeout-fund.js"></script>
+}
+<script src="~/js/contract/dashboard/lender-balance.js"></script>
+<script src="~/js/contract/dashboard/active-borrower.js"></script>
+<script src="~/js/contract/dashboard/requestd-borrower.js"></script>
+<script src="~/js/admin-website/dashboard.js"></script>
 

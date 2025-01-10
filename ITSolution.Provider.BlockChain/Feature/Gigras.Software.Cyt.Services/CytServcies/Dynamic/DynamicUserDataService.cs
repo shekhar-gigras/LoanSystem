@@ -12,6 +12,8 @@ namespace Gigras.Software.Cyt.Services.CytServcies
         // Additional methods for DynamicFormService
         Task<List<DynamicUserData>> GetUserDataList(string csc);
 
+        Task<List<DynamicUserData>> GetUserDataList(int formid);
+
         Task<DynamicUserData> GetUserData(int id);
 
         Task<DynamicUserData> GetUserEditData(int id);
@@ -37,12 +39,22 @@ namespace Gigras.Software.Cyt.Services.CytServcies
         {
             //&& ((userdetail.Roles.Contains("User") && cv.CreatedBy.ToString() == userdetail.UserId) || userdetail.Roles.Contains("Admin"))
             var userdetail = await _cytAdminService.GetUserDetails();
-            var data = await _Repository.GetAllAsync(cv => cv.IsActive && !cv.IsDelete ,
+            var data = await _Repository.GetAllAsync(cv => cv.IsActive && !cv.IsDelete,
                                    new Expression<Func<DynamicUserData, object?>>[] { x => x.Form!, y => y.Form!.Country, y => y.Form!.State, y => y.Form!.City }
                                    );
             data = data.Where(cv =>
                 (cv.Form?.FormName!.Replace(" ", "-")?.ToLower() ?? string.Empty) == csc.ToLower()
             ).ToList();
+            return data;
+        }
+
+        public async Task<List<DynamicUserData>> GetUserDataList(int formid)
+        {
+            //&& ((userdetail.Roles.Contains("User") && cv.CreatedBy.ToString() == userdetail.UserId) || userdetail.Roles.Contains("Admin"))
+            var userdetail = await _cytAdminService.GetUserDetails();
+            var data = await _Repository.GetAllAsync(cv => cv.FormId == formid && cv.IsActive && !cv.IsDelete,
+                                   new Expression<Func<DynamicUserData, object?>>[] { x => x.Form!, y => y.Form!.Country, y => y.Form!.State, y => y.Form!.City }
+                                   );
             return data;
         }
 

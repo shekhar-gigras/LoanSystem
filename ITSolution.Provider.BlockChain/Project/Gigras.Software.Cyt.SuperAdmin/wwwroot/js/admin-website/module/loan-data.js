@@ -1,23 +1,28 @@
 ﻿function DisplayLoanData(tbody, data) {
-    data.fallbackData.forEach(user => {
-        // Parse JSON data and dynamically select fields, excluding specific ones
-        const jsonSubsetData = {};
-        const jsonData = JSON.parse(user.userData || "{}"); // Parse JSON string
-        const keys = Object.keys(jsonData)
-            .filter(key => key !== "SystemFormId" && key !== "UserId") // Exclude unwanted keys
-            .slice(0, 3); // Limit to first 3 keys after filtering
-
-        keys.forEach(key => {
-            const formattedKey = key.replace(/_/g, " ").replace(/^\w/, (c) => c.toUpperCase());
-            jsonSubsetData[formattedKey] = jsonData[key];
-        });
-
-        const jsonSubset = JSON.stringify(jsonSubsetData);
+    const thead = $("#kt_category_table thead");
+    thead.empty(); // Clear existing rows
+    thead.append(`
+                        <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                                <th class="min-w-125px">#</th>
+                                <th>Borrower Name</th>
+                                 <th>Lender Name</th>
+                                 <th>Principal Amount</th>
+                                 <th>Interest Rate</th>
+                                <th>CreateBy</th>
+                                 <th>ModifiedBy</th>
+                              <th class="text-end min-w-50px">Actions</th>
+                            </tr>
+                     `);
+    data.data.forEach(user => {
         // Append the user data to the table
         tbody.append(`
                     <tr>
                         <td>${user.id}</td>
-                        <td>${user.createdBy}</td>
+                        <td>${user.borrowerName}</td>
+                        <td>${user.lenderName}</td>
+                        <td>${user.principalAmount}</td>
+                        <td>${user.interestRate}</td>
+                       <td>${user.createdBy}</td>
                         <td>${new Date(user.createdAt).toLocaleString()}</td>
                         <td>
                             <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 view-json" data-id="${user.id}">
@@ -38,7 +43,11 @@
     });
     $(document).on('click', '.edit-btn', function () {
         const id = $(this).data('id');
-        location.href = `/sadmin/borrower/edit-form/${id}/` + csc;
+        const baseUrl = `/sadmin/Borrower`;
+        let formgroup = $("#kt_category_table").data("formgroup");
+        let formid = $("#kt_category_table").data("formid");
+        const basedataUrl = `${baseUrl}/${formgroup}/${formid}`;
+        location.href = `${basedataUrl}/edit-form/${id}`;
     });
 }
 

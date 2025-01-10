@@ -71,7 +71,7 @@
                 @if (User.IsInRole("User"))
                 {
                     var forms = ViewBag.Forms as List<Form>;
-                    @foreach (var item in forms!.Where(x => !string.IsNullOrEmpty(x.NavigationGroup) && x.NavigationGroup.ToLower() != "blank" && x.NavigationGroup.ToLower() != "admin").Select(x => x.NavigationGroup).Distinct())
+                    @foreach (var item in forms!.Where(x => !string.IsNullOrEmpty(x.NavigationGroup) && x.NavigationGroup.ToLower() != "blank" && x.NavigationGroup.ToLower() != "admin" && x.NavigationGroup.ToLower() != "transaction").Select(x => x.NavigationGroup).Distinct())
                     {
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                             <span class="menu-link">
@@ -84,9 +84,9 @@
                             <div class="menu-sub menu-sub-accordion menu-active-bg">
                                 @foreach (var childtem in forms!.Where(x => x.NavigationGroup == item).OrderBy(x => x.FormName))
                                 {
-                                    var url = childtem.FormName;
+                                    var url = childtem.FormName!.Replace(" ","-");
                                     <div class="menu-item">
-                                        <a class="menu-link" href="/sadmin/borrower/@url">
+                                        <a class="menu-link" href="/sadmin/borrower/@childtem.FormGroup/@url">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -101,7 +101,7 @@
                 @if (User.IsInRole("Admin"))
                 {
                     var forms = ViewBag.Forms as List<Form>;
-                    @foreach (var item in forms!.Where(x => !string.IsNullOrEmpty(x.NavigationGroup) && (x.NavigationGroup.ToLower() == "admin" || x.NavigationGroup.ToLower() == "transaction")).Select(x => x.NavigationGroup).Distinct())
+                    @foreach (var item in forms!.Where(x => !string.IsNullOrEmpty(x.NavigationGroup) && (x.NavigationGroup.ToLower() == "admin" || x.NavigationGroup.ToLower() == "transaction" || x.FormGroup!.ToLower() == "aau" || x.FormGroup!.ToLower() == "a")).Select(x => x.NavigationGroup).Distinct())
                     {
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                             <span class="menu-link">
@@ -114,31 +114,9 @@
                             <div class="menu-sub menu-sub-accordion menu-active-bg">
                                 @foreach (var childtem in forms!.Where(x => x.NavigationGroup == item).OrderBy(x => x.FormName))
                                 {
-                                    var url = childtem.FormName;
-                                    if (childtem.StateId != null && childtem.State != null)
-                                    {
-                                        if (childtem.CityId != null && childtem.City != null)
-                                        {
-                                            url = "city/" + childtem.City!.CityName;
-                                        }
-                                        else
-                                        {
-                                            url = "state/" + childtem.State!.StateName;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (childtem.CountryId != null && childtem.Country != null)
-                                        {
-                                            url = "country/" + childtem.Country!.CountryName;
-                                        }
-                                        else
-                                        {
-                                            url = childtem.FormName;
-                                        }
-                                    }
+                                    var url = childtem.FormName!.Replace(" ", "-");
                                     <div class="menu-item">
-                                        <a class="menu-link" href="/sadmin/borrower/@url">
+                                        <a class="menu-link" href="/sadmin/borrower/@childtem.FormGroup/@url">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>

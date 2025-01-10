@@ -9,6 +9,7 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
 {
     [Route("sadmin")]
     [Authorize]
+    [Authorize(Roles = "Admin")] // Specify multiple roles here
     public class DynamicFieldTypesController : BaseController
     {
         private readonly IDynamicFieldTypeService _dynamicFieldTypeService;

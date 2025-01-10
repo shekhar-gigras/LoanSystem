@@ -3,23 +3,20 @@
 @inject Gigras.Software.Database.CytContext context
 @model Form
 @{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
     if (Model != null)
     {
         ViewBag.Title = Model.FormName + " Form";
     }
-    var LoanId =  Model != null && Model!.FieldValues != null &&
+    var LoanId = Model != null && Model!.FieldValues != null &&
                                 (Model.FieldValues.TryGetValue("LoanId", out var value) ||
                                 Model.FieldValues.TryGetValue("LoanId", out value))
                                 ? value?.ToString()
                                 : Guid.NewGuid().ToString();
     int stateid = Model!.StateId == null ? 0 : Model.StateId.Value!;
-    // if (Model.NavigationGroup!.ToLower() == "blank")
-    // {
-    //     Layout = "~/Views/Shared/_BlankLayout.cshtml";
-    // }
 }
 <style>
-    
+
 </style>
 
 @if (Model != null)
@@ -27,16 +24,17 @@
     <div class="full-page-heading">
         @Html.Raw(Model.FormDescription)
     </div>
-    <div id="meta-container">
-        <h1>Login with MetaMask</h1>
-        <button id="loginMetaMaskButton">Login For Lender In MetaMask</button>
-        <p id="metamaskstatus" class="status-disconnected">Please connect to MetaMask to log in.</p>
-    </div>
+    @if (Model.IsMetaMaskRequired)
+    {
+        <div id="meta-container">
+            <h1>Login with MetaMask</h1>
+            <button id="loginMetaMaskButton">Login In MetaMask</button>
+            <p id="metamaskstatus" class="status-disconnected">Please connect to MetaMask to log in.</p>
+        </div>
+    }
     <div id="main-container" class="container mt-4">
         @* <h3>@Model.FormDescription</h3> *@
-        <form method="post" action="/sadmin/borrower/submit-form" name="frmCreateAccount" id="frmCreateAccount" enctype="multipart/form-data">
-            <input type="hidden" name="FormId" id="FormId" value="@Model.Id" />
-            <input type="hidden" name="LoanId" id="LoanId" value="@LoanId" />
+        <form method="post" action="" data-formgroup="@Model.FormGroup" name="frmCreateAccount" id="frmCreateAccount" data-formid="@Model.Id" data-loanid="@LoanId" enctype="multipart/form-data">
             @foreach (var formsection in Model.FormsSections!
            .Where(x => x.FormFields!.Count > 0)   // Filter out sections with no form fields
            .OrderBy(x => x.SortOrder))
@@ -59,7 +57,7 @@
 
                                 if (fieldKey == "Margin")
                                 {
-                                    
+
                                 }
                                 @Html.DynamicHtmlControl(field, context, stateid)
                             }
@@ -93,66 +91,6 @@ else
 {
     <h3>No Form Found</h3>
 }
-
-<script src="~/js/sadmin/validation.js"></script>
-<script src="~/js/sadmin/form.js"></script>
-<script src="~/js/sadmin/module/dashboard.js"></script>
-<script>
-    function handleBackButtonClick() {
-        // Check if Colorbox is active
-        if (typeof $.colorbox !== "undefined" && $("#cboxOverlay").is(":visible")) {
-            // If Colorbox is active, close it
-            parent.closeColorbox()
-        } else {
-       // Otherwise, navigate back in history
-            window.history.back();
-        }
-    }
-
-
-    async function GetShortLendderInfo() {
-        if (typeof loanContract == 'undefined')
-            await checkMetaMaskConnection();
-        else {
-            if (typeof window.ethereum !== 'undefined') {
-                const accounts = await ethereum.request({ method: 'eth_accounts' });
-                if (accounts.length > 0) {
-                    Swal.fire({
-                        title: "Please wait.. we are getting the all information.",
-                        didOpen: () => {
-                            Swal.showLoading();
-                        },
-                        allowOutsideClick: false,
-                        allowEscapeKey: false
-                    });
-                    try {
-                        let isprocess = await loanContract.IsLendder();
-                        if (isprocess) {
-                            let balance = await loanContract.getContractBalance();
-                            if (balance != null) {
-                                PreviousBalance = balance;
-                                document.getElementById('header-smart-contract-balance').textContent = "Smart Contract Balance : " + balance;
-                            } else {
-                                document.getElementById('header-smart-contract-balance').textContent = "Smart Contract Balance : " + 0;
-                            }
-                            let totalborrower = await loanContract.getActiveBorrowers();
-                            if (totalborrower != null) {
-                                document.getElementById('header-total-active-borrow').textContent = "Total Active Borrow : " + totalborrower.length;
-                            }
-                            else {
-                                document.getElementById('header-total-active-borrow').textContent = "Total Active Borrow : " + 0;
-                            }
-                            Swal.close();
-                        }
-                    }
-                    catch {
-                    }
-                }
-            }
-        }
-    }
-</script>
-
 <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:100%;">
         <div class="modal-content">
@@ -168,3 +106,12 @@ else
         </div>
     </div>
 </div>
+
+@if (Model.IsMetaMaskRequired)
+{
+    <script src="~/js/contract/dashboard/lender-info.js"></script>
+    <script src="~/js/admin-website/website.js"></script>
+    <script src="~/js/admin-website/loan-insert-blockchain.js"></script>
+}
+<script src="~/js/admin-website/validation.js"></script>
+<script src="~/js/admin-website/form.js"></script>

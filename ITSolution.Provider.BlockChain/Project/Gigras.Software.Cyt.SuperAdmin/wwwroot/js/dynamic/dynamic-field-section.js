@@ -239,33 +239,47 @@ function toggleDeleteSection(id, isDelete) {
 }
 
 function toggleActiveSection(id) {
-    // Show the loader
+    // Ask for confirmation
     Swal.fire({
-        title: 'Processing...',
-        text: 'Please wait while we update the status.',
-        allowOutsideClick: false,
-        didOpen: () => {
-            Swal.showLoading();
+        title: 'Are you sure?',
+        text: 'Do you want to toggle the active status of this record?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, toggle it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show the loader
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we update the status.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // Make a request to toggle the active state
+            fetch(`/sadmin/dynamic-form-section-toggle-active/${id}`, {
+                method: 'GET'
+            })
+                .then(data => {
+                    Swal.fire({
+                        title: "Success",
+                        text: "Record active/inactive successfully!",
+                        icon: "success",
+                        confirmButtonText: "OK"
+                    }).then(() => {
+                        const formId = $("#FormId").val();
+                        loadSections(formId); // Reload sections to reflect changes
+                    });
+                })
+                .catch(error => {
+                    console.error('Error toggling active status:', error);
+                    Swal.fire("Error", "Unable to toggle active status. Please try again.", "error");
+                });
         }
     });
-
-    // Make a request to toggle the active state
-    fetch(`/sadmin/dynamic-form-section-toggle-active/${id}`, {
-        method: 'GET'
-    })
-        .then(data => {
-            Swal.fire({
-                title: "Success",
-                text: "Record active/inactive successfully!",
-                icon: "success",
-                confirmButtonText: "OK"
-            }).then(() => {
-                const formId = $("#FormId").val();
-                loadSections(formId); // Reload sections to reflect changes
-            });
-        })
-        .catch(error => {
-            console.error('Error toggling active status:', error);
-            Swal.fire("Error", "Unable to toggle active status. Please try again.", "error");
-        });
 }

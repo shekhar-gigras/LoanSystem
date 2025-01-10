@@ -44,6 +44,10 @@ namespace Gigras.Software.Generic.DynamicControl.Controls
                         {validationString}
                         />{Field.FieldValue ?? string.Empty}</textarea>
                         {validationErrorLabel}
+                        {(string.IsNullOrEmpty(Field.FieldType.JavaScript) ? string.Empty : $@"
+                            <script>
+                                {Field.FieldType.JavaScript}
+                           </script>")}
                         {(string.IsNullOrEmpty(Field.JavaScript) ? string.Empty : $@"
                         <script>
                             {Field.JavaScript}

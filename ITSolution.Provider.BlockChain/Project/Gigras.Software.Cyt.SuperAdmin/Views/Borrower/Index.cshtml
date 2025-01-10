@@ -1,15 +1,26 @@
-﻿@{
+﻿@using Gigras.Software.Database.Cyt.Entity.Models
+@model Form
+@{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
     var csc = "";
     var mode = "";
 
-    ViewBag.Title = $"{ViewBag.FormDescription}";
-    csc = ViewBag.FormName;
+    ViewBag.Title = $"{Model.FormDescription}";
+    csc = Model.FormName;
     mode = "form";
 }
 
 <div class="full-page-heading text-center">
     @Html.Raw(ViewBag.Title)
 </div>
+@if (Model.IsMetaMaskRequired)
+{
+    <div id="meta-container">
+        <h1>Login with MetaMask</h1>
+        <button id="loginMetaMaskButton">Login In MetaMask</button>
+        <p id="metamaskstatus" class="status-disconnected">Please connect to MetaMask to log in.</p>
+    </div>
+}
 <div class="post d-flex flex-column-fluid" id="kt_post">
     <!--begin::Container-->
     <div id="kt_content_container" class="container-xxl">
@@ -31,18 +42,18 @@
                     <!--end::Search-->
                 </div>
                 <!--end::Card title-->
-                @if (ViewBag.FormDescription == null || (ViewBag.FormDescription != null && !ViewBag.FormDescription.ToLower().Contains("transaction")))
+                @if (ViewBag.FormDescription == null || (Model.FormDescription != null && !Model.FormDescription!.ToLower().Contains("transaction")))
                 {
                     <!--begin::Card toolbar-->
                     <div class="card-toolbar">
                         <!--begin::Button-->
-                        <button type="button" class="btn btn-light-primary" onclick="location.href='/sadmin/borrower/@mode/@csc'">
+                        <button type="button" class="btn btn-light-primary" onclick="location.href='/sadmin/borrower/@Model.FormGroup/@mode/@csc'">
                             <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
                             <span class="svg-icon svg-icon-3">
                                 <i class="fa fa-plus"></i>
                             </span>
                             <!--end::Svg Icon-->
-                            Add  @Html.Raw(ViewBag.FormDescription)
+                            Add  @Html.Raw(Model.FormDescription)
                         </button>
                         <!--end::Button-->
                     </div>
@@ -54,7 +65,7 @@
             <div class="card-body pt-0">
                 <!--begin::Table-->
                 <div class="table-responsive">
-                    <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_category_table">
+                    <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_category_table" data-formgroup="@Model.FormGroup" data-formid="@Model.Id">
                         <thead>
                             <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                                 <th class="min-w-125px">#</th>
@@ -97,53 +108,13 @@
 <script>
     let csc = '@csc';
 </script>
-<script src="~/js/sadmin/borrower.js"></script>
-<script src="~/js/sadmin/module/user-data.js"></script>
-<script src="~/js/sadmin/module/abi.js"></script>
-<script src="~/js/sadmin/module/contract-address.js"></script>
-<script src="~/js/sadmin/module/loan-data.js"></script>
-<script src="~/js/sadmin/module/dashboard.js"></script>
-
-<script>
-     async function GetShortLendderInfo() {
-        if (typeof loanContract == 'undefined')
-            await checkMetaMaskConnection();
-        else {
-            if (typeof window.ethereum !== 'undefined') {
-                const accounts = await ethereum.request({ method: 'eth_accounts' });
-                if (accounts.length > 0) {
-                    Swal.fire({
-                        title: "Please wait.. we are getting the all information.",
-                        didOpen: () => {
-                            Swal.showLoading();
-                        },
-                        allowOutsideClick: false,
-                        allowEscapeKey: false
-                    });
-                    try {
-                        let isprocess = await loanContract.IsLendder();
-                        if (isprocess) {
-                            let balance = await loanContract.getContractBalance();
-                            if (balance != null) {
-                                PreviousBalance = balance;
-                                document.getElementById('header-smart-contract-balance').textContent = "Smart Contract Balance : " + balance;
-                            } else {
-                                document.getElementById('header-smart-contract-balance').textContent = "Smart Contract Balance : " + 0;
-                            }
-                            let totalborrower = await loanContract.getActiveBorrowers();
-                            if (totalborrower != null) {
-                                document.getElementById('header-total-active-borrow').textContent = "Total Active Borrow : " + totalborrower.length;
-                            }
-                            else {
-                                document.getElementById('header-total-active-borrow').textContent = "Total Active Borrow : " + 0;
-                            }
-                            Swal.close();
-                        }
-                    }
-                    catch {
-                    }
-                }
-            }
-        }
-    }
-</script>
+<script src="~/js/admin-website/borrower.js"></script>
+<script src="~/js/admin-website/module/abi.js"></script>
+<script src="~/js/admin-website/module/contract-address.js"></script>
+<script src="~/js/admin-website/module/loan-data.js"></script>
+<script src="~/js/admin-website/module/user-data.js"></script>
+@if (Model.IsMetaMaskRequired)
+{
+    <script src="~/js/contract/dashboard/lender-info.js"></script>
+    <script src="~/js/admin-website/website.js"></script>
+}
