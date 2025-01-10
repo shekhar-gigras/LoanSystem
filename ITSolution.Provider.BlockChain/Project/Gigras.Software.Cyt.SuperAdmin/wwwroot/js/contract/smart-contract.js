@@ -17,12 +17,11 @@ class LoanContract {
 
     async IsLendder() {
         try {
-            let address = await this.getAddress();
-            await this.contract.methods.checkBalanceOfSmartContract().call({
-                from: address // Ensure this is the lender's address
-            });
-            return true;
-        } catch  {
+            let address = (await this.getAddress()).toLowerCase();
+            let lenderAddress = (await this.contract.methods.lender().call()).toLowerCase();
+
+            return address === lenderAddress;
+        } catch {
             return false;
         }
     }
@@ -35,7 +34,7 @@ class LoanContract {
             });
             //let balanceEther = this.web3.utils.fromWei(balance, 'ether');
             return balance;
-        } catch  {
+        } catch {
             return null;
         }
     }
@@ -49,7 +48,7 @@ class LoanContract {
             await this.contract.methods.fundContract()
                 .send({ from: lenderAddress, value: this.web3.utils.toWei(amount.toString(), 'wei') });
             return true
-        } catch  {
+        } catch {
             return false;
         }
     }
@@ -63,7 +62,7 @@ class LoanContract {
                 from: currentAddress // Only the current lender can call this
             });
             return true;
-        } catch  {
+        } catch {
             return false;
         }
     }
@@ -135,7 +134,7 @@ class LoanContract {
                 from: lenderAddress // Only the lender can access this data
             });
             return requestedBorrowers;
-        } catch  {
+        } catch {
             return null;
         }
     }
@@ -275,9 +274,6 @@ class LoanContract {
         }
     }
 
-
-
-
     async repayLoan(borrowerAddress, repaymentAmount) {
         try {
             const accounts = await this.web3.eth.getAccounts();
@@ -329,10 +325,139 @@ class LoanContract {
         }
     }
 
+    async AddCommonLoanDetails(data) {
+        try {
+            const currentAddress = await this.getAddress();
+
+            // Change lender
+            await this.contract.methods.setCommonAndInterestDetails(
+                data.loanId,
+                data.emiPaymentStartDate,
+                data.principalAmount,
+                data.fixedInterestRate,
+                data.monthlyPaymentAmount,
+                data.maturityDate,
+                data.emiPaymentDay,
+                data.interestRateChangeDate,
+                data.lenderName,
+                data.borrowerName
+            ).send({
+                from: currentAddress // Only the current lender can call this
+            });
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    async AddPaymentAndLateLoanDetails(data) {
+        try {
+            const currentAddress = await this.getAddress();
+
+            // Change lender
+            await this.contract.methods.setPaymentAndLateDetails(
+                data.loanId,
+                data.latePaymentGracePeriod,
+                data.lateChargePercentage,
+                data.margin,
+                data.currentIndex,
+                data.maxInterestRateAtFirstChange,
+                data.minInterestRateAtFirstChange,
+                data.maxInterestRateAfterChange,
+                data.minInterestRateAfterChange
+            ).send({
+                from: currentAddress // Only the current lender can call this
+            });
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    async addOtherLoanDetails(data) {
+        try {
+            const currentAddress = await this.getAddress();
+
+            // Change lender
+            await this.contract.methods.setAdjustableInterestRateDetails(
+                data.loanId,
+                data.noteDate,
+                data.city,
+                data.state,
+                data.propertyAddress,
+                data.paymentLocation
+            ).send({
+                from: currentAddress // Only the current lender can call this
+            });
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    async AddUpdateLoanDetail(loanid, data) {
+        try {
+            await this.AddCommonLoanDetails(data);
+            //await this.AddPaymentAndLateLoanDetails(data)
+            //await this.addOtherLoanDetails(data)
+            return true;
+        } catch {
+            return null;
+        }
+    }
+
+    async getLoanInfo(loanid) {
+        try {
+            const currentAddress = await this.getAddress();
+
+            // Change lender
+            let objDetail = await this.contract.methods.getLoanDetails(loanid).call({
+                from: currentAddress // Only the current lender can call this
+            });
+            return objDetail;
+        } catch {
+            return null;
+        }
+    }
+
+    async getLoanIds() {
+        try {
+            const currentAddress = await this.getAddress();
+
+            // Change lender
+            let objDetail = await this.contract.methods.getAllLoanIds().call({
+                from: currentAddress // Only the current lender can call this
+            });
+            let distinctObjDetail = [...new Set(objDetail)];
+
+            return distinctObjDetail;
+        } catch {
+            return null;
+        }
+    }
+
+    async RemoveLoan(loanid) {
+        try {
+            const currentAddress = await this.getAddress();
+
+            // Change lender
+            let objDetail = await this.contract.methods.deleteLoan(loanid).send({
+                from: currentAddress // Only the current lender can call this
+            });
+            return objDetail;
+        } catch {
+            return null;
+        }
+    }
+
     async getAddress() {
-        const accounts = await this.web3.eth.getAccounts();
-        const Address = accounts[0];
-        return Address;
+        try {
+            const accounts = await this.web3.eth.getAccounts();
+            const Address = accounts[0];
+            return Address;
+        } catch {
+            return null;
+        }
     }
 
     async showLoader(message = "Please wait...") {

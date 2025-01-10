@@ -87,6 +87,7 @@ namespace Gigras.Software.Cyt.Services.CytServcies
                 existingFieldType.Steps = Math.Round(fieldType.Steps ?? 0, 4);
 
                 existingFieldType.BlockChainFieldId = fieldType.BlockChainFieldId;
+                existingFieldType.JavaScript = fieldType.JavaScript;
                 existingFieldType.FieldTypeOptionId = fieldType.FieldTypeOptionId;
                 existingFieldType.FieldName = fieldType.FieldName;
                 existingFieldType.FieldDescription = fieldType.FieldDescription;

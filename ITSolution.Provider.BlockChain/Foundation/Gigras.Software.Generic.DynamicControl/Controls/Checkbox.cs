@@ -108,6 +108,10 @@ namespace Gigras.Software.Generic.DynamicControl.Controls
                                     </div>
                             </div>
                     </div>
+                    {(string.IsNullOrEmpty(Field.FieldType.JavaScript) ? string.Empty : $@"
+                        <script>
+                            {Field.FieldType.JavaScript}
+                        </script>")}
                 ");
                 }
             }

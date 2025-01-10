@@ -10,6 +10,10 @@ namespace Gigras.Software.Cyt.Services.CytServcies
     {
         // Additional methods for DynamicFormService
         Task<LoanDetails> SubmitData(Dictionary<string, string> fieldValues);
+
+        Task<List<LoanDetails>> GetList();
+        Task<LoanDetails> GetData(int id);
+        Task<LoanDetails> GetEditData(int id);
     }
 
     public class LoanDetailsService : GenericCytService<LoanDetails>, ILoanDetailsService
@@ -27,7 +31,7 @@ namespace Gigras.Software.Cyt.Services.CytServcies
         {
             string loanid = fieldValues["LoanId"].ToString();
 
-            return await Add(loanid,fieldValues);
+            return await Add(loanid, fieldValues);
         }
 
         private async Task<LoanDetails> Add(string loanid, Dictionary<string, string> fieldValues)
@@ -54,6 +58,24 @@ namespace Gigras.Software.Cyt.Services.CytServcies
                 await _LoanDetailsRepository.UpdateAsync(obj);
                 return obj;
             }
+        }
+
+        public async Task<List<LoanDetails>> GetList()
+        {
+            var data = await _LoanDetailsRepository.GetAllAsync();
+            return data.ToList();
+        }
+
+        public async Task<LoanDetails> GetData(int id)
+        {
+            var data = await _LoanDetailsRepository.GetByIdAsync(id);
+            return data;
+        }
+
+        public async Task<LoanDetails> GetEditData(int id)
+        {
+            var data = await GetData(id);
+            return data;
         }
         // Additional methods specific to DynamicForm
     }

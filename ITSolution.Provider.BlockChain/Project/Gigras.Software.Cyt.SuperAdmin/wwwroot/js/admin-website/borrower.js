@@ -7,7 +7,6 @@ let KTCategoryList = (function () {
             let tableElement = document.querySelector("#kt_category_table");
             if (tableElement) {
                 // Parse date and set data-order attribute for sorting
-                let rows = tableElement.querySelectorAll("tbody tr");
                 // Initialize DataTable
                 dataTable = $(tableElement).DataTable({
                     info: false,
@@ -55,29 +54,16 @@ let FieldArray = [
     "UpdatedBy"
 ];
 $(document).ready(function () {
-    const baseUrl = "/sadmin/Borrower";
 
-    // Function to show SweetAlert2 loading spinner
-    function showLoader(message = "Please wait...") {
-        Swal.fire({
-            title: message,
-            didOpen: () => {
-                Swal.showLoading();
-            },
-            allowOutsideClick: false,
-            allowEscapeKey: false
-        });
-    }
-
-    // Function to hide SweetAlert2 loading spinner
-    function hideLoader() {
-        Swal.close();
-    }
+    const baseUrl = `/sadmin/Borrower`;
 
     // Fetch and display all user data
     function loadUserData() {
+        let formgroup = $("#kt_category_table").data("formgroup");
+        let formid = $("#kt_category_table").data("formid");
+        const basedataUrl = `${baseUrl}/${formgroup}/${formid}`;
         showLoader("Loading Data..."); // Show loader
-        $.get(baseUrl + "/get-userdata-list?csc=" + csc, function (data) {
+        $.get(basedataUrl + "/get-userdata-list", function (data) {
             const tbody = $("#kt_category_table tbody");
             tbody.empty(); // Clear existing rows
             if (data.entity == "smartcontractabi") {
@@ -86,10 +72,10 @@ $(document).ready(function () {
             else if (data.entity == "smartcontractaddress") {
                 DisplayContractAddressData(tbody, data);
             }
-            else if (data.entity!= null && data.entity.toLowerCase() == "loandetails") {
+            else if (data.entity != null && data.entity.toLowerCase() == "loandetails") {
                 DisplayLoanData(tbody, data);
             }
-            else if (data.fallbackData.length > 0) {
+            else if (data != "" && data.fallbackData.length > 0) {
                 DisplayUserData(tbody, data.fallbackData)
             }
             KTCategoryList.init();
@@ -108,9 +94,12 @@ $(document).ready(function () {
     // Fetch JSON data and display in modal
     $(document).on("click", ".view-json", function () {
         const id = $(this).data("id");
-        showLoader("Loading Data..."); // Show loader while loading JSON data
+        let formgroup = $("#kt_category_table").data("formgroup");
+        let formid = $("#kt_category_table").data("formid");
+        const basedataUrl = `${baseUrl}/${formgroup}/${formid}`;
+       showLoader("Loading Data..."); // Show loader while loading JSON data
 
-        $.get(`${baseUrl}/get-user-data?id=${id}&csc=` + csc, function (data) {
+        $.get(`${basedataUrl}/get-user-data?id=${id}`, function (data) {
             const jsonData = JSON.parse(data); // Parse JSON data
             let table = "";
             if (csc == "SmartContractABI") {

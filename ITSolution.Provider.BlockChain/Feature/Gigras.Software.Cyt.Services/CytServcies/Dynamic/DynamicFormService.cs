@@ -12,6 +12,7 @@ namespace Gigras.Software.Cyt.Services.CytServcies
         Task<Form> GetForm(string mode, string formname);
 
         Task<Form> GetForm(string formname);
+        Task<Form> GetForm(int formid);
     }
 
     public class DynamicFormService : GenericCytService<Form>, IDynamicFormService
@@ -77,6 +78,35 @@ namespace Gigras.Software.Cyt.Services.CytServcies
                             (f.State!.StateName!.Replace(" ", "-") == formname) ||
                             (f.City!.CityName!.Replace(" ", "-") == formname)
                         )  // Apply your filtering criteria
+                    .Include(f => f.FormsSections!.Where(x => !x.IsDelete && x.IsActive))     // Include the sections for the form
+                        .ThenInclude(fs => fs.FormFields!.Where(x => !x.IsDelete && x.IsActive))  // Include the form fields for each section
+                            .ThenInclude(fss => fss.FieldType)
+                                .ThenInclude(fsss => fsss!.FieldTypeValidations!.Where(x => !x.IsDelete && x.IsActive))
+                                    .ThenInclude(x => x.FieldValidation)
+               .FirstOrDefaultAsync();
+            if (form != null)
+            {
+                // Load FieldOption and FieldTypeValidations separately
+                foreach (var section in form.FormsSections!)
+                {
+                    foreach (var fieldType in from formField in section.FormFields
+                                              let fieldType = formField.FieldType
+                                              select fieldType)
+                    {
+                        // Load FieldOption
+                        await _context.Entry(fieldType)
+                                                    .Reference(f => f.FieldOption) // Load FieldOption
+                                                    .LoadAsync();// Load the FieldOption and its FieldOptionValues
+                    }
+                }
+            }
+
+            return form;
+        }
+        public async Task<Form> GetForm(int formid)
+        {
+            var form = await _context.DynamicForms
+                        .Where(f =>f.Id== formid)  // Apply your filtering criteria
                     .Include(f => f.FormsSections!.Where(x => !x.IsDelete && x.IsActive))     // Include the sections for the form
                         .ThenInclude(fs => fs.FormFields!.Where(x => !x.IsDelete && x.IsActive))  // Include the form fields for each section
                             .ThenInclude(fss => fss.FieldType)

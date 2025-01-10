@@ -76,9 +76,9 @@
                                                 <i class="fas fa-pencil-alt"></i>
                                             </span>
                                         </button>
-                                        <!-- Delete Button -->
+                                        <!-- Delete/Retrieve Button -->
                                         <button class="btn btn-icon btn-active-light-primary w-30px h-30px"
-                                                onclick="if(confirm('Are you sure you want to delete this item?')) location.href='@Url.Action("Delete", new { id = field.Id, isDelete = !field.IsDelete })'">
+                                                onclick="confirmDeleteOrRetrieve('@Url.Action("Delete", new { id = field.Id, isDelete = !field.IsDelete })', @(field.IsDelete ? "true" : "false"))">
                                             <span class="icon">
                                                 <i class="@(field.IsDelete ? "fas fa-trash-alt text-danger" : "fas fa-trash-alt text-success")"></i>
                                             </span>
@@ -86,7 +86,7 @@
 
                                         <!-- Toggle Status Button -->
                                         <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3"
-                                                onclick="location.href='@Url.Action("ToggleFieldTypeStatus", new { id = field.Id, isActive = !field.IsActive })'">
+                                                onclick="confirmToggle('@Url.Action("ToggleFieldTypeStatus", new { id = field.Id, isActive = !field.IsActive })')">
                                             <span class="icon">
                                                 <i class="@(field.IsActive ? "fas fa-check-circle text-success" : "fas fa-times-circle text-danger")"></i>
                                             </span>
@@ -103,5 +103,4 @@
         </div>
     </div>
 </div>
-<script src="~/js/sadmin/grid.js"></script>
-<script src="~/js/sadmin/dynamic.js"></script>
+<script src="~/js/dynamic/dynamic-option.js"></script>

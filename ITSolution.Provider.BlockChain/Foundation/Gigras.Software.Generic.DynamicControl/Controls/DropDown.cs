@@ -104,10 +104,14 @@ namespace Gigras.Software.Generic.DynamicControl.Controls
                             <option></option>
                             {optionStringBuilder}
                         </select>
+                        {(string.IsNullOrEmpty(Field.FieldType.JavaScript) ? string.Empty : $@"
+                            <script>
+                                {Field.FieldType.JavaScript}
+                           </script>")}
                         {(string.IsNullOrEmpty(Field.JavaScript) ? string.Empty : $@"
                             <script>
                                 {Field.JavaScript}
-                            </script>")}
+                           </script>")}
                     </div>
                 ");
                 }

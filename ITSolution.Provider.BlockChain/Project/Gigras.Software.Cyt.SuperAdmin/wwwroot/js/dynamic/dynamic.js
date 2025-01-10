@@ -62,19 +62,42 @@ $(document).ready(function () {
     });
 
 });
-// Function to show SweetAlert2 loading spinner
-function showLoader(message = "Please wait...") {
+
+// SweetAlert for Delete/Retrieve Confirmation
+function confirmDeleteOrRetrieve(url, isDelete) {
+    const deleteAction = isDelete === true; // Convert string to boolean
     Swal.fire({
-        title: message,
-        didOpen: () => {
-            Swal.showLoading();
-        },
-        allowOutsideClick: false,
-        allowEscapeKey: false
+        title: 'Are you sure?',
+        text: deleteAction ? 'Do you really want to retrieve this item?' : 'Do you really want to delete this item?',
+        icon: deleteAction ? 'question' : 'warning',
+        showCancelButton: true,
+        confirmButtonColor: deleteAction ? '#3085d6' : '#d33',
+        cancelButtonColor: '#d33',
+        confirmButtonText: deleteAction ? 'Yes, retrieve it!' : 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
     });
 }
 
-// Function to hide SweetAlert2 loading spinner
-function hideLoader() {
-    Swal.close();
+
+// SweetAlert for Toggle Status Confirmation
+function confirmToggle(url) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you want to toggle the status of this item?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, toggle it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+    });
 }
+

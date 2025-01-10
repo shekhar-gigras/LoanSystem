@@ -1,4 +1,23 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿// Function to show SweetAlert2 loading spinner
+function showLoader(message = "Please wait...") {
+    Swal.fire({
+        title: message,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: false,
+        allowEscapeKey: false
+    });
+}
 
-// Write your JavaScript code.
+// Function to hide SweetAlert2 loading spinner
+function hideLoader() {
+    Swal.close();
+}
+
+$(document).ready(function () {
+    if ($("#header-smart-contract-balance").length > 0)
+        $("#header-smart-contract-balance").css("display", "none");
+    if ($("#header-total-active-borrow").length > 0)
+        $("#header-total-active-borrow").css("display", "none");
+});

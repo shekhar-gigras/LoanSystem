@@ -9,6 +9,7 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
 {
     [Route("sadmin")]
     [Authorize]
+    [Authorize(Roles = "Admin")] // Specify multiple roles here
     public class DynamicFormController : BaseController
     {
         private readonly IDynamicFormSectionService _dynamicFormSectionService;
@@ -81,6 +82,8 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
             existingForm.FormDescription = form.FormDescription;
             existingForm.EntityName = form.EntityName;
             existingForm.NavigationGroup = form.NavigationGroup;
+            existingForm.IsMetaMaskRequired = form.IsMetaMaskRequired;
+            existingForm.FormGroup = form.FormGroup;
             existingForm.CountryId = form.CountryId;
             existingForm.StateId = form.StateId;
             existingForm.CityId = form.CityId;

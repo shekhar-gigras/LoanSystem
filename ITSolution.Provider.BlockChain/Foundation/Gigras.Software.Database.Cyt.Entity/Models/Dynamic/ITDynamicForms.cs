@@ -15,11 +15,12 @@ namespace Gigras.Software.Database.Cyt.Entity.Models
 
         public string? FormDescription { get; set; }
         public string? EntityName { get; set; }
+        public string? FormGroup { get; set; }
         public string? NavigationGroup { get; set; }
         public int? CountryId { get; set; }
         public int? StateId { get; set; }
         public int? CityId { get; set; }
-
+        public bool IsMetaMaskRequired { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
         public int CreatedBy { get; set; } = 1;
