@@ -1,0 +1,16 @@
+{
+  "name": "lender_data",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Girendra",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "ether": "^0.0.9",
+    "node-fetch": "^3.3.2"
+  }
+}

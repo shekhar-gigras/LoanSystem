@@ -31,6 +31,7 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
         [Authorize(Roles = "Admin,User")] // Specify multiple roles here
         public async Task<IActionResult> BothFormList(string formname)
         {
+            Gigras.Software.BlockChain.Service.LoanProvider.GetDetail();
             var objForm = new Form();
             var obj = await _dynamicFormService.GetAllAsync(x => x.FormName!.ToLower() == formname);
             if (obj != null && obj.Any())

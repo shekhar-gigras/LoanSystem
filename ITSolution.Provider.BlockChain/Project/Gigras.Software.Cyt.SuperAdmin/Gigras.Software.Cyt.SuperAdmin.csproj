@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Feature\Gigras.Software.BlockChain.Service\Gigras.Software.BlockChain.Service.csproj" />
     <ProjectReference Include="..\..\Feature\Gigras.Software.Cyt.Services\Gigras.Software.Cyt.Services.csproj" />
     <ProjectReference Include="..\..\Feature\Gigras.Software.Cyt.ViewModel\Gigras.Software.Cyt.ViewModel.csproj" />
     <ProjectReference Include="..\..\Feature\Gigras.Software.General.Helper\Gigras.Software.General.Helper.csproj" />
