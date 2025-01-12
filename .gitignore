@@ -257,3 +257,4 @@ _Pvt_Extensions
 /Lib/DatabaseMigrator/RunMigrations*.ps1
 appsettings.Development.json
 local.settings.json
+ITSolution.Provider.BlockChain/Foundation/Gigras.Software.Cyt.SqlDatabase/Gigras.Software.Cyt.SqlDatabase.jfm
