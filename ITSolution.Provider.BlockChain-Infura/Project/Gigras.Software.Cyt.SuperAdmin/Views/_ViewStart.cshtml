@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Http
+@{
+    var path = Context.Request.Path.Value;
+
+    // Set layout based on URL path
+    if (path.StartsWith("/sadmin", StringComparison.OrdinalIgnoreCase))
+    {
+        Layout = "_SuperAdminLayout"; // Use the layout for superadmin
+    }
+    else if (path.StartsWith("/madmin", StringComparison.OrdinalIgnoreCase))
+    {
+        Layout = "_MemberAdminLayout"; // Use the layout for superadmin
+    }
+    else
+    {
+        Layout = "_Layout"; // Default layout
+    }
+}

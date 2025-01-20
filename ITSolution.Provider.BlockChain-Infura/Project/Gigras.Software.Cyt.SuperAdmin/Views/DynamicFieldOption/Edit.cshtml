@@ -1,0 +1,127 @@
+﻿@using Gigras.Software.Database.Cyt.Entity.Models
+@model FieldOption
+@{
+    var sourceoptionCss = Model.IsDynamic ? "display:block;" : "display:none;";
+    var tableoptionCss = Model.IsDynamic ? "display:none;" : "display:block;";
+}
+@{
+    ViewBag.Title = "Field DropDown Options";
+}
+
+<div class="full-page-heading">
+    Edit Field Option for Forms
+</div>
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <!--begin::Container-->
+    <div id="kt_content_container" class="container-xxl">
+        <div id="form-wrapper">
+            <form asp-action="EditSubmit" method="post" class="form">
+                <input type="hidden" name="_method" value="PUT" />
+                <input asp-for="Id" type="hidden" />
+                @if (!string.IsNullOrEmpty(ViewBag.Error))
+                {
+                    <div class="form-group">
+                        <span class="error" style="color:red;">@ViewBag.Error</span>
+                    </div>
+                }
+                <div class="form-group">
+                    <label>Option Name</label>
+                    <input asp-for="OptionName" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <div class="form-check">
+                        <input asp-for="IsDynamic" class="form-check-input" type="checkbox" id="IsDynamic" onchange="toggleSourceTable()" />
+                        <label class="form-check-label">Is Dynamic</label>
+                    </div>
+                </div>
+                <div id="optionsSourceWrapper" style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; margin-top: 20px;">
+                    <div id="optionsTableContainer" style="@tableoptionCss">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" onclick="addOption()">Add Option</button>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div class="table-responsive">
+                                <table id="optionTable" class="table align-middle table-row-dashed fs-6 gy-5 mb-0">
+                                    <thead>
+                                        <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                                            <th>Option Label</th>
+                                            <th>Option Value</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.OptionValues)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <input type="text" value="@item.OptionLabel" class="form-control" name="OptionLabel[]" placeholder="Option Label" required />
+                                                </td>
+                                                <td>
+                                                    <input type="text" value="@item.OptionValue" class="form-control" name="OptionValue[]" placeholder="Option Value" required />
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-danger" onclick="removeOption(this)">Remove</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                        <!-- Dynamically added options will appear here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="sourceTableContainer" style="@sourceoptionCss margin-top: 20px;">
+                        <div class="form-group">
+                            <label>Source Table</label>
+                            <select asp-for="SourceTable" class="form-select form-control" id="SourceTable" name="SourceTable">
+                                <option value="">None</option>
+                                @foreach (var item in ViewBag.DbSetNames)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Text&Value Field</label>
+                            <input asp-for="TextValueField" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Condition</label>
+                            <input asp-for="Condition" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a href="/sadmin/dynamic-fieldoption" class="btn btn-secondary">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal to add Option -->
+<div class="modal fade" id="addOptionModal" tabindex="-1" aria-labelledby="addOptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addOptionModalLabel">Add Option</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Option Label</label>
+                    <input type="text" id="OptionLabel" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>Option Value</label>
+                    <input type="text" id="OptionValue" class="form-control" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addOptionToTable()">Add Option</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/dynamic/dynamic-option.js"></script>

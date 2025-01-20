@@ -1,0 +1,18 @@
+﻿@using Gigras.Software.General.Model
+@model LoanCountInfo
+
+<div class="col-md-3">
+    <div class="card custom-card text-white">
+        <div class="card-header border-0 pt-9">
+            <div class="card-title m-0">
+                <div class="symbol symbol-50px w-50px">
+                    <i class="fas fa-handshake fa-3x"></i>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-9">
+            <div class="fs-3 fw-bolder">Rejected Borrower</div>
+            <div class="fs-5 text-red" id="active-borrower">Total : @Model.CountRejected</div>
+        </div>
+    </div>
+</div>

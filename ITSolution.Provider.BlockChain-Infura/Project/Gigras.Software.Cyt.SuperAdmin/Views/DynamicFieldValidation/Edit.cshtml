@@ -1,0 +1,45 @@
+﻿@using Gigras.Software.Database.Cyt.Entity.Models
+@model FieldValidation
+@{
+    ViewBag.Title = "Field Validation";
+}
+<div class="full-page-heading">
+    Edit Field Validation for Forms
+</div>
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <!--begin::Container-->
+    <div id="kt_content_container" class="container-xxl">
+        <div id="form-wrapper">
+            <form asp-action="EditSubmit" asp-route-id="@Model.Id" method="post" class="form">
+                <input type="hidden" name="_method" value="PUT" />
+                <input asp-for="Id" type="hidden" />
+                <div class="form-group">
+                    <label>Validation Name</label>
+                    <input asp-for="ValidationName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>Validation Type</label>
+                    <select asp-for="ValidationType" class="form-select" class="form-control" id="ValidationType" name="ValidationType">
+                        <option value="">None</option>
+                        @foreach (var item in ViewBag.ValidationList as List<DynamicValidation>)
+                        {
+                            <option value="@item.ValidationType">@item.ValidationType</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Validation Value</label>
+                    <input asp-for="ValidationValue" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>Error Message</label>
+                    <input asp-for="ErrorMessage" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a href="/sadmin/dynamic-fieldvalidation" class="btn btn-secondary">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

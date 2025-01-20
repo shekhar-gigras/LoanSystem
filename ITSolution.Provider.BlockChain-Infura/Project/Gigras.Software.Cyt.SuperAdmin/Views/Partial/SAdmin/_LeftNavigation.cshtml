@@ -1,0 +1,145 @@
+﻿@using Gigras.Software.Database.Cyt.Entity.Models
+@using Microsoft.AspNetCore.Authorization
+
+<div id="kt_aside" class="aside aside-dark aside-hoverable" data-kt-drawer="true" data-kt-drawer-name="aside" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle">
+    <!--begin::Brand-->
+    <div class="aside-logo flex-column-auto" id="kt_aside_logo">
+        <!--begin::Logo-->
+        <a href="/">
+@*             <img alt="Logo" src="~/images/logo.jpg" class="h-50px logo" />
+ *@            @*             IT Solution Provider
+            *@
+        </a>
+        <!--end::Logo-->
+        <!--begin::Aside toggler-->
+        <div id="kt_aside_toggle" class="btn btn-icon w-auto px-0 btn-active-color-primary aside-toggle" data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body" data-kt-toggle-name="aside-minimize">
+            <!--begin::Svg Icon | path: icons/duotune/arrows/arr074.svg-->
+            <!--end::Svg Icon-->
+        </div>
+        <!--end::Aside toggler-->
+    </div>
+    <!--end::Brand-->
+    <!--begin::Aside menu-->
+    <div class="aside-menu flex-column-fluid">
+        <!--begin::Aside Menu-->
+        <div class="hover-scroll-overlay-y my-2 py-5 py-lg-8" id="kt_aside_menu_wrapper" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_aside_logo, #kt_aside_footer" data-kt-scroll-wrappers="#kt_aside_menu" data-kt-scroll-offset="0">
+            <!--begin::Menu-->
+            <div class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500" id="#kt_aside_menu" data-kt-menu="true">
+                <div class="menu-item">
+                    <a class="menu-link" href="/sadmin/">
+                        <span class="menu-bullet">
+                            <span class="bullet bullet-dot"></span>
+                        </span>
+                        <span class="menu-title">Home</span>
+                    </a>
+                </div>
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="menu-item">
+                        <a class="menu-link" href="/sadmin/dynamic-fieldoption">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Field Option</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link" href="/sadmin/dynamic-fieldvalidation">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Field Validation</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link" href="/sadmin/dynamic-fieldtype">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Fields</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link" href="/sadmin/dynamic-form">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Forms</span>
+                        </a>
+                    </div>
+                }
+                @if (User.IsInRole("User"))
+                {
+                    var forms = ViewBag.Forms as List<Form>;
+                    @foreach (var item in forms!.Where(x => !string.IsNullOrEmpty(x.NavigationGroup) && x.NavigationGroup.ToLower() != "blank" && x.NavigationGroup.ToLower() != "admin" && x.NavigationGroup.ToLower() != "transaction").Select(x => x.NavigationGroup).Distinct())
+                    {
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                            <span class="menu-link">
+                                <span class="menu-icon">
+                                    <i class="bi bi-shield-check fs-3"></i>
+                                </span>
+                                <span class="menu-title">@item</span>
+                                <span class="menu-arrow"></span>
+                            </span>
+                            <div class="menu-sub menu-sub-accordion menu-active-bg">
+                                @foreach (var childtem in forms!.Where(x => x.NavigationGroup == item).OrderBy(x => x.FormName))
+                                {
+                                    var url = childtem.FormName!.Replace(" ","-");
+                                    <div class="menu-item">
+                                        <a class="menu-link" href="/sadmin/borrower/@childtem.FormGroup/@url">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">@childtem.FormDescription</span>
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    var forms = ViewBag.Forms as List<Form>;
+                    @foreach (var item in forms!.Where(x => !string.IsNullOrEmpty(x.NavigationGroup) && (x.NavigationGroup.ToLower() == "admin" || x.NavigationGroup.ToLower() == "transaction" || x.FormGroup!.ToLower() == "aau" || x.FormGroup!.ToLower() == "a")).Select(x => x.NavigationGroup).Distinct())
+                    {
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                            <span class="menu-link">
+                                <span class="menu-icon">
+                                    <i class="bi bi-shield-check fs-3"></i>
+                                </span>
+                                <span class="menu-title">@item</span>
+                                <span class="menu-arrow"></span>
+                            </span>
+                            <div class="menu-sub menu-sub-accordion menu-active-bg">
+                                @foreach (var childtem in forms!.Where(x => x.NavigationGroup == item).OrderBy(x => x.FormName))
+                                {
+                                    var url = childtem.FormName!.Replace(" ", "-");
+                                    <div class="menu-item">
+                                        <a class="menu-link" href="/sadmin/borrower/@childtem.FormGroup/@url">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">@childtem.FormDescription</span>
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                }
+                <div class="menu-item">
+                    <a class="menu-link" href="/sauth/logout">
+                        <span class="menu-bullet">
+                            <span class="bullet bullet-dot"></span>
+                        </span>
+                        <span class="menu-title">Logout</span>
+                    </a>
+                </div>
+            </div>
+            <!--end::Menu-->
+        </div>
+    </div>
+    <!--end::Aside menu-->
+</div>

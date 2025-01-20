@@ -1,0 +1,203 @@
+﻿@using Gigras.Software.Database.Cyt.Entity.Models
+@model Form
+@{
+    ViewBag.Title = "Field Form";
+
+    Model.CountryId = Model.CountryId == null ? 0 : Model.CountryId.Value!;
+    Model.StateId = Model.StateId == null ? 0 : Model.StateId.Value!;
+    Model.CityId = Model.CityId == null ? 0 : Model.CityId.Value!;
+}
+<div class="full-page-heading">
+    Edit Form based on state
+</div>
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <!--begin::Container-->
+    <div id="kt_content_container" class="container-xxl">
+        <div id="form-wrapper">
+            <form asp-action="EditSubmit" asp-route-id="@Model.Id" method="post" class="form">
+                <input type="hidden" name="_method" value="PUT" />
+                <input asp-for="Id" type="hidden" />
+                <div class="form-group">
+                    <label for="FormName">Form Name</label>
+                    <input type="text" class="form-control" id="FormName" name="FormName" value="@Model.FormName" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="FormDescription">Form Description</label>
+                    <input type="text" class="form-control" id="FormDescription" name="FormDescription" value="@Model.FormDescription" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="CountryId">Country</label>
+                    <select class="form-control" id="CountryId" name="CountryId">
+                        <option value="">Select a Country</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="StateId">State</label>
+                    <select class="form-control" id="StateId" name="StateId" disabled>
+                        <option value="">Select a State</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="CityId">City</label>
+                    <select class="form-control" id="CityId" name="CityId" disabled>
+                        <option value="">Select a City</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Entity Name</label>
+                    <select asp-for="EntityName" class="form-select form-control" id="EntityName" name="EntityName">
+                        <option value="">None</option>
+                        @foreach (var item in ViewBag.DbSetNames)
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="FormGroup">Form Group</label>
+                    <select asp-for="FormGroup" class="form-select form-control" id="FormGroup" name="FormGroup">
+                        <option value="a">Admin</option>
+                        <option value="aau">Both</option>
+                        <option value="au">User</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="IsMetaMaskRequired">Is Meta Mask Login Required</label>
+                    <select asp-for="IsMetaMaskRequired" class="form-select form-control" id="IsMetaMaskRequired" name="IsMetaMaskRequired">
+                        @if (Model.IsMetaMaskRequired){
+                            <option value="true" selected >Yes</option>
+                        }
+                        else
+                        {
+                            <option value="true">Yes</option>
+                        }
+                        @if (!Model.IsMetaMaskRequired)
+                        {
+                            <option value="false" selected>No</option>
+                        }
+                        else
+                        {
+                            <option value="false">No</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="FormDescription">Navigation Group Name</label>
+                    <input type="text" class="form-control" id="NavigationGroup" name="NavigationGroup" value="@Model.NavigationGroup" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="/sadmin/dynamic-form" class="btn btn-secondary">Back</a>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        // Load countries on page load
+        $(document).ready(function () {
+            Swal.fire({
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            $.ajax({
+                url: '/api/location/countries', // Your API for countries
+                method: 'GET',
+                success: function (data) {
+                    $('#CountryId').append('<option value="">Select a Country</option>');
+                    $.each(data, function (index, country) {
+                        $('#CountryId').append('<option value="' + country.id + '" ' + (country.id == @Model.CountryId ? 'selected' : '') + '>' + country.countryName + '</option>');
+                    });
+
+                    // Preselect state and city based on model data
+                    loadStates(@Model.CountryId);
+                    loadCities(@Model.StateId);
+
+                    Swal.close(); // Close the loading spinner
+                },
+                error: function () {
+                    Swal.close(); // Close loading spinner on error
+                    Swal.fire('Error', 'Failed to load countries.', 'error');
+                }
+            });
+
+            // Load states when a country is selected
+            $('#CountryId').change(function () {
+                var countryId = $(this).val();
+                if (countryId) {
+                    loadStates(countryId);
+                } else {
+                    $('#StateId').prop('disabled', true).empty().append('<option value="">Select a State</option>');
+                }
+            });
+
+            // Load cities when a state is selected
+            $('#StateId').change(function () {
+                var stateId = $(this).val();
+                if (stateId) {
+                    loadCities(stateId);
+                } else {
+                    $('#CityId').prop('disabled', true).empty().append('<option value="">Select a City</option>');
+                }
+            });
+
+            // Function to load states based on selected country
+            function loadStates(countryId) {
+                Swal.fire({
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                $.ajax({
+                    url: '/api/location/states/' + countryId, // Your API for states
+                    method: 'GET',
+                    success: function (data) {
+                        $('#StateId').prop('disabled', false).empty().append('<option value="">Select a State</option>');
+                        $.each(data, function (index, state) {
+                            $('#StateId').append('<option value="' + state.id + '" ' + (state.id == @Model.StateId ? 'selected' : '') + '>' + state.stateName + '</option>');
+                        });
+                        Swal.close(); // Close the loading spinner
+                    },
+                    error: function () {
+                        Swal.close(); // Close loading spinner on error
+                        Swal.fire('Error', 'Failed to load states.', 'error');
+                    }
+                });
+            }
+
+            // Function to load cities based on selected state
+            function loadCities(stateId) {
+                Swal.fire({
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                $.ajax({
+                    url: '/api/location/cities/' + stateId, // Your API for cities
+                    method: 'GET',
+                    success: function (data) {
+                        $('#CityId').prop('disabled', false).empty().append('<option value="">Select a City</option>');
+                        $.each(data, function (index, city) {
+                            $('#CityId').append('<option value="' + city.id + '" ' + (city.id == @Model.CityId ? 'selected' : '') + '>' + city.cityName + '</option>');
+                        });
+                        Swal.close(); // Close the loading spinner
+                    },
+                    error: function () {
+                        Swal.close(); // Close loading spinner on error
+                        Swal.fire('Error', 'Failed to load cities.', 'error');
+                    }
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,140 @@
+﻿@using Gigras.Software.Database.Cyt.Entity.Models
+@model FieldType
+@{
+    ViewBag.Title = "Field Types";
+    Model.FieldTypeValidations = (Model.FieldTypeValidations == null ? new List<FieldTypeValidation>() : Model.FieldTypeValidations);
+}
+<div class="full-page-heading">
+    Edit Field Type for forms
+</div>
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <!--begin::Container-->
+    <div id="kt_content_container" class="container-xxl">
+        <div id="form-wrapper">
+            <form asp-action="EditSubmit" asp-route-id="@Model.Id" method="post" class="form">
+                <input type="hidden" name="_method" value="PUT" />
+                <input asp-for="Id" type="hidden" />
+                <div class="form-group">
+                    <label for="CtrlType">Ctrl Type</label>
+                    <select class="form-control" id="CtrlType" name="CtrlType">
+                        @foreach (var item in ViewBag.CtrlList as List<DynamicCtrl>)
+                        {
+                            if (Model != null && Model.CtrlType.ToLower() == item.CtrlType.ToLower())
+                            {
+                                <option value="@item.CtrlType" selected>@item.CtrlType</option>
+                            }else{
+                                <option value="@item.CtrlType">@item.CtrlType</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Field Name</label>
+                    <input asp-for="FieldName" class="form-control" required/>
+                </div>
+                <div class="form-group">
+                    <label>Default Value</label>
+                    <input asp-for="DefaultValue" class="form-control" />
+                </div>
+@*                 <div class="form-group">
+                    <label>Min Value</label>
+                    <input asp-for="MinValue" class="form-control" type="number" step="any" />
+                </div>
+                <div class="form-group">
+                    <label>Max Value</label>
+                    <input asp-for="MaxValue" class="form-control" type="number" step="any" />
+                </div> *@
+                <div class="form-group">
+                    <label>Max Length</label>
+                    <input asp-for="MaxLength" class="form-control" type="number" step="any" />
+                </div>
+                <div class="form-group">
+                    <label>Steps</label>
+                    <input asp-for="Steps" class="form-control" type="number" step="0.0001" />
+                </div>
+@*                 <div class="form-group">
+                    <label>Range Start</label>
+                    <input asp-for="RangeStart" class="form-control" type="number" step="any" />
+                </div>
+                <div class="form-group">
+                    <label>Range End</label>
+                    <input asp-for="RangeEnd" class="form-control" type="number" step="any" />
+                </div> *@
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea asp-for="FieldDescription" class="form-control" required></textarea>
+                </div>
+                <div class="form-group" style="display:none;">
+                    <label for="BlockChainFieldId">BlockChain Field</label>
+                    <select class="form-control" id="BlockChainFieldId" name="BlockChainFieldId">
+                        <option value="">Select an option</option>
+                        @foreach (var item in ViewBag.BlockChainFields as List<DynamicBlockChainField>)
+                        {
+                            <option value="@item.Id" selected="@(item.Id == Model.BlockChainFieldId ? "selected" : null)">
+                                @item.BlockChainField
+                            </option>
+                        }
+
+                        <!-- Options will be populated dynamically here -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="form-check">
+                        <input asp-for="HasOptions" class="form-check-input" type="checkbox" id="hasOptionsCheckbox" />
+                        <label class="form-check-label" for="hasOptionsCheckbox">Has Options</label>
+                    </div>
+                </div>
+                <div class="form-group" id="optionsDiv" style="display: none;">
+                    <label for="FieldTypeOptionId">Options</label>
+                    <select class="form-control" id="FieldTypeOptionId" name="FieldTypeOptionId">
+                        <option value="">Select an option</option>
+                        @foreach (var item in ViewBag.Options as List<FieldOption>)
+                        {
+                            <option value="@item.Id" selected="@(item.Id == Model.FieldTypeOptionId ? "selected" : null)">
+                                @item.OptionName
+                            </option>
+                        }
+
+                        <!-- Options will be populated dynamically here -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="form-check">
+                        <input asp-for="RequiresScript" class="form-check-input" type="checkbox" id="requiresScriptCheckbox" />
+                        <label class="form-check-label" for="requiresScriptCheckbox">Required Validations</label>
+                    </div>
+                </div>
+
+                <div class="form-group" id="validationDiv" style="display: none;">
+                    <label for="FieldValidations">Validations</label>
+                    <div style="height: 400px; overflow-y: auto;">
+                        <ul class="list-group">
+                            @foreach (var item in ViewBag.Validations as List<FieldValidation>)
+                            {
+                                <li class="list-group-item">
+                                    <input type="checkbox"
+                                           id="validation-@item.Id"
+                                           name="FieldValidations"
+                                           value="@item.Id"
+                                    @(Model.FieldTypeValidations.Any(x => x.FieldValidationId == item.Id) ? "checked" : "") />
+                                    <label for="validation-@item.Id">@item.ValidationName</label>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="JavaScript" class="form-label">JavaScript</label>
+                    <textarea class="form-control" id="JavaScript" name="JavaScript" rows="5">@Model.JavaScript</textarea>
+                </div>
+
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a href="/sadmin/dynamic-fieldtype" class="btn btn-secondary">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="~/js/dynamic/dynamic-field-type.js"></script>
