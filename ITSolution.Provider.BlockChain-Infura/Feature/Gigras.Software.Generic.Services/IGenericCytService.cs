@@ -13,7 +13,9 @@ namespace Gigras.Software.Generic.Services
         Task UpdateAsync(T entity);
 
         Task DeleteAsync(int id, bool IsSave = true);
+
         Task DeleteManyAsync(List<int> ids, bool IsSave = true);
+
         Task DeleteByConditionAsync(Func<T, bool> condition, bool IsSave = true);
 
         Task<T> GetByIdAsync(int id, Func<IQueryable<T>, IQueryable<T>> include = null);
@@ -39,5 +41,10 @@ namespace Gigras.Software.Generic.Services
                                                                         Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, // Sorting condition
                                                                         params Expression<Func<T, object>>[] includes
                                                             );
+
+        Task<T?> GetByIdAsync(
+            int? id,
+            Expression<Func<T, bool>> predicate,
+            Func<IQueryable<T>, IQueryable<T>>? include = null);
     }
 }

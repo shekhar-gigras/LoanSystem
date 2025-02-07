@@ -31,12 +31,18 @@ namespace Gigras.Software.Cyt.Services.CytServcies
         private readonly ILoanDetailsRepository _LoanDetailsRepository;
         private readonly ICytAdminService _cytAdminService;
         private readonly ILoanTransDetailsRepository _LoanTransDetailsRepository;
+        private readonly ILoanBuyInterestRepository _loanBuyInterestRepository;
 
-        public LoanDetailsService(ILoanDetailsRepository LoanDetailsRepository, ICytAdminService cytAdminService, ILoanTransDetailsRepository loanTransDetailsRepository) : base(LoanDetailsRepository)
+        public LoanDetailsService(ILoanDetailsRepository LoanDetailsRepository,
+            ICytAdminService cytAdminService,
+            ILoanTransDetailsRepository loanTransDetailsRepository,
+            ILoanBuyInterestRepository loanBuyInterestRepository
+            ) : base(LoanDetailsRepository)
         {
             _LoanDetailsRepository = LoanDetailsRepository;
             _cytAdminService = cytAdminService;
             _LoanTransDetailsRepository = loanTransDetailsRepository;
+            _loanBuyInterestRepository = loanBuyInterestRepository;
         }
 
         public async Task<LoanDetails> SubmitData(Dictionary<string, string> fieldValues)
@@ -56,8 +62,6 @@ namespace Gigras.Software.Cyt.Services.CytServcies
                 {
                     var obj = objList.FirstOrDefault();
                     ObjectPopulator.PopulateObject<LoanDetails>(obj, fieldValues);
-                    obj.IsActive = true;
-                    obj.IsDelete = false;
                     obj.IsApproved = false;
                     obj.IsRejected = false;
                     obj.UpdatedBy = await _cytAdminService.GetUserName();
@@ -67,7 +71,6 @@ namespace Gigras.Software.Cyt.Services.CytServcies
                         var objLoanTrans = new LoanTransDetails();
                         ObjectPopulator.CopyObject(obj, objLoanTrans);
                         objLoanTrans.Id = 0;
-                        objLoanTrans.LinkId = obj.Id;
                         obj.LoanTransDetails.Add(objLoanTrans);
                     }
                     else
@@ -76,7 +79,6 @@ namespace Gigras.Software.Cyt.Services.CytServcies
                         var objLoanTrans = new LoanTransDetails();
                         ObjectPopulator.CopyObject(obj, objLoanTrans);
                         objLoanTrans.Id = 0;
-                        objLoanTrans.LinkId = obj.Id;
                         obj.LoanTransDetails.Add(objLoanTrans);
                     }
                     await _LoanDetailsRepository.UpdateAsync(obj);
@@ -86,6 +88,8 @@ namespace Gigras.Software.Cyt.Services.CytServcies
                 {
                     var obj = new LoanDetails();
                     ObjectPopulator.PopulateObject<LoanDetails>(obj, fieldValues);
+                    obj.IsLoanSell = false;
+                    obj.IsApprovedTransferLoan = false;
                     obj.IsActive = true;
                     obj.IsDelete = false;
                     obj.IsApproved = false;
@@ -111,14 +115,13 @@ namespace Gigras.Software.Cyt.Services.CytServcies
 
         public async Task<List<LoanDetails>> GetList()
         {
-            var username = await _cytAdminService.GetUserName();
             var userdetail = await _cytAdminService.GetUserDetails();
-
+            var lenderid = await _cytAdminService.GetUserUniqueId();
             var data = await _LoanDetailsRepository.GetAllAsync(x =>
                 x.IsActive
                 && !x.IsDelete
                 && (
-                    (userdetail.Roles.Contains("User") && x.CreatedBy == username) || (userdetail.Roles.Contains("Admin") && !x.IsRejected && !x.IsApproved)
+                    (userdetail.Roles.Contains("Lender") && x.LendderId.ToString() == lenderid) || (userdetail.Roles.Contains("Admin"))
                 )
             );
             data = data.OrderBy(x => x.LoanId).ToList();
@@ -185,7 +188,10 @@ namespace Gigras.Software.Cyt.Services.CytServcies
 
         public async Task<LoanDetails> GetData(int id)
         {
-            var data = await _LoanDetailsRepository.GetByIdAsync(id);
+            var lenderid = await _cytAdminService.GetUserUniqueId();
+            var userdetail = await _cytAdminService.GetUserDetails();
+
+            var data = await _LoanDetailsRepository.GetByIdAsync(id, x => (x.LendderId.ToString() == lenderid || userdetail.Roles.Contains("Admin")));
             return data;
         }
 
@@ -218,6 +224,9 @@ namespace Gigras.Software.Cyt.Services.CytServcies
             var RejectedAmount = data.Where(x => x.IsRejected).Sum(x => x.PrincipalAmount);
             var PendingAmount = data.Where(x => !x.IsApproved && !x.IsRejected && !x.IsDelete).Sum(x => x.PrincipalAmount);
 
+            var dataSellLoan = await _LoanDetailsRepository.GetAllAsync(x => x.IsLoanSell && !x.IsApprovedTransferLoan && x.IsActive && !x.IsDelete && x.IsApproved);
+            var dataLoanBuyers = await _loanBuyInterestRepository.GetAllAsync(x => !x.IsClosedSellerLoan && x.IsActive && !x.IsDelete);
+
             // Create a result object to hold the data and counts
             var result = new LoanCountInfo()
             {
@@ -229,7 +238,9 @@ namespace Gigras.Software.Cyt.Services.CytServcies
                 DeletedAmount = DeletedAmount,
                 ApprovedAmount = ApprovedAmount,
                 RejectedAmount = RejectedAmount,
-                PendingAmount = PendingAmount
+                PendingAmount = PendingAmount,
+                LoanDetails = dataSellLoan,
+                BuyerList = dataLoanBuyers
             };
             return result;
         }

@@ -34,7 +34,7 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
         {
             var dbSetNames = typeof(CytContext)
                 .GetProperties()
-                .Where(p => !p.Name.ToLower().Contains("dynamic") && p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>))
+                .Where(p => (!p.Name.ToLower().Contains("dynamic") || p.Name.ToLower().Contains("dynamicadmins")) && p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>))
                 .Select(p => p.Name)
                 .ToList();
 

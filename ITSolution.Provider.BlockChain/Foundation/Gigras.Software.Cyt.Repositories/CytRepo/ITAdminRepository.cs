@@ -22,7 +22,7 @@ namespace Gigras.Software.Cyt.Repositories.CytRepo
             string hashpassword = PasswordHelper.HashPassword(password);
             // Query the database to find the user based on username and password
             var user = await _context.DynamicAdmins
-                                     .Where(a => a.IsActive && (a.UserName == username || a.Email == username) && a.Password == hashpassword)
+                                     .Where(a => a.IsActive && !a.IsDelete && !a.IsBlock && (a.UserName == username || a.Email == username) && a.Password == hashpassword)
                                      .FirstOrDefaultAsync();
 
             if (user == null)

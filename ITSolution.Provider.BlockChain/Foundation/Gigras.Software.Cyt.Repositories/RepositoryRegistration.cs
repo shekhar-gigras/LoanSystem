@@ -30,6 +30,7 @@ namespace Gigras.Software.Cyt.Repositories
             services.AddScoped<IBorrowerLoanRepository, BorrowerLoanRepository>();
             services.AddScoped<ILoanDetailsRepository, LoanDetailsRepository>();
             services.AddScoped<ILoanTransDetailsRepository, LoanTransDetailsRepository>();
+            services.AddScoped<ILoanBuyInterestRepository, LoanBuyInterestRepository>();
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
         private readonly ILogger<SAuthController> _logger;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IConfiguration _configuration;
+        private readonly int _tokenExpireMin = 15;
 
         public SAuthController(ILogger<SAuthController> logger,
             IDNTCaptchaValidatorService validatorService, IOptions<DNTCaptchaOptions> options,
@@ -74,6 +75,11 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
                 return View(model);
             }
             var user = await _cytAdminService.FindByUsernameAndPasswordAsync(model.Username, model.Password);
+            if (user == null)
+            {
+                ModelState.AddModelError("Username", "This username/password is wrong");
+                return View(model);
+            }
             await _cytAdminService.SignInUserAsync(user);
 
             // If the return URL is empty or invalid, redirect to the default page (Home/Index)
@@ -110,25 +116,45 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
                 }
                 return View(model);
             }
-
-            var obj = await _cytAdminService.GetAllAsync(a => a.Email == model.Email || a.UserName == model.UserName);
+            var obj = await _cytAdminService.GetAllAsync(a => a.Email == model.Email);
 
             // Check if Email or Username already exists
             if (obj != null && obj.Count() > 0)
             {
-                ModelState.AddModelError("Email", "This email/username is already registered.");
+                ModelState.AddModelError("Email", "This email already registered.");
                 return View(model);
             }
 
+            obj = await _cytAdminService.GetAllAsync(a => a.Email == model.Email || a.UserName == model.UserName);
+
+            // Check if Email or Username already exists
+            if (obj != null && obj.Count() > 0)
+            {
+                ModelState.AddModelError("UserName", "This username already registered.");
+                return View(model);
+            }
+
+            var expirationTime = DateTime.UtcNow.AddMinutes(_tokenExpireMin); // Set expiry time
+
+            var verificationToken = PasswordHelper.GenerateVerificationToken(expirationTime);
+            var verificationLink = Url.Action("VerifyEmail", "SAuth", new { token = verificationToken, email = model.Email }, Request.Scheme);
+
             // Save data to database
+            model.UserId = Guid.NewGuid();
             model.IsActive = false;
-            model.Phone = model.Phone;
+            model.IsDelete = false;
+            model.IsBlock = false;
+            model.IsAddLoan = false;
+            model.IsDeleteLoan = false;
+            model.IsEditLoan = false;
+            model.IsVisibleLoanSale = false;
+            model.IsConfirmLink = false;
+            model.Role = "Lender";
             model.CreatedDate = DateTime.Now;
             model.Password = PasswordHelper.HashPassword(model.Password!);
+            model.Token = verificationToken;
+            model.TokenExpiry = expirationTime;
             await _cytAdminService.AddAsync(model);
-
-            var verificationToken = PasswordHelper.GenerateVerificationToken();
-            var verificationLink = Url.Action("VerifyEmail", "SAuth", new { token = verificationToken, email = model.Email }, Request.Scheme);
 
             string rootpath = _webHostEnvironment.ContentRootPath + "//wwwroot";
             string template = await EmailHelper.ReadEmailTemplate(rootpath, "RegisterUser.html", verificationLink, "", "Registration Verification Link");
@@ -145,9 +171,20 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
             {
                 return BadRequest("Invalid verification link.");
             }
+            var user = await _cytAdminService.GetByIdAsync(0, a => a.Email == email);
 
-            var user = await _cytAdminService.GetAllAsync(u => u.Email == email);
-            if (user == null || user.Count() == 0)
+            if (user != null && !PasswordHelper.ValidateVerificationToken(token))
+            {
+                var expirationTime = DateTime.UtcNow.AddMinutes(_tokenExpireMin); // Set expiry time
+                var verificationToken = PasswordHelper.GenerateVerificationToken(expirationTime);
+                var verificationLink = Url.Action("VerifyEmail", "SAuth", new { token = verificationToken, email = email }, Request.Scheme);
+                string rootpath = _webHostEnvironment.ContentRootPath + "//wwwroot";
+                string template = await EmailHelper.ReadEmailTemplate(rootpath, "RegisterUser.html", verificationLink, "", "Registration Verification Link");
+                await EmailHelper.SendEmailAsync(_configuration, user.Name!, user.Email!, "Registration Verification Link", template);
+
+                return BadRequest("Token has been expired,Please contact to administrator");
+            }
+            if (user == null)
             {
                 return NotFound("User not found.");
             }
@@ -156,9 +193,9 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
             // and mark the email as verified in the database
 
             // For now, we'll just mark the user as verified
-            var objuser = await _cytAdminService.GetByIdAsync(user!.FirstOrDefault()!.Id);
+            var objuser = await _cytAdminService.GetByIdAsync(user!.Id);
 
-            objuser.IsActive = true; // Assuming you have an IsActive field for verification
+            objuser.IsActive = false; // Assuming you have an IsActive field for verification
             await _cytAdminService.UpdateAsync(objuser);
 
             return RedirectToAction("Login", "SAuth");
@@ -192,11 +229,12 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
 
                 var objUser = await _cytAdminService.GetByIdAsync(user!.FirstOrDefault()!.Id);
                 // Generate a unique reset token (in real cases, use a secure method)
-                var token = Guid.NewGuid().ToString();
+                var expirationTime = DateTime.UtcNow.AddMinutes(_tokenExpireMin); // Set expiry time
+                var token = PasswordHelper.GenerateVerificationToken(expirationTime);
 
                 // Store the token and expiration time in the database
                 objUser.Token = token;
-                objUser.TokenExpiry = DateTime.UtcNow.AddHours(1);
+                objUser.TokenExpiry = expirationTime;
                 await _cytAdminService.UpdateAsync(objUser);
 
                 // Generate reset link

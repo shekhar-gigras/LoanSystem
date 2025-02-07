@@ -1,4 +1,5 @@
 using DNTCaptcha.Core;
+using Gigras.Software.BlockChain.Service;
 using Gigras.Software.Cyt.Repositories;
 using Gigras.Software.Cyt.Services;
 using Gigras.Software.Database;
@@ -51,6 +52,9 @@ builder.Services.AddDbContext<CytContext>(options => options
 
 builder.Services.AddCytRepository();
 builder.Services.AddCytServices();
+builder.Services.AddScoped<ILoanProvider, LoanProvider>();
+builder.Services.AddScoped<ISmartContractService, SmartContractService>();
+builder.Services.AddScoped<ISmartContractBorrowerService, SmartContractBorrowerService>();
 
 builder.Services.AddControllersWithViews();
 

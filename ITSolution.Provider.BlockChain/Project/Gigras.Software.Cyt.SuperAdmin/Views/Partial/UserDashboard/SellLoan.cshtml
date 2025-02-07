@@ -1,0 +1,65 @@
+﻿@using Gigras.Software.General.Model
+@inject Gigras.Software.Cyt.Services.ICytServices.ICytAdminService cytAdmin
+
+@model LoanCountInfo
+@{
+    var usettype = User.IsInRole("Admin") ? "admin" : "lender";
+    var lenderid = await cytAdmin.GetUserUniqueId();
+    var IsVisibleSaleLoanAccess = await cytAdmin.IsVisibleSaleLoanAccess();
+}
+
+@if (IsVisibleSaleLoanAccess)
+{
+    @foreach (var item in Model.LoanDetails!)
+    {
+        var obj = Model.BuyerList!.Where(x => x.BuyerId.ToString() == lenderid && x.LoanId == item.LoanId && !x.IsClosedSellerLoan);
+        if (obj != null && obj.Count() > 0 && obj.FirstOrDefault()!.IsDenied)
+        {
+            continue;
+        }
+        if (item.IsApprovedTransferLoan)
+        {
+            continue;
+        }
+        <div class="col-md-3">
+            <div class="card text-white" style="background-color:grey">
+                <div class="card-header border-0 pt-9">
+                    <div class="card-title m-0">
+                        <div class="symbol symbol-50px w-50px">
+                            <i class="fas fa-handshake fa-3x"></i>
+                        </div>
+                    </div>
+                    @if (lenderid != item.LendderId.ToString() && usettype == "lender")
+                    {
+                        if (obj != null && obj.Count() == 0)
+                        {
+                            <div class="card-toolbar">
+                                <button class="btn btn-light fw-bolder px-4 py-3" data-loan-id="@item.LoanId" onClick="loanBuyerInterest(this)">Interest</button>
+                                <button class="btn btn-light fw-bolder px-4 py-3" data-loan-id="@item.LoanId" onClick="loanRejectInterest(this)">Reject</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="card-toolbar">
+                                <button class="btn btn-light fw-bolder px-4 py-3" data-loan-id="@item.LoanId">Thanks for the Interest</button>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        var totalloanbuyer = Model.BuyerList!.Where(x => x.LoanId == item.LoanId);
+                        <div class="card-toolbar">
+                            <button class="btn btn-light fw-bolder px-4 py-3">@totalloanbuyer.Count() buyer interested</button>
+                        </div>
+                    }
+                </div>
+                <div class="card-body p-9">
+                    <div class="fs-3 fw-bolder">Loan Detail</div>
+                    <div class="fs-5 text-red">Name : @item.BorrowerName</div>
+                    <div class="fs-5 text-red">Address : @item.State, @item.City, @item.PropertyAddress</div>
+                    <div class="fs-5 text-red">Amount : @item.PrincipalAmount</div>
+                </div>
+            </div>
+        </div>
+    }
+}

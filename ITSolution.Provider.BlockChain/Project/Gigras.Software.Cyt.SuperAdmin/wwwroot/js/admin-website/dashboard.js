@@ -30,6 +30,7 @@ async function DashBoardSubmitData(actionUrl, formData) {
         processData: false, // Prevent jQuery from processing the data
         contentType: false, // Prevent jQuery from setting the Content-Type header
         success: function (response) {
+            window.location.reload();
         },
         error: function (xhr, status, error) {
             // Handle the failure response

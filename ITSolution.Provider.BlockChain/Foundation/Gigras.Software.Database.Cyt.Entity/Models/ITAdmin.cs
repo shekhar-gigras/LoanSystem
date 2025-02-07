@@ -10,11 +10,15 @@ public class ITAdmin
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
+    public Guid? UserId { get; set; }
+
     [StringLength(255)]
     public string? Name { get; set; }
 
     [StringLength(255)]
     public string? UserName { get; set; }
+
+    public string? Role { get; set; }
 
     [Required]
     [StringLength(255)]
@@ -34,6 +38,13 @@ public class ITAdmin
     public DateTime? LastLogin { get; set; } = DateTime.Now;
 
     public bool IsActive { get; set; }
+    public bool IsDelete { get; set; }
+    public bool IsBlock { get; set; }
+    public bool IsAddLoan { get; set; }
+    public bool IsEditLoan { get; set; }
+    public bool IsDeleteLoan { get; set; }
+    public bool IsVisibleLoanSale { get; set; }
+
     public bool IsConfirmLink { get; set; }
 
     [StringLength(500)]

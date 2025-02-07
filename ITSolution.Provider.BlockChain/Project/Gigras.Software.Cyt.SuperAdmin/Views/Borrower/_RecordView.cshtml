@@ -1,0 +1,28 @@
+﻿@{
+    List<string> FieldArray = new()
+    {
+        "SystemFormId", "UserId", "Id", "Entity", "CreatedBy", "CreatedDate",
+        "ModifiedBy", "ModifiedDate", "IsActive", "IsDelete", "CountryId",
+        "StateMaster", "CityMaster", "StateId", "RecordId", "IsDeleted",
+        "ParentId", "MetaMaskID", "CreatedAt", "UpdatedAt", "UpdatedBy",
+        "IsApprovedTransferLoan", "LoanTransDetails", "IsRejected",
+        "IsApproved", "IsLoanSell", "LoanId", "LendderId", "BorrowerId"
+    };
+}
+<div class="row">
+    @foreach (var field in Model.Fields)
+    {
+        if (FieldArray.Contains(field.Key))
+        {
+            continue; // Skip fields that are in the exclusion list
+        }
+
+        // Format key (replace underscores with spaces and capitalize first letter)
+        string formattedKey = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(field.Key.Replace("_", " "));
+
+        <div class="col-12 mb-12">
+            <label><strong>@formattedKey</strong></label>
+            <p>@field.Value</p>
+        </div>
+    }
+</div>

@@ -1,199 +1,743 @@
-﻿using Nethereum.Hex.HexTypes;
+﻿using Gigras.Software.BlockChain.Service.Model;
+using Gigras.Software.Cyt.Services.CytServcies;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Nethereum.ABI.FunctionEncoding;
+using Nethereum.Hex.HexTypes;
+using Nethereum.RPC.Eth.DTOs;
 using Nethereum.Web3;
 using Nethereum.Web3.Accounts;
+using System.Text.Json;
 
 namespace Gigras.Software.BlockChain.Service
 {
-    public static class LoanProvider
+    public class LoanProvider : ILoanProvider
     {
-        private static string rpcUrl = "https://sepolia.infura.io/v3/4d39d517c0a5417fbc15dde4bad2e182"; // Replace with your Ethereum node URL
-        private static string contractAddress = "0x5b2a6640153D1df9b6a8bB37E9B07EBa9F06b637"; // Replace with your contract address
-        private static string abi = @"[{""inputs"":[],""stateMutability"":""nonpayable"",""type"":""constructor""},{""anonymous"":false,""inputs"":[{""indexed"":false,""internalType"":""address"",""name"":""lender"",""type"":""address""},{""indexed"":false,""internalType"":""uint256"",""name"":""amount"",""type"":""uint256""}],""name"":""ContractFunded"",""type"":""event""},{""anonymous"":false,""inputs"":[{""indexed"":false,""internalType"":""string"",""name"":""loanId"",""type"":""string""},{""indexed"":false,""internalType"":""string"",""name"":""propertyAddress"",""type"":""string""}],""name"":""LoanCreated"",""type"":""event""},{""anonymous"":false,""inputs"":[{""indexed"":false,""internalType"":""string"",""name"":""loanId"",""type"":""string""}],""name"":""LoanDeleted"",""type"":""event""},{""anonymous"":false,""inputs"":[{""indexed"":false,""internalType"":""string"",""name"":""loanId"",""type"":""string""},{""indexed"":false,""internalType"":""string"",""name"":""propertyAddress"",""type"":""string""}],""name"":""LoanUpdated"",""type"":""event""},{""inputs"":[{""internalType"":""string"",""name"":"""",""type"":""string""}],""name"":""adjustableInterestRateDetailsMap"",""outputs"":[{""internalType"":""string"",""name"":""noteDate"",""type"":""string""},{""internalType"":""string"",""name"":""city"",""type"":""string""},{""internalType"":""string"",""name"":""state"",""type"":""string""},{""internalType"":""string"",""name"":""propertyAddress"",""type"":""string""},{""internalType"":""string"",""name"":""paymentLocation"",""type"":""string""}],""stateMutability"":""view"",""type"":""function""},{""inputs"":[{""internalType"":""address"",""name"":""_address"",""type"":""address""}],""name"":""changeLender"",""outputs"":[],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[],""name"":""checkBalanceOfSmartContract"",""outputs"":[{""internalType"":""uint256"",""name"":"""",""type"":""uint256""}],""stateMutability"":""view"",""type"":""function""},{""inputs"":[{""internalType"":""string"",""name"":"""",""type"":""string""}],""name"":""commonAndInterestDetailsMap"",""outputs"":[{""internalType"":""string"",""name"":""emiPaymentStartDate"",""type"":""string""},{""internalType"":""uint256"",""name"":""principalAmount"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""fixedInterestRate"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""monthlyPaymentAmount"",""type"":""uint256""},{""internalType"":""string"",""name"":""maturityDate"",""type"":""string""},{""internalType"":""uint8"",""name"":""emiPaymentDay"",""type"":""uint8""},{""internalType"":""string"",""name"":""interestRateChangeDate"",""type"":""string""},{""internalType"":""string"",""name"":""lenderName"",""type"":""string""},{""internalType"":""string"",""name"":""borrowerName"",""type"":""string""}],""stateMutability"":""view"",""type"":""function""},{""inputs"":[{""internalType"":""string"",""name"":""loanId"",""type"":""string""}],""name"":""deleteLoan"",""outputs"":[],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[],""name"":""fundContract"",""outputs"":[],""stateMutability"":""payable"",""type"":""function""},{""inputs"":[],""name"":""getAllLoanIds"",""outputs"":[{""internalType"":""string[]"",""name"":"""",""type"":""string[]""}],""stateMutability"":""view"",""type"":""function""},{""inputs"":[{""internalType"":""address"",""name"":""_borrower"",""type"":""address""}],""name"":""getBorrowerBalance"",""outputs"":[{""internalType"":""uint256"",""name"":"""",""type"":""uint256""}],""stateMutability"":""view"",""type"":""function""},{""inputs"":[],""name"":""getLenderBalance"",""outputs"":[{""internalType"":""uint256"",""name"":"""",""type"":""uint256""}],""stateMutability"":""view"",""type"":""function""},{""inputs"":[{""internalType"":""string"",""name"":""loanId"",""type"":""string""}],""name"":""getLoanDetails"",""outputs"":[{""components"":[{""internalType"":""string"",""name"":""emiPaymentStartDate"",""type"":""string""},{""internalType"":""uint256"",""name"":""principalAmount"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""fixedInterestRate"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""monthlyPaymentAmount"",""type"":""uint256""},{""internalType"":""string"",""name"":""maturityDate"",""type"":""string""},{""internalType"":""uint8"",""name"":""emiPaymentDay"",""type"":""uint8""},{""internalType"":""string"",""name"":""interestRateChangeDate"",""type"":""string""},{""internalType"":""string"",""name"":""lenderName"",""type"":""string""},{""internalType"":""string"",""name"":""borrowerName"",""type"":""string""}],""internalType"":""struct LoanAgreementContract.CommonAndInterestDetails"",""name"":"""",""type"":""tuple""},{""components"":[{""internalType"":""uint8"",""name"":""latePaymentGracePeriod"",""type"":""uint8""},{""internalType"":""uint256"",""name"":""lateChargePercentage"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""margin"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""currentIndex"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""maxInterestRateAtFirstChange"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""minInterestRateAtFirstChange"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""maxInterestRateAfterChange"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""minInterestRateAfterChange"",""type"":""uint256""}],""internalType"":""struct LoanAgreementContract.PaymentAndLateDetails"",""name"":"""",""type"":""tuple""},{""components"":[{""internalType"":""string"",""name"":""noteDate"",""type"":""string""},{""internalType"":""string"",""name"":""city"",""type"":""string""},{""internalType"":""string"",""name"":""state"",""type"":""string""},{""internalType"":""string"",""name"":""propertyAddress"",""type"":""string""},{""internalType"":""string"",""name"":""paymentLocation"",""type"":""string""}],""internalType"":""struct LoanAgreementContract.AdjustableInterestRateDetails"",""name"":"""",""type"":""tuple""}],""stateMutability"":""view"",""type"":""function""},{""inputs"":[],""name"":""lender"",""outputs"":[{""internalType"":""address"",""name"":"""",""type"":""address""}],""stateMutability"":""view"",""type"":""function""},{""inputs"":[{""internalType"":""string"",""name"":"""",""type"":""string""}],""name"":""paymentAndLateDetailsMap"",""outputs"":[{""internalType"":""uint8"",""name"":""latePaymentGracePeriod"",""type"":""uint8""},{""internalType"":""uint256"",""name"":""lateChargePercentage"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""margin"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""currentIndex"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""maxInterestRateAtFirstChange"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""minInterestRateAtFirstChange"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""maxInterestRateAfterChange"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""minInterestRateAfterChange"",""type"":""uint256""}],""stateMutability"":""view"",""type"":""function""},{""inputs"":[{""internalType"":""string"",""name"":""loanId"",""type"":""string""},{""internalType"":""string"",""name"":""_noteDate"",""type"":""string""},{""internalType"":""string"",""name"":""_city"",""type"":""string""},{""internalType"":""string"",""name"":""_state"",""type"":""string""},{""internalType"":""string"",""name"":""_propertyAddress"",""type"":""string""},{""internalType"":""string"",""name"":""_paymentLocation"",""type"":""string""}],""name"":""setAdjustableInterestRateDetails"",""outputs"":[],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[{""internalType"":""string"",""name"":""loanId"",""type"":""string""},{""internalType"":""string"",""name"":""_emiPaymentStartDate"",""type"":""string""},{""internalType"":""uint256"",""name"":""_principalAmount"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""_fixedInterestRate"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""_monthlyPaymentAmount"",""type"":""uint256""},{""internalType"":""string"",""name"":""_maturityDate"",""type"":""string""},{""internalType"":""uint8"",""name"":""_emiPaymentDay"",""type"":""uint8""},{""internalType"":""string"",""name"":""_interestRateChangeDate"",""type"":""string""},{""internalType"":""string"",""name"":""_lenderName"",""type"":""string""},{""internalType"":""string"",""name"":""_borrowerName"",""type"":""string""}],""name"":""setCommonAndInterestDetails"",""outputs"":[],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[{""internalType"":""string"",""name"":""loanId"",""type"":""string""},{""internalType"":""uint8"",""name"":""_latePaymentGracePeriod"",""type"":""uint8""},{""internalType"":""uint256"",""name"":""_lateChargePercentage"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""_margin"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""_currentIndex"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""_maxInterestRateAtFirstChange"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""_minInterestRateAtFirstChange"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""_maxInterestRateAfterChange"",""type"":""uint256""},{""internalType"":""uint256"",""name"":""_minInterestRateAfterChange"",""type"":""uint256""}],""name"":""setPaymentAndLateDetails"",""outputs"":[],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[{""internalType"":""uint256"",""name"":""_amount"",""type"":""uint256""}],""name"":""takeOutContractFunds"",""outputs"":[],""stateMutability"":""nonpayable"",""type"":""function""}]"; // Replace with your contract's ABI
-        private static string mywallet = "0xF5cEA5e4B6126ffe06B2AEF2Ce8c1c3b981fA3F4";
-        private static string privateKey = "70d6fbd05080e82449ad03908af1fa4d5aa2a0e09276707fa8c69c44521ffbbc";
+        private readonly ILogger<LoanProvider> _logger;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IConfiguration _configuration;
+        private readonly IConfigurationSection _configurationSection;
+        private readonly ISmartContractAbiService _smartContractAbiService;
+        private readonly ISmartContractAddressService _smartContractAddressService;
 
-        public static async Task<string> GetDetail()
+        private readonly string _inFuraUrl;
+        private readonly string _privateKey;
+
+        public LoanProvider(ILogger<LoanProvider> logger,
+             IWebHostEnvironment webHostEnvironment, IConfiguration configuration,
+            ISmartContractAbiService smartContractAbiService,
+             ISmartContractAddressService smartContractAddressService
+            )
         {
-            var web3 = new Web3(rpcUrl);
+            _logger = logger;
+            _webHostEnvironment = webHostEnvironment;
+            _configuration = configuration;
+            _smartContractAbiService = smartContractAbiService;
+            _smartContractAddressService = smartContractAddressService;
+            _configurationSection = _configuration.GetSection("InfuraSetting");
+            _inFuraUrl = _configurationSection["InFuraUrl"];
+            _privateKey = _configurationSection["PrivateKey"];
+        }
+
+        public async Task<string> GetSmartContractOwnerAddress()
+        {
             try
             {
-                // Get the contract instance
-                var contract = web3.Eth.GetContract(abi, contractAddress);
+                var Abi = await _smartContractAbiService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var smartContractAddres = await _smartContractAddressService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var web3 = new Web3(_inFuraUrl);
+                Abi!.Abi = JsonDocument.Parse(Abi.Abi!).RootElement.GetRawText();
 
-                // Access the "lender" function
+                var contract = web3.Eth.GetContract(Abi!.Abi, smartContractAddres!.ContractAddress);
                 var lenderFunction = contract.GetFunction("lender");
-
-                // Call the "lender" function
                 var lenderAddress = await lenderFunction.CallAsync<string>();
-
-                Console.WriteLine($"Lender Address: {lenderAddress}");
-
-                // Access the "lender" function
-                var fundFunction = contract.GetFunction("checkBalanceOfSmartContract");
-
-                // Call the "lender" function
-                var total = await fundFunction.CallAsync<int>();
-
                 return lenderAddress;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
-            return "";
+            return string.Empty;
         }
 
-        public static async Task AddMoney(string address)
+        public async Task<int> GetSmartContractBalance()
         {
-            var web3 = new Web3(rpcUrl);
             try
             {
-                var account = new Account(privateKey);
-                // Get the contract instance
-                var contract = web3.Eth.GetContract(abi, contractAddress);
+                var Abi = await _smartContractAbiService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var smartContractAddres = await _smartContractAddressService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var web3 = new Web3(_inFuraUrl);
+                Abi!.Abi = JsonDocument.Parse(Abi.Abi!).RootElement.GetRawText();
 
-                // Access the "fundContract" function
-                var fundContractFunction = contract.GetFunction("fundContract");
-                var value = new Nethereum.Hex.HexTypes.HexBigInteger(50); // Amount in Ether
-
-                var gasEstimate = await fundContractFunction.EstimateGasAsync(
-                   "0xf1641499E7733F717F72a437F446a5472c3965be",
-                   null,
-                   null,
-                   null
-               );
-
-                var transactionHash = await fundContractFunction.SendTransactionAndWaitForReceiptAsync(
-                    "0xf1641499E7733F717F72a437F446a5472c3965be",
-                    gasEstimate,
-                    new HexBigInteger(50), // Value to send, if any
-                    null
-                );
-                var transactionReceipt = await fundContractFunction.SendTransactionAsync(
-                 from: "0xf1641499E7733F717F72a437F446a5472c3965be",    // Replace with your wallet address
-                 gas: new Nethereum.Hex.HexTypes.HexBigInteger(200000), // Set an appropriate gas limit
-                 value: value // Ether amount in Wei
-             );
-
-                //Console.WriteLine($"Transaction successful! Hash: {transactionReceipt.}");
+                var contract = web3.Eth.GetContract(Abi!.Abi, smartContractAddres!.ContractAddress);
+                var lenderFunction = contract.GetFunction("checkBalanceOfSmartContract");
+                var balance = await lenderFunction.CallAsync<int>();
+                return balance;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+            return -1;
         }
 
-        public static async Task SendMoney(string address)
+        public async Task<decimal> GetLenderBalance(string lenderAddress)
         {
             try
             {
-                //address = mywallet;
-                // Replace with your private key and Infura details
-                var account = new Account(privateKey);
-                var web3 = new Web3(account, rpcUrl);
-                address = account.Address;
-                // Contract details
+                var Abi = await _smartContractAbiService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var smartContractAddres = await _smartContractAddressService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var web3 = new Web3(_inFuraUrl);
 
-                // Create the contract instance
-                var contract = web3.Eth.GetContract(abi, contractAddress);
+                Abi!.Abi = JsonDocument.Parse(Abi.Abi!).RootElement.GetRawText();
 
-                // Get the fundContract function
+                var contract = web3.Eth.GetContract(Abi!.Abi, smartContractAddres!.ContractAddress);
+                var lenderFunction = contract.GetFunction("getLenderBalance");
+
+                // Set the lender's address as the 'from' parameter (only the lender is allowed to call this)
+                var callInput = new CallInput
+                {
+                    From = lenderAddress, // Set the lender's address
+                    To = smartContractAddres.ContractAddress, // The contract address
+                    Data = lenderFunction.GetData() // Encoded function data
+                };
+
+                var hexResult = await web3.Eth.Transactions.Call.SendRequestAsync(callInput);
+
+                if (!string.IsNullOrEmpty(hexResult))
+                {
+                    var hexBigInt = new HexBigInteger(hexResult);
+
+                    // Convert the balance from Wei to Ether (if the balance is in Wei)
+                    decimal balanceInEther = Web3.Convert.FromWei(hexBigInt.Value);
+                    return balanceInEther;
+                }
+            }
+            catch (SmartContractRevertException ex)
+            {
+                // Handle the revert exception here (you can log it or throw it as needed)
+                Console.WriteLine($"Smart contract error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+
+            return 0m; // Return 0 if any error occurs
+        }
+
+        public async Task<string> FundContractAsync(string lenderAddress, int amountInEther)
+        {
+            try
+            {
+                // Create an account using the private key
+                var account = new Account(_privateKey);
+                var web3 = new Web3(account, _inFuraUrl);
+                web3.TransactionManager.UseLegacyAsDefault = true;
+
+                // Retrieve the smart contract ABI and address
+                var abi = await _smartContractAbiService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var smartContractAddress = await _smartContractAddressService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+
+                if (abi == null || smartContractAddress == null)
+                {
+                    throw new Exception("Smart contract ABI or address not found.");
+                }
+
+                // Parse the ABI
+                abi.Abi = JsonDocument.Parse(abi.Abi!).RootElement.GetRawText();
+
+                // Access the smart contract and the "fundContract" function
+                var contract = web3.Eth.GetContract(abi.Abi, smartContractAddress.ContractAddress);
                 var fundContractFunction = contract.GetFunction("fundContract");
 
-                // Amount of Ether to send (e.g., 1 ETH)
-                decimal etherToSend = 1m;
-                var weiToSend = 50;// Web3.Convert.ToWei(etherToSend);
+                // Convert Ether amount to Wei
+                var valueInWei = amountInEther;// Web3.Convert.ToWei(amountInEther);
+
+                // Get current gas price and estimate gas limit
+                var gasPrice = await web3.Eth.GasPrice.SendRequestAsync();
+                var gasLimit = await fundContractFunction.EstimateGasAsync(
+                     from: lenderAddress,    // Replace with your wallet address
+                     gas: new Nethereum.Hex.HexTypes.HexBigInteger(200000), // Set an appropriate gas limit
+                     value: new HexBigInteger(valueInWei) // Ether amount in Wei
+                );
+
+                // Get the nonce for the sender's address
+                var nonce = await web3.Eth.Transactions.GetTransactionCount.SendRequestAsync(lenderAddress);
+
+                // Offline transaction signing
+                var transactionInput = new TransactionInput
+                {
+                    From = lenderAddress,
+                    To = smartContractAddress.ContractAddress,
+                    Gas = new HexBigInteger(gasLimit),
+                    GasPrice = new HexBigInteger(gasPrice),
+                    Value = new HexBigInteger(valueInWei),
+                    Data = fundContractFunction.GetData() // Call fundContract()
+                };
+
+                var offlineTransactionSigner = new AccountOfflineTransactionSigner();
+                var signedTransaction = await account.TransactionManager.SignTransactionAsync(
+                       transactionInput
+                   );
+
+                // Send the signed transaction
+                var transactionHash = await web3.Eth.Transactions.SendRawTransaction.SendRequestAsync(signedTransaction);
+
+                Console.WriteLine($"Transaction successfully sent. Hash: {transactionHash}");
+
+                return transactionHash; // Return the transaction hash
+            }
+            catch (SmartContractRevertException ex)
+            {
+                Console.WriteLine($"Smart contract error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<List<string>> GetLoanIds()
+        {
+            try
+            {
+                var Abi = await _smartContractAbiService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var smartContractAddres = await _smartContractAddressService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var web3 = new Web3(_inFuraUrl);
+                Abi!.Abi = JsonDocument.Parse(Abi.Abi!).RootElement.GetRawText();
+
+                var contract = web3.Eth.GetContract(Abi!.Abi, smartContractAddres!.ContractAddress);
+                var lenderFunction = contract.GetFunction("getAllLoanIds");
+                var loanids = await lenderFunction.CallAsync<List<string>>();
+                return loanids;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            return null;
+        }
+
+        public async Task<string> TakeOutContractFundsAsync(string lenderAddress, decimal amountToWithdraw)
+        {
+            try
+            {
+                // Create an account with the private key
+                var account = new Account(_privateKey);
+                var web3 = new Web3(account, _inFuraUrl);
+                web3.TransactionManager.UseLegacyAsDefault = true;
+
+                // Retrieve the ABI and smart contract address
+                var abi = await _smartContractAbiService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var smartContractAddress = await _smartContractAddressService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+
+                if (abi == null || smartContractAddress == null)
+                {
+                    throw new Exception("Smart contract ABI or address not found.");
+                }
+
+                // Parse the ABI
+                abi.Abi = JsonDocument.Parse(abi.Abi!).RootElement.GetRawText();
+
+                // Access the smart contract and "takeOutContractFunds" function
+                var contract = web3.Eth.GetContract(abi.Abi, smartContractAddress.ContractAddress);
+                var takeOutContractFundsFunction = contract.GetFunction("takeOutContractFunds");
+
+                // Convert the withdrawal amount to Wei
+                var amountInWei = amountToWithdraw;// Web3.Convert.ToWei(amountToWithdraw);
+
+                // Estimate the gas for the transaction
+                var gasLimit = await takeOutContractFundsFunction.EstimateGasAsync(
+                                     from: lenderAddress,    // Replace with your wallet address
+                                     gas: new Nethereum.Hex.HexTypes.HexBigInteger(200000), // Set an appropriate gas limit
+                                     value: new HexBigInteger(0),
+                                     functionInput: new object[] { amountInWei }
+                                );
+                // Get the nonce for the sender's address
+                var nonce = await web3.Eth.Transactions.GetTransactionCount.SendRequestAsync(lenderAddress);
+
+                // Sign and send the transaction
+                var transactionInput = takeOutContractFundsFunction.CreateTransactionInput(
+                    from: lenderAddress,
+                    gas: new HexBigInteger(gasLimit),
+                    gasPrice: null, // Optional: Specify a gas price or let it use the default
+                    value: null, // No Ether is sent to the function
+                    functionInput: new object[] { amountInWei }
+                );
+
+                var offlineTransactionSigner = new AccountOfflineTransactionSigner();
+                var signedTransaction = await account.TransactionManager.SignTransactionAsync(
+                       transactionInput
+                   );
+
+                // Send the raw transaction
+                var transactionHash = await web3.Eth.Transactions.SendRawTransaction.SendRequestAsync(signedTransaction);
+                Console.WriteLine($"Transaction successfully sent. Hash: {transactionHash}");
+
+                return transactionHash; // Return the transaction hash
+            }
+            catch (SmartContractRevertException ex)
+            {
+                Console.WriteLine($"Smart contract error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<string> ChangeLenderAsync(string lenderAddress, string newLenderAddress)
+        {
+            try
+            {
+                // Initialize Web3 and account
+                var account = new Account(_privateKey);  // Use the private key of the current lender
+                var web3 = new Web3(account, _inFuraUrl);
+                web3.TransactionManager.UseLegacyAsDefault = true;
+
+                // Retrieve the ABI and smart contract address
+                var abi = await _smartContractAbiService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var smartContractAddress = await _smartContractAddressService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+
+                if (abi == null || smartContractAddress == null)
+                {
+                    throw new Exception("Smart contract ABI or address not found.");
+                }
+
+                // Parse the ABI
+                abi.Abi = JsonDocument.Parse(abi.Abi!).RootElement.GetRawText();
+
+                // Access the smart contract and "changeLender" function
+                var contract = web3.Eth.GetContract(abi.Abi, smartContractAddress.ContractAddress);
+                var changeLenderFunction = contract.GetFunction("changeLender");
+
+                // Estimate gas for the transaction
+                var gasLimit = await changeLenderFunction.EstimateGasAsync(
+                                     from: lenderAddress,    // Replace with your wallet address
+                                     gas: new Nethereum.Hex.HexTypes.HexBigInteger(200000), // Set an appropriate gas limit
+                                     value: new HexBigInteger(0),
+                                     functionInput: new object[] { newLenderAddress }
+                                );
+
+                Console.WriteLine($"Gas estimate: {gasLimit}");
+
+                // Get the nonce for the sender's address
+                var nonce = await web3.Eth.Transactions.GetTransactionCount.SendRequestAsync(lenderAddress);
 
                 // Create the transaction input
-                var transactionInput = fundContractFunction.CreateTransactionInput(
-                    from: "0xf1641499E7733F717F72a437F446a5472c3965be", // Sender's address
-                    gas: null, // Let Web3 determine the gas
-                    value: new HexBigInteger(weiToSend) // Ether amount in Wei
+                var transactionInput = changeLenderFunction.CreateTransactionInput(
+                    from: lenderAddress,
+                    gas: new HexBigInteger(gasLimit),
+                    value: new HexBigInteger(0),
+                    functionInput: new object[] { newLenderAddress } // Input: the new lender's address
                 );
 
-                var setAdjustableInterestRateDetailsFunction = contract.GetFunction("setAdjustableInterestRateDetails");
+                // Sign the transaction using the account
+                var offlineTransactionSigner = new AccountOfflineTransactionSigner();
+                var signedTransaction = await account.TransactionManager.SignTransactionAsync(
+                       transactionInput
+                   );
 
-                // Estimate gas
-                //var gasEstimate = await web3.Eth.Transactions.EstimateGas.SendRequestAsync(transactionInput);
+                // Send the raw transaction
+                var transactionHash = await web3.Eth.Transactions.SendRawTransaction.SendRequestAsync(signedTransaction);
+                Console.WriteLine($"Transaction successfully sent. Hash: {transactionHash}");
 
-                var gasEstimate = await setAdjustableInterestRateDetailsFunction.EstimateGasAsync(
-                   "0xf1641499E7733F717F72a437F446a5472c3965be",
-                   null,
-                   null,
-                   "Test00001",
-                   "h1",
-                   "h2",
-                   "h3",
-                   "h4",
-                   "h5"
-               );
-
-                // Send the transaction
-                var transactionHash = await setAdjustableInterestRateDetailsFunction.SendTransactionAndWaitForReceiptAsync(
-                    "0xf1641499E7733F717F72a437F446a5472c3965be",
-                    gasEstimate,
-                    new HexBigInteger(0), // Value to send, if any
-                    null,
-                   "Test00001",
-                   "h1",
-                   "h2",
-                   "h3",
-                   "h4",
-                   "h5"
-                );
-
-                // Send the transaction
-                //var transactionHash = await fundContractFunction.SendTransactionAndWaitForReceiptAsync(
-                //    address,
-                //    gasEstimate,
-                //    new HexBigInteger(weiToSend),
-                //    null // No parameters for this function
-                //);
-                Console.WriteLine($"Transaction sent successfully! Hash: {transactionHash}");
+                return transactionHash; // Return the transaction hash
+            }
+            catch (SmartContractRevertException ex)
+            {
+                Console.WriteLine($"Smart contract error: {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
+                throw;
             }
         }
 
-        public static void GetDetail1()
+        public async Task<string> SetCommonAndInterestDetailsAsync(string lenderAddress, LoanDetails loanDetails)
         {
             try
             {
-                // Replace with your details
-                var privateKey = "YOUR_PRIVATE_KEY"; // Lender's private key
-                var rpcUrl = "https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID";
-                var contractAddress = "0x5b2a6640153D1df9b6a8bB37E9B07EBa9F06b637"; // Replace with your contract address
-                var abi = @"[YOUR_CONTRACT_ABI]"; // Replace with your contract's ABI
+                // Initialize Web3 and account
+                var account = new Account(_privateKey);  // Use the private key of the account calling the function
+                var web3 = new Web3(account, _inFuraUrl);
+                web3.TransactionManager.UseLegacyAsDefault = true;
 
-                // Create an account and Web3 instance
-                var account = new Account(privateKey);
-                var web3 = new Web3(account, rpcUrl);
+                // Retrieve the ABI and smart contract address
+                var abi = await _smartContractAbiService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var smartContractAddress = await _smartContractAddressService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
 
-                // Get the contract
-                var contract = web3.Eth.GetContract(abi, contractAddress);
+                if (abi == null || smartContractAddress == null)
+                {
+                    throw new Exception("Smart contract ABI or address not found.");
+                }
 
-                // Get the setAdjustableInterestRateDetails function
-                var setAdjustableInterestRateDetailsFunction = contract.GetFunction("setAdjustableInterestRateDetails");
+                // Parse the ABI
+                abi.Abi = JsonDocument.Parse(abi.Abi!).RootElement.GetRawText();
 
-                // Prepare function parameters
-                string loanId = "loan123";
-                string interestRateChangeDate = "2025-01-12";
-                uint margin = 200; // Example values, adjust as needed
-                uint currentIndex = 1;
-                uint maxInterestRateAtFirstChange = 500; // Example in basis points
-                uint minInterestRateAtFirstChange = 100; // Example in basis points
-                uint maxInterestRateAfterChange = 700; // Example in basis points
-                uint minInterestRateAfterChange = 150; // Example in basis points
+                // Access the smart contract and "setCommonAndInterestDetails" function
+                var contract = web3.Eth.GetContract(abi.Abi, smartContractAddress.ContractAddress);
+                var setCommonAndInterestDetailsFunction = contract.GetFunction("setCommonAndInterestDetails");
 
-                // Estimate gas
+                var gasPrice = await web3.Eth.GasPrice.SendRequestAsync();
+                var gasEstimate = await setCommonAndInterestDetailsFunction.EstimateGasAsync(
+                                    from: lenderAddress,    // Replace with your wallet address
+                                    gas: gasPrice, // Set an appropriate gas limit
+                                    value: new HexBigInteger(0),
+                                    functionInput: new object[]
+                                        {
+                                            loanDetails.LoanId,
+                                            loanDetails.EmiPaymentStartDate,
+                                            loanDetails.PrincipalAmount,
+                                            loanDetails.FixedInterestRate,
+                                            loanDetails.MonthlyPaymentAmount,
+                                            loanDetails.MaturityDate,
+                                            loanDetails.EmiPaymentDay,
+                                            loanDetails.InterestRateChangeDate,
+                                            loanDetails.LenderName,
+                                            loanDetails.BorrowerName
+                                        }
+                               );
 
-                //Console.WriteLine($"Transaction successful! Hash: {transactionHash.TransactionHash}");
+                Console.WriteLine($"Gas estimate: {gasEstimate}");
+
+                // Get the nonce for the sender's address
+                var nonce = await web3.Eth.Transactions.GetTransactionCount.SendRequestAsync(lenderAddress);
+
+                // Create the transaction input
+                var transactionInput = setCommonAndInterestDetailsFunction.CreateTransactionInput(
+                    from: lenderAddress,
+                    gas: new HexBigInteger(gasEstimate),
+                    value: new HexBigInteger(0),
+                    functionInput: new object[]
+                    {
+                        loanDetails.LoanId,
+                        loanDetails.EmiPaymentStartDate,
+                        loanDetails.PrincipalAmount,
+                        loanDetails.FixedInterestRate,
+                        loanDetails.MonthlyPaymentAmount,
+                        loanDetails.MaturityDate,
+                        loanDetails.EmiPaymentDay,
+                        loanDetails.InterestRateChangeDate,
+                        loanDetails.LenderName,
+                        loanDetails.BorrowerName
+                    }
+                );
+
+                var offlineTransactionSigner = new AccountOfflineTransactionSigner();
+                var signedTransaction = await account.TransactionManager.SignTransactionAsync(
+                       transactionInput
+                   );
+
+                // Send the raw transaction
+                var transactionHash = await web3.Eth.Transactions.SendRawTransaction.SendRequestAsync(signedTransaction);
+                Console.WriteLine($"Transaction successfully sent. Hash: {transactionHash}");
+
+                return transactionHash; // Return the transaction hash
+            }
+            catch (SmartContractRevertException ex)
+            {
+                Console.WriteLine($"Smart contract error: {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<string> SetPaymentAndLateDetailsAsync(string lenderAddress, InterestDetails details)
+        {
+            try
+            {
+                // Initialize Web3 and account
+                var account = new Account(_privateKey);  // Use the private key of the account calling the function
+                var web3 = new Web3(account, _inFuraUrl);
+                web3.TransactionManager.UseLegacyAsDefault = true;
+
+                // Retrieve the ABI and smart contract address
+                var abi = await _smartContractAbiService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var smartContractAddress = await _smartContractAddressService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+
+                if (abi == null || smartContractAddress == null)
+                {
+                    throw new Exception("Smart contract ABI or address not found.");
+                }
+
+                // Parse the ABI
+                abi.Abi = JsonDocument.Parse(abi.Abi!).RootElement.GetRawText();
+
+                // Access the smart contract and "setCommonAndInterestDetails" function
+                var contract = web3.Eth.GetContract(abi.Abi, smartContractAddress.ContractAddress);
+                var setPaymentAndLateDetailsFunction = contract.GetFunction("setPaymentAndLateDetails");
+
+                var gasPrice = await web3.Eth.GasPrice.SendRequestAsync();
+                var gasEstimate = await setPaymentAndLateDetailsFunction.EstimateGasAsync(
+                                    from: lenderAddress,    // Replace with your wallet address
+                                    gas: gasPrice, // Set an appropriate gas limit
+                                    value: new HexBigInteger(0),
+                                    functionInput: new object[]
+                                        {
+                                            details.LoanId,
+                                            details.LatePaymentGracePeriod,
+                                            details.LateChargePercentage,
+                                            details.Margin,
+                                            details.CurrentIndex,
+                                            details.MaxInterestRateAtFirstChange,
+                                            details.MinInterestRateAtFirstChange,
+                                            details.MaxInterestRateAfterChange,
+                                            details.MinInterestRateAfterChange
+                                        }
+                               );
+
+                Console.WriteLine($"Gas estimate: {gasEstimate}");
+
+                // Get the nonce for the sender's address
+                var nonce = await web3.Eth.Transactions.GetTransactionCount.SendRequestAsync(lenderAddress);
+
+                // Create the transaction input
+                var transactionInput = setPaymentAndLateDetailsFunction.CreateTransactionInput(
+                    from: lenderAddress,
+                    gas: new HexBigInteger(gasEstimate),
+                    value: new HexBigInteger(0),
+                    functionInput: new object[]
+                    {
+                        details.LoanId,
+                        details.LatePaymentGracePeriod,
+                        details.LateChargePercentage,
+                        details.Margin,
+                        details.CurrentIndex,
+                        details.MaxInterestRateAtFirstChange,
+                        details.MinInterestRateAtFirstChange,
+                        details.MaxInterestRateAfterChange,
+                        details.MinInterestRateAfterChange
+                    }
+                );
+
+                var offlineTransactionSigner = new AccountOfflineTransactionSigner();
+                var signedTransaction = await account.TransactionManager.SignTransactionAsync(
+                       transactionInput
+                   );
+
+                // Send the raw transaction
+                var transactionHash = await web3.Eth.Transactions.SendRawTransaction.SendRequestAsync(signedTransaction);
+                Console.WriteLine($"Transaction successfully sent. Hash: {transactionHash}");
+
+                return transactionHash; // Return the transaction hash
+            }
+            catch (SmartContractRevertException ex)
+            {
+                Console.WriteLine($"Smart contract error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<string> SetAdjustableInterestRateDetailsAsync(string lenderAddress, OtherDetails details)
+        {
+            try
+            {
+                // Initialize Web3 and account
+                var account = new Account(_privateKey);  // Use the private key of the account calling the function
+                var web3 = new Web3(account, _inFuraUrl);
+                web3.TransactionManager.UseLegacyAsDefault = true;
+
+                // Retrieve the ABI and smart contract address
+                var abi = await _smartContractAbiService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var smartContractAddress = await _smartContractAddressService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+
+                if (abi == null || smartContractAddress == null)
+                {
+                    throw new Exception("Smart contract ABI or address not found.");
+                }
+
+                // Parse the ABI
+                abi.Abi = JsonDocument.Parse(abi.Abi!).RootElement.GetRawText();
+
+                // Access the smart contract and "setCommonAndInterestDetails" function
+                var contract = web3.Eth.GetContract(abi.Abi, smartContractAddress.ContractAddress);
+                var setAdjustableInterestRateDetailsFunction = contract.GetFunction("setAdjustableInterestRateDetails");
+
+                var gasPrice = await web3.Eth.GasPrice.SendRequestAsync();
+                var gasEstimate = await setAdjustableInterestRateDetailsFunction.EstimateGasAsync(
+                                    from: lenderAddress,    // Replace with your wallet address
+                                    gas: gasPrice, // Set an appropriate gas limit
+                                    value: new HexBigInteger(0),
+                                    functionInput: new object[]
+                                        {
+                                            details.LoanId,
+                                            details.NoteDate,
+                                            details.City,
+                                            details.State,
+                                            details.PropertyAddress,
+                                            details.PaymentLocation
+                                        }
+                               );
+
+                Console.WriteLine($"Gas estimate: {gasEstimate}");
+
+                // Get the nonce for the sender's address
+                var nonce = await web3.Eth.Transactions.GetTransactionCount.SendRequestAsync(lenderAddress);
+
+                // Create the transaction input
+                var transactionInput = setAdjustableInterestRateDetailsFunction.CreateTransactionInput(
+                    from: lenderAddress,
+                    gas: new HexBigInteger(gasEstimate),
+                    value: new HexBigInteger(0),
+                    functionInput: new object[]
+                    {
+                        details.LoanId,
+                        details.NoteDate,
+                        details.City,
+                        details.State,
+                        details.PropertyAddress,
+                        details.PaymentLocation
+                    }
+                );
+
+                var offlineTransactionSigner = new AccountOfflineTransactionSigner();
+                var signedTransaction = await account.TransactionManager.SignTransactionAsync(
+                       transactionInput
+                   );
+
+                // Send the raw transaction
+                var transactionHash = await web3.Eth.Transactions.SendRawTransaction.SendRequestAsync(signedTransaction);
+                Console.WriteLine($"Transaction successfully sent. Hash: {transactionHash}");
+
+                return transactionHash; // Return the transaction hash
+            }
+            catch (SmartContractRevertException ex)
+            {
+                Console.WriteLine($"Smart contract error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<Loan> GetLoanDetailsAsync(string loanId)
+        {
+            try
+            {
+                // Initialize Web3
+                var web3 = new Web3(_inFuraUrl);
+
+                // Retrieve ABI and contract address
+                var abi = await _smartContractAbiService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var smartContractAddress = await _smartContractAddressService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+
+                if (abi == null || smartContractAddress == null)
+                {
+                    throw new Exception("Smart contract ABI or address not found.");
+                }
+
+                // Parse ABI
+                abi.Abi = JsonDocument.Parse(abi.Abi!).RootElement.GetRawText();
+
+                // Get the contract and function
+                var contract = web3.Eth.GetContract(abi.Abi, smartContractAddress.ContractAddress);
+                var getLoanDetailsFunction = contract.GetFunction("getLoanDetails");
+
+                // Call the function
+                var result = await getLoanDetailsFunction.CallDeserializingToObjectAsync<Loan>(loanId);
+
+                // Return the deserialized result
+                return result;
+            }
+            catch (SmartContractRevertException ex)
+            {
+                Console.WriteLine($"Smart contract error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<string> DeleteLoanAsync(string lenderAddress, string loanId)
+        {
+            try
+            {
+                // Initialize Web3 and account
+                var account = new Account(_privateKey);  // Use the private key of the account calling the function
+                var web3 = new Web3(account, _inFuraUrl);
+                web3.TransactionManager.UseLegacyAsDefault = true;
+
+                // Retrieve the ABI and smart contract address
+                var abi = await _smartContractAbiService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+                var smartContractAddress = await _smartContractAddressService.GetByIdAsync(null, x => x.IsActive && !x.IsDelete);
+
+                if (abi == null || smartContractAddress == null)
+                {
+                    throw new Exception("Smart contract ABI or address not found.");
+                }
+
+                // Parse the ABI
+                abi.Abi = JsonDocument.Parse(abi.Abi!).RootElement.GetRawText();
+
+                // Access the smart contract and "setCommonAndInterestDetails" function
+                var contract = web3.Eth.GetContract(abi.Abi, smartContractAddress.ContractAddress);
+                var deleteLoanFunction = contract.GetFunction("deleteLoan");
+
+                var gasPrice = await web3.Eth.GasPrice.SendRequestAsync();
+                var gasEstimate = await deleteLoanFunction.EstimateGasAsync(
+                                    from: lenderAddress,    // Replace with your wallet address
+                                    gas: gasPrice, // Set an appropriate gas limit
+                                    value: new HexBigInteger(0),
+                                    functionInput: loanId
+                               );
+
+                Console.WriteLine($"Gas estimate: {gasEstimate}");
+
+                // Get the nonce for the sender's address
+                var nonce = await web3.Eth.Transactions.GetTransactionCount.SendRequestAsync(lenderAddress);
+
+                // Create the transaction input
+                var transactionInput = deleteLoanFunction.CreateTransactionInput(
+                    from: lenderAddress,
+                    gas: new HexBigInteger(gasEstimate),
+                    value: new HexBigInteger(0),
+                    functionInput: loanId
+                );
+
+                var offlineTransactionSigner = new AccountOfflineTransactionSigner();
+                var signedTransaction = await account.TransactionManager.SignTransactionAsync(
+                       transactionInput
+                   );
+
+                // Send the raw transaction
+                var transactionHash = await web3.Eth.Transactions.SendRawTransaction.SendRequestAsync(signedTransaction);
+                Console.WriteLine($"Transaction successfully sent. Hash: {transactionHash}");
+
+                return transactionHash; // Return the transaction hash
+            }
+            catch (SmartContractRevertException ex)
+            {
+                Console.WriteLine($"Smart contract error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                throw;
             }
         }
     }

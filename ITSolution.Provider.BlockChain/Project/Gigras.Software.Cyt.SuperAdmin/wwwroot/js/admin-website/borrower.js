@@ -41,6 +41,22 @@ let KTCategoryList = (function () {
                         });
                     });
                 }
+                searchInput = document.querySelector('[data-kt-category-table-filter="user-search"]');
+                if (searchInput) {
+                    searchInput.addEventListener("keyup", function (event) {
+                        const baseUrl = `/sadmin/Borrower`;
+                        let formgroup = $("#kt_category_table").data("formgroup");
+                        let formid = $("#kt_category_table").data("formid");
+                        let val = searchInput.value;
+                        const basedataUrl = `${baseUrl}/${formgroup}/${formid}`;
+                        $.get(basedataUrl + `/get-userdata-list?q=${val}`, function (data) {
+                            const tbody = $("#kt_category_table tbody");
+                            tbody.empty(); // Clear existing rows
+                            DisplayAdminUserData(tbody, data, data.isAdmin);
+                        }).fail(function () {
+                        });
+                    });
+                }
             }
         }
     };
@@ -67,7 +83,15 @@ let FieldArray = [
     "MetaMaskID",
     "CreatedAt",
     "UpdatedAt",
-    "UpdatedBy"
+    "UpdatedBy",
+    "IsApprovedTransferLoan",
+    "LoanTransDetails",
+    "IsRejected",
+    "IsApproved",
+    "IsLoanSell",
+    "LoanId",
+    "LendderId",
+    "BorrowerId"
 ];
 $(document).ready(function () {
     const baseUrl = `/sadmin/Borrower`;
@@ -82,16 +106,40 @@ $(document).ready(function () {
             const tbody = $("#kt_category_table tbody");
             tbody.empty(); // Clear existing rows
             if (data.entity == "smartcontractabi") {
-                DisplayABIData(tbody, data);
+                const table = $("#kt_category_table");
+                table.empty();
+                table.append(data.html);
+                //DisplayABIData(tbody, data);
             }
             else if (data.entity == "smartcontractaddress") {
-                DisplayContractAddressData(tbody, data);
+                const table = $("#kt_category_table");
+                table.empty();
+                table.append(data.html);
+                //DisplayContractAddressData(tbody, data);
             }
             else if (data.entity != null && data.entity.toLowerCase() == "loandetails") {
-                DisplayLoanData(tbody, data, data.isAdmin);
+                const table = $("#kt_category_table");
+                table.empty();
+                table.append(data.html);
+                //DisplayLoanData(tbody, data, data.isAdmin, data.isEditLoan, data.isDeleteLoan);
             }
             else if (data.entity != null && data.entity.toLowerCase() == "loantransdetails") {
-                DisplayLoanTransData(tbody, data, data.isAdmin);
+                const table = $("#kt_category_table");
+                table.empty();
+                table.append(data.html);
+                //DisplayLoanTransData(tbody, data, data.isAdmin);
+            }
+            else if (data.entity == "dynamicadmins") {
+                const table = $("#kt_category_table");
+                table.empty();
+                table.append(data.html);
+                //DisplayAdminUserData(tbody, data);
+            }
+            else if (data.entity == "loanbuyinterest") {
+                const table = $("#kt_category_table");
+                table.empty();
+                table.append(data.html);
+                //DisplayLoanBuyInterestData(tbody, data, data.isAdmin);
             }
             else if (data != "" && data.fallbackData.length > 0) {
                 DisplayUserData(tbody, data.fallbackData)

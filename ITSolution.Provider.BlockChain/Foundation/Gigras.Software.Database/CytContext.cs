@@ -30,6 +30,7 @@ public partial class CytContext : DbContext
     public DbSet<SmartContractAddress> SmartContractAddress { get; set; }
     public DbSet<BorrowerLoan> BorrowerLoan { get; set; }
     public DbSet<LoanDetails> LoanDetails { get; set; }
+    public DbSet<LoanBuyInterest> LoanBuyInterest { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

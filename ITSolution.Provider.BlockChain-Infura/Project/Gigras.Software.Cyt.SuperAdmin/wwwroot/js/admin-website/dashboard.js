@@ -1,25 +1,5 @@
 ﻿document.addEventListener("DOMContentLoaded", async function () {
     await checkMetaMaskConnection();
-    if (isContractSetupDone) {
-        let isprocess = await loanContract.IsLendder();
-        if (isprocess) {
-            $("#meta-container").css("display", "none");
-            if ($(".dashboard-admin").length > 0)
-                await GetAllLendderInfo();
-            else if ($(".dashboard-user").length > 0)
-                await GetAllUserInfo();
-        }
-        else {
-            if ($(".dashboard-user").length > 0) {
-                $("#meta-container").css("display", "none");
-               await GetAllUserInfo();
-            }
-            else {
-                $("#meta-container").css("display", "block");
-                isContractSetupDone = false;
-            }
-        }
-    }
 });
 
 async function DashBoardSubmitData(actionUrl, formData) {
@@ -35,4 +15,51 @@ async function DashBoardSubmitData(actionUrl, formData) {
             // Handle the failure response
         }
     });
+}
+
+async function callAjaxWithSwal({
+    url,
+    method = 'POST',
+    data = {},
+    confirmationText = 'Are you sure?',
+    successMessage = 'Operation successful!',
+    errorMessage = 'Something went wrong!'
+}) {
+    // Show confirmation alert
+    const result = await Swal.fire({
+        title: 'Confirmation',
+        text: confirmationText,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, proceed!',
+        cancelButtonText: 'Cancel'
+    });
+
+    if (result.isConfirmed) {
+        try {
+            // Make AJAX request and return a Promise
+            const response = await $.ajax({
+                url: url,
+                method: method,
+                data: data,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            // Show success message
+            //Swal.fire('Success', successMessage, 'success');
+            return response; // Return the response
+        } catch (error) {
+            // Show error message
+            Swal.fire('Error', errorMessage, 'error');
+            console.error(error); // Log the error
+            throw error; // Rethrow the error for further handling if needed
+        }
+    } else {
+        return { status: false }
+            ; // Return null if the user cancels
+    }
 }

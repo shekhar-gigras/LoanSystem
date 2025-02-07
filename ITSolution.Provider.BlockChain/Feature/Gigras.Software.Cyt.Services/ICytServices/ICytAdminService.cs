@@ -15,7 +15,22 @@ namespace Gigras.Software.Cyt.Services.ICytServices
 
         Task<string?> GetUserId();
 
+        Task<List<ITAdmin>> GetUserList(string q = "");
+
         Task<(string? UserId, List<string> Roles)> GetUserDetails();
+
+        Task<bool> IsAddLoanAccess();
+
+        Task<bool> IsVisibleSaleLoanAccess();
+
+        Task<bool> IsEditLoanAccess();
+
+        Task<bool> IsDeleteLoanAccess();
+
+        Task<string?> GetUserUniqueId();
+
+        Task<bool> IsAdmin();
+
         // Additional methods for CytAdminService
     }
 }

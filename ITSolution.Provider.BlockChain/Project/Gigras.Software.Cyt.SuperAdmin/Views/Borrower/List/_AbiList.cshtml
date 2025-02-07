@@ -1,0 +1,50 @@
+﻿@using Gigras.Software.Database.Cyt.Entity.Models
+@model object
+@{
+    var abiList = Model as List<SmartContractAbi>;
+}
+<thead>
+    <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+        <th class="min-w-125px">#</th>
+        <th>Version</th>
+        <th>CreateBy</th>
+        <th>ModifiedBy</th>
+        <th class="text-end min-w-50px">Actions</th>
+    </tr>
+</thead>
+<tbody>
+    @foreach (var lookup in abiList!)
+    {
+        <tr>
+            <td>@lookup.Id</td>
+            <td>@lookup.Version</td>
+            <td>@lookup.CreatedBy</td>
+            <td>@lookup.UpdatedBy</td>
+            <td>
+                <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 view-json" data-id="@lookup.Id">
+                    <span class="icon">
+                        <i class="fa fa-eye"></i>
+                    </span>
+                </button>
+                <button class="btn btn-icon btn-active-light-primary w-30px h-30px" onclick="deleteRecord(@lookup.Id, 'abi')">
+                    <span class="icon">
+                        @if (lookup.IsDelete)
+                        {
+                            <i class='btn-danger fas fa-trash-alt'></i>
+                        }
+                        else
+                        {
+                            <i class='btn-success fas fa-trash-alt'></i>
+                        }
+                    </span>
+                </button>
+                <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" data-status="@lookup.IsActive"
+                        onclick="toggleStatus(this, @lookup.Id, 'abi')">
+                    <span class="icon">
+                        <i class="@(lookup.IsActive ? "fas fa-check text-success" : "fas fa-times text-danger")"></i>
+                    </span>
+                </button>
+            </td>
+        </tr>
+    }
+</tbody>

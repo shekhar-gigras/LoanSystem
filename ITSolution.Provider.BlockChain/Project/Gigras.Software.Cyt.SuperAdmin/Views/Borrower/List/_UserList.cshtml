@@ -1,0 +1,72 @@
+﻿@using Gigras.Software.Database.Cyt.Entity.Models
+@model object
+@{
+    var userList = Model as List<ITAdmin>;
+}
+
+<thead>
+    <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+        <th class="min-w-100px">#</th>
+        <th>Status</th>
+        <th class="w-200px">Name</th>
+        <th class="w-200px">Email</th>
+        <th>Phone</th>
+        <th>Actions</th>
+    </tr>
+</thead>
+<tbody>
+    @foreach (var user in userList!)
+    {
+        <tr>
+            <td>@user.Id</td>
+            <td>
+                <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                    <div class="symbol-label" style="background-color: @(user.IsActive ? "green" : (user.IsDelete ? "red" : "darkred"));">
+                        <span style="color: white; font-weight: bold;">
+                            @(user.IsActive ? "A" : (user.IsDelete ? "D" : "B"))
+                        </span>
+                    </div>
+                </div>
+            </td>
+            <td>@user.UserName</td>
+            <td>@user.Email</td>
+            <td>@user.Phone</td>
+            <td>
+                <button style="background-color: @(user.IsActive ? "green" : "red"); color: white; font-size: 10px; border: none; border-radius: 5px;"
+                        data-status="@user.IsActive"
+                        onclick="toggleUserStatus(this,'@user.UserId', 'portaluser','active')">
+                    Active
+                </button>
+                <button style="background-color: @(!user.IsDelete ? "green" : "red"); color: white; font-size: 10px; border: none; border-radius: 5px;"
+                        data-status="@user.IsDelete"
+                        onclick="toggleUserStatus(this,'@user.UserId', 'portaluser','delete')">
+                    Delete
+                </button>
+                <button style="background-color: @(!user.IsBlock ? "green" : "red"); color: white; font-size: 10px; border: none; border-radius: 5px;"
+                        onclick="toggleUserStatus(this,'@user.UserId', 'portaluser','block')">
+                    Block
+                </button>
+                <button style="background-color: @(user.IsAddLoan ? "green" : "red"); color: white; font-size: 10px; border: none; border-radius: 5px;"
+                        data-status="@user.IsAddLoan"
+                        onclick="toggleUserStatus(this,'@user.UserId', 'portaluser','addloanstatus')">
+                    Permit Add Loan
+                </button>
+                <button style="background-color: @(user.IsEditLoan ? "green" : "red"); color: white; font-size: 10px; border: none; border-radius: 5px;"
+                        data-status="@user.IsEditLoan"
+                        onclick="toggleUserStatus(this,'@user.UserId', 'portaluser','editloanstatus')">
+                    Permit Edit Loan
+                </button>
+                <button style="background-color: @(user.IsDeleteLoan ? "green" : "red"); color: white; font-size: 10px; border: none; border-radius: 5px;"
+                        data-status="@user.IsDeleteLoan"
+                        onclick="toggleUserStatus(this,'@user.UserId', 'portaluser','deleteloanstatus')">
+                    Permit Delete Loan
+                </button>
+                <button style="background-color: @(user.IsVisibleLoanSale ? "green" : "red"); color: white; font-size: 10px; border: none; border-radius: 5px;"
+                        data-status="@user.IsVisibleLoanSale"
+                        onclick="toggleUserStatus(this,'@user.UserId', 'portaluser','visibleloanstatus')">
+                    Permit Visible Sale Loan
+                </button>
+            </td>
+        </tr>
+    }
+</tbody>

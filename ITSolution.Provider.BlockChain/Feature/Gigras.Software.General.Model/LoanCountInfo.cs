@@ -13,5 +13,7 @@ namespace Gigras.Software.General.Model
         public decimal ApprovedAmount { get; set; }
         public decimal RejectedAmount { get; set; }
         public decimal PendingAmount { get; set; }
+        public List<LoanDetails>? LoanDetails { get; set; } = new List<LoanDetails>();
+        public List<LoanBuyInterest>? BuyerList { get; set; } = new List<LoanBuyInterest>();
     }
 }

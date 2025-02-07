@@ -1,0 +1,84 @@
+﻿@using Gigras.Software.Database.Cyt.Entity.Models
+@inject Gigras.Software.Cyt.Services.ICytServices.ICytAdminService cytAdmin
+
+@model object
+@{
+    bool isAdmin = await cytAdmin.IsAdmin();
+    bool isEditLoan = await cytAdmin.IsEditLoanAccess();
+    bool isDeleteLoan = await cytAdmin.IsDeleteLoanAccess();
+    var loanList = Model as List<LoanDetails>;
+}
+
+<thead>
+    <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+        <th class="min-w-125px">#</th>
+        <th>Status</th>
+        <th>Borrower Name</th>
+        <th>Lender Name</th>
+        <th>Principal Amount</th>
+        <th>Interest Rate</th>
+        <th>Created By</th>
+        <th>Modified By</th>
+        <th class="text-end min-w-50px">Actions</th>
+    </tr>
+</thead>
+<tbody>
+    @foreach (var user in loanList!)
+    {
+        <tr>
+            <td>@user.Id</td>
+            <td>
+                <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                    <div class="symbol-label" style="background-color: @(user.IsApproved ? "green" : (user.IsRejected ? "red" : "yellow"));">
+                        <span style="color: @(user.IsApproved ? "white" : (user.IsRejected ? "white" : "blue")); font-weight: bold;">
+                            @(user.IsApproved ? "A" : (user.IsRejected ? "R" : "P"))
+                        </span>
+                    </div>
+                </div>
+            </td>
+            <td>@user.BorrowerName</td>
+            <td>@user.LenderName</td>
+            <td>@user.PrincipalAmount.ToString("F2")</td>
+            <td>@user.InterestRate.ToString("F2")</td>
+            <td>@user.CreatedBy</td>
+            <td>@user.CreatedAt!.Value.ToString("dd-MMM-yyyy")</td>
+            <td>
+                @if (isAdmin)
+                {
+                    <button class="view-json" style="background-color: green; color: white; font-size: 10px; border: none; border-radius: 5px;" data-id="@user.Id">
+                        View
+                    </button>
+                }
+                @if ((!isAdmin && !user.IsApproved && isEditLoan) || (isAdmin && !user.IsApproved && user.CreatedBy == "admin"))
+                {
+                    <button class="edit-btn" style="background-color: green; color: white; font-size: 10px; border: none; border-radius: 5px;" data-id="@user.Id">
+                        Edit
+                    </button>
+                }
+                @if ((!isAdmin && !user.IsApproved && isDeleteLoan) || (isAdmin && !user.IsApproved && user.CreatedBy == "admin"))
+                {
+                    <button style="background-color: @(user.IsDelete ? "red" : "green"); color: white; font-size: 10px; border: none; border-radius: 5px;" data-status="@user.IsDelete"
+                            onclick="deleteRecord('@user.LoanId','loandetails')">
+                        Delete
+                    </button>
+                }
+                @if ((!isAdmin && user.IsApproved) || (isAdmin && !user.IsApproved && user.CreatedBy == "admin"))
+                {
+                    <button style="background-color: @(user.IsLoanSell ? "blue" : "green"); color: white; font-size: 10px; border: none; border-radius: 5px;" data-status="@user.IsLoanSell"
+                            onclick="toggleUserStatus(this,'@user.LoanId', 'loandetails','sell')">
+                        Sell
+                    </button>
+                }
+                @if (isAdmin && !user.IsApproved && !user.IsRejected)
+                {
+                    <button style="background-color: @(user.IsApproved ? "blue" : "green"); color: white; font-size: 10px; border: none; border-radius: 5px;" data-status="@user.IsApproved" onclick="approveLoan('@user.LoanId','loandetails')">
+                        Approve
+                    </button>
+                    <button style="background-color: @(user.IsRejected ? "blue" : "green"); color: white; font-size: 10px; border: none; border-radius: 5px;" data-status="@user.IsRejected" onclick="rejectLoan('@user.LoanId','loandetails')">
+                        Reject
+                    </button>
+                }
+            </td>
+        </tr>
+    }
+</tbody>

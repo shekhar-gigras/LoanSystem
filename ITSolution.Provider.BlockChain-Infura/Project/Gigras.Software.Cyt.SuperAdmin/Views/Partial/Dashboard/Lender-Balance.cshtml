@@ -1,4 +1,7 @@
-﻿<div class="col-md-4">
+﻿@using Gigras.Software.General.Model
+@model LoanCountInfo
+
+<div class="col-md-2">
     <div class="card custom-card text-white">
         <div class="card-header border-0 pt-9">
             <div class="card-title m-0">
@@ -12,7 +15,7 @@
         </div>
         <div class="card-body p-9">
             <div class="fs-3 fw-bolder">Lender Balance</div>
-            <div class="fs-5 text-red" id="lendder-balance">Loading....</div>
+            <div class="fs-5 text-red" id="lendder-balance">@Model.LenderBalance</div>
         </div>
     </div>
 </div>

@@ -73,6 +73,7 @@ async function ChangeSmartContractLendder(address) {
                             else {
                                 document.getElementById('lendder-address').textContent = "";
                             }
+                            window.location.reload();
                         } else {
                             document.getElementById('lendder-address').textContent = "";
                             setTimeout(() => {

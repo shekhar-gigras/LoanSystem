@@ -1,7 +1,7 @@
 ﻿@using Gigras.Software.General.Model
 @model LoanCountInfo
 
-<div class="col-md-3">
+<div class="col-12 col-md-3">
     <div class="card custom-card text-white">
         <div class="card-header border-0 pt-9">
             <div class="card-title m-0">
@@ -13,6 +13,7 @@
         <div class="card-body p-9">
             <div class="fs-3 fw-bolder">Requested Borrower</div>
             <div class="fs-5 text-red" id="active-borrower">Total : @Model.CountPending</div>
+            <div class="fs-5 text-red" id="active-borrower">Amount : @Model.PendingAmount</div>
         </div>
     </div>
 </div>

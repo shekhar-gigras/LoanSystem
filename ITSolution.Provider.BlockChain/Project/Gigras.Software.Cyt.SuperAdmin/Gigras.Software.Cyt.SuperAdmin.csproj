@@ -8,6 +8,10 @@
     <RazorCompileOnBuild>false</RazorCompileOnBuild>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\DynamicForm\BorrowerController.cs" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DNTCaptcha.Core" Version="5.2.8" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
@@ -36,5 +40,9 @@
     <ProjectReference Include="..\..\Foundation\Gigras.Software.Database.Cyt.Entity\Gigras.Software.Database.Cyt.Entity.csproj" />
     <ProjectReference Include="..\..\Foundation\Gigras.Software.Database\Gigras.Software.Database.csproj" />
     <ProjectReference Include="..\..\Foundation\Gigras.Software.Generic.DynamicControl\Gigras.Software.Generic.DynamicControl.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\DynamicForm\Partial\" />
   </ItemGroup>
 </Project>

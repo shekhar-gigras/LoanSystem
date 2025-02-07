@@ -50,9 +50,9 @@ async function AddSmartContractFund(amount) {
                                 document.getElementById('contract-balance').textContent = "Balance : " + balance;
                                 document.getElementById('current-balance').textContent = "Balance : " + balance;
                                 document.getElementById('takeout-balance').textContent = "Balance : " + balance;
-                          } else {
+                            } else {
                                 document.getElementById('contract-balance').textContent = "Balance : " + 0;
-                          }
+                            }
                             setTimeout(async () => {
                                 Swal.close(); // Close any previous Swal instances
                                 Swal.fire({
@@ -68,8 +68,8 @@ async function AddSmartContractFund(amount) {
                                     formData.set("FormId", "20")
                                     formData.set("Previous Balance", PreviousBalance)
                                     formData.set("Current Balance", balance)
-                                   formData.set("MetaMaskID", await loanContract.getAddress())
-                                    let actionUrl = "/sadmin/borrower/submit-form"
+                                    formData.set("MetaMaskID", await loanContract.getAddress())
+                                    let actionUrl = "/sadmin/borrower/a/20/submit-form"
                                     await DashBoardSubmitData(actionUrl, formData);  // Now it will work
                                     PreviousBalance = balance;
                                 });

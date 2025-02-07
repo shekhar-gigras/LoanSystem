@@ -45,8 +45,14 @@ class LoanContract {
             const lenderAddress = accounts[0];
 
             // Call fundContract method
-            await this.contract.methods.fundContract()
+            let transaction  = await this.contract.methods.fundContract()
                 .send({ from: lenderAddress, value: this.web3.utils.toWei(amount.toString(), 'wei') });
+            console.log("Transaction Hash:", transaction.transactionHash);
+            console.log("Block Number:", transaction.blockNumber);
+            console.log("Gas Used:", transaction.gasUsed);
+            console.log("Sender Address:", transaction.from);
+            console.log("Contract Address:", transaction.to);
+            console.log("Status:", transaction.status);
             return true
         } catch {
             return false;

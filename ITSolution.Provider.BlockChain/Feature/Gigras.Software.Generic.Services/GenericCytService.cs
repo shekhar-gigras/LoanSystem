@@ -39,6 +39,7 @@ namespace Gigras.Software.Generic.Services
         {
             return await _repository.GetByIdAsync(id, filter, includes);
         }
+
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             try
@@ -47,7 +48,6 @@ namespace Gigras.Software.Generic.Services
             }
             catch (Exception ex)
             {
-
             }
             return null;
         }
@@ -92,6 +92,7 @@ namespace Gigras.Software.Generic.Services
         {
             await _repository.DeleteManyAsync(ids, IsSave);
         }
+
         public async Task DeleteByConditionAsync(Func<T, bool> condition, bool IsSave = true)
         {
             await _repository.DeleteByConditionAsync(condition, IsSave);

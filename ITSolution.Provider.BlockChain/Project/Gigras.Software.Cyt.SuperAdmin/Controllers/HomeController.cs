@@ -7,7 +7,7 @@ using System.Diagnostics;
 namespace Gigras.Software.Cyt.SuperAdmin.Controllers
 {
     [Route("sadmin")]
-    [Authorize(Roles = "Admin,User")]
+    [Authorize(Roles = "Admin,Lender")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

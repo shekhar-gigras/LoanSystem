@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace Gigras.Software.Database.Cyt.Entity.Models
 {
@@ -11,6 +10,8 @@ namespace Gigras.Software.Database.Cyt.Entity.Models
         public int Id { get; set; } // Assuming an auto-generated primary key for the table
 
         public Guid LoanId { get; set; } // Unique identifier for the loan
+        public Guid LendderId { get; set; } // Unique identifier for the loan
+        public Guid BorrowerId { get; set; } // Unique identifier for the loan
 
         [MaxLength(500)]
         public string? MetaMaskID { get; set; } // Unique identifier for the MetaMask user
@@ -96,6 +97,8 @@ namespace Gigras.Software.Database.Cyt.Entity.Models
         public bool IsApproved { get; set; } = true;
 
         public bool IsRejected { get; set; } = false;
+        public bool IsLoanSell { get; set; } = false;
+        public bool IsApprovedTransferLoan { get; set; } = false;
 
         public ICollection<LoanTransDetails>? LoanTransDetails { get; set; }
     }

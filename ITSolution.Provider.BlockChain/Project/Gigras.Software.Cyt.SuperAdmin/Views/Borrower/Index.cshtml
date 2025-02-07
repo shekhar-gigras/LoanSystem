@@ -1,4 +1,6 @@
 ﻿@using Gigras.Software.Database.Cyt.Entity.Models
+@inject Gigras.Software.Cyt.Services.ICytServices.ICytAdminService cytadmin
+
 @model Form
 @{
     Layout = "~/Views/Shared/_UserLayout.cshtml";
@@ -8,6 +10,8 @@
     ViewBag.Title = $"{Model.FormDescription}";
     csc = Model.FormName;
     mode = "form";
+
+    var hasLoanAccess = await cytadmin.IsAddLoanAccess();
 }
 
 <div class="full-page-heading text-center">
@@ -39,32 +43,40 @@
                         @if (Model.FormName.ToLower() == "transactionlog")
                         {
                             <!--end::Svg Icon-->
-                            <input type="text" data-kt-category-table-filter="loan-trans-search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Category" />
+                            <input type="text" data-kt-category-table-filter="loan-trans-search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Transaction" />
+                        }
+                        else if (Model.EntityName.ToLower() == "dynamicadmins")
+                        {
+                            <!--end::Svg Icon-->
+                            <input type="text" data-kt-category-table-filter="user-search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Users" />
                         }
                         else
                         {
                             <!--end::Svg Icon-->
-                            <input type="text" data-kt-category-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Category" />
+                            <input type="text" data-kt-category-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search....." />
                         }
                     </div>
                     <!--end::Search-->
                 </div>
                 <!--end::Card title-->
-                @if (ViewBag.FormDescription == null || (Model.FormDescription != null && !Model.FormDescription!.ToLower().Contains("transaction")))
+                @if (ViewBag.FormDescription == null || (Model.FormDescription != null && (!Model.FormDescription!.ToLower().Contains("transaction") && !Model.FormDescription!.ToLower().Contains("lendders") && !Model.FormName!.ToLower().Contains("loanbuyrequest"))))
                 {
-                    <!--begin::Card toolbar-->
-                    <div class="card-toolbar">
-                        <!--begin::Button-->
-                        <button type="button" class="btn btn-light-primary" onclick="location.href='/sadmin/borrower/@Model.FormGroup/@mode/@csc'">
-                            <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
-                            <span class="svg-icon svg-icon-3">
-                                <i class="fa fa-plus"></i>
-                            </span>
-                            <!--end::Svg Icon-->
-                            Add  @Html.Raw(Model.FormDescription)
-                        </button>
-                        <!--end::Button-->
-                    </div>
+                    @if (User.IsInRole("Admin") || hasLoanAccess)
+                    {
+                        <!--begin::Card toolbar-->
+                        <div class="card-toolbar">
+                            <!--begin::Button-->
+                            <button type="button" class="btn btn-light-primary" onclick="location.href='/sadmin/borrower/@Model.FormGroup/@mode/@csc'">
+                                <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+                                <span class="svg-icon svg-icon-3">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                <!--end::Svg Icon-->
+                                Add  @Html.Raw(Model.FormDescription)
+                            </button>
+                            <!--end::Button-->
+                        </div>
+                    }
                     <!--end::Card toolbar-->
                 }
             </div>
@@ -122,6 +134,8 @@
 <script src="~/js/admin-website/module/loan-data.js"></script>
 <script src="~/js/admin-website/module/user-data.js"></script>
 <script src="~/js/admin-website/module/loan-trans-data.js"></script>
+<script src="~/js/admin-website/module/admin-user-data.js"></script>
+<script src="~/js/admin-website/module/loan-buy-interest.js"></script>
 
 @if (Model.IsMetaMaskRequired && User.IsInRole("Admin"))
 {

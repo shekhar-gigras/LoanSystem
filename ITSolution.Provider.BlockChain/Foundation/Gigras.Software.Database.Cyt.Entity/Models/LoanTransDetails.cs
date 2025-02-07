@@ -9,12 +9,14 @@ namespace Gigras.Software.Database.Cyt.Entity.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; } // Assuming an auto-generated primary key for the table
 
-        [ForeignKey("LoanDetail")] // Specifies the foreign key relationship
-        public int LinkId { get; set; } // Assuming an auto-generated primary key for the table
+        public int LoanDetailId { get; set; } // Assuming an auto-generated primary key for the table
 
-        public LoanDetails? LoanDetail { get; set; } // Assuming an auto-generated primary key for the table
+        [ForeignKey(nameof(LoanDetailId))]
+        public LoanDetails? LoanDetails { get; set; }
 
         public Guid LoanId { get; set; } // Unique identifier for the loan
+        public Guid LendderId { get; set; } // Unique identifier for the loan
+        public Guid BorrowerId { get; set; } // Unique identifier for the loan
 
         [MaxLength(500)]
         public string? MetaMaskID { get; set; } // Unique identifier for the MetaMask user
@@ -100,5 +102,7 @@ namespace Gigras.Software.Database.Cyt.Entity.Models
         public bool IsApproved { get; set; } = true;
 
         public bool IsRejected { get; set; } = false;
+        public bool IsLoanSell { get; set; } = false;
+        public bool IsApprovedTransferLoan { get; set; } = false;
     }
 }

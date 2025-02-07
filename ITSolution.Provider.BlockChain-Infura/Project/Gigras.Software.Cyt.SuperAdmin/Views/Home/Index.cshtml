@@ -23,11 +23,11 @@
         {
             @await Html.PartialAsync("~/Views/Partial/Dashboard/Change-Lender.cshtml")
             @await Html.PartialAsync("~/Views/Partial/Dashboard/SmartContract-Fund.cshtml")
-            @await Html.PartialAsync("~/Views/Partial/Dashboard/Add-Fund.cshtml")
+@*             @await Html.PartialAsync("~/Views/Partial/Dashboard/Add-Fund.cshtml")
             @await Html.PartialAsync("~/Views/Partial/Dashboard/TakeOut-Fund.cshtml")
-            @await Html.PartialAsync("~/Views/Partial/Dashboard/Lender-Balance.cshtml")
-            @await Html.PartialAsync("~/Views/Partial/Dashboard/Active-Borrower.cshtml")
-            @* @await Html.PartialAsync("~/Views/Partial/Dashboard/Request-Borrower.cshtml") *@
+             @await Html.PartialAsync("~/Views/Partial/Dashboard/Lender-Balance.cshtml")
+             @await Html.PartialAsync("~/Views/Partial/Dashboard/Active-Borrower.cshtml")
+             @await Html.PartialAsync("~/Views/Partial/Dashboard/Request-Borrower.cshtml") *@
         }
         @if (User.IsInRole("Admin") || User.IsInRole("User"))
         {
@@ -35,10 +35,11 @@
             @await Html.PartialAsync("~/Views/Partial/UserDashboard/Approved-Borrower.cshtml", Model)
             @await Html.PartialAsync("~/Views/Partial/UserDashboard/Rejected-Borrower.cshtml", Model)
             @await Html.PartialAsync("~/Views/Partial/UserDashboard/Deleted-Borrower.cshtml", Model)
-            @await Html.PartialAsync("~/Views/Partial/UserDashboard/Requested-BorrowerAmount.cshtml", Model)
+@*             @await Html.PartialAsync("~/Views/Partial/UserDashboard/Requested-BorrowerAmount.cshtml", Model)
             @await Html.PartialAsync("~/Views/Partial/UserDashboard/Approved-BorrowerAmount.cshtml", Model)
             @await Html.PartialAsync("~/Views/Partial/UserDashboard/Rejected-BorrowerAmount.cshtml", Model)
             @await Html.PartialAsync("~/Views/Partial/UserDashboard/Deleted-BorrowerAmount.cshtml", Model)
+ *@        
         }
     </div>
 </div>

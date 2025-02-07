@@ -1,0 +1,48 @@
+﻿@using Gigras.Software.Database.Cyt.Entity.Models
+@model object
+@{
+    var transList = Model as List<LoanTransDetails>;
+}
+<thead>
+    <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+        <th class="min-w-125px">#</th>
+        <th>Status</th>
+        <th>Borrower Name</th>
+        <th>Lender Name</th>
+        <th>Principal Amount</th>
+        <th>Interest Rate</th>
+        <th>CreateBy</th>
+        <th>ModifiedBy</th>
+        <th class="text-end min-w-50px">Actions</th>
+    </tr>
+</thead>
+<tbody>
+    @foreach (var user in transList!)
+    {
+        <tr>
+            <td>@user.Id</td>
+            <td>
+                <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                    <div class="symbol-label" style="background-color: @(user.IsApproved ? "green" : (user.IsRejected ? "red" : "yellow"));">
+                        <span style="color: @(user.IsApproved ? "white" : (user.IsRejected ? "white" : "blue")); font-weight: bold;">
+                            @(user.IsApproved ? "A" : (user.IsRejected ? "R" : "P"))
+                        </span>
+                    </div>
+                </div>
+            </td>
+            <td>@user.BorrowerName</td>
+            <td>@user.LenderName</td>
+            <td>@user.PrincipalAmount.ToString("F2")</td>
+            <td>@user.InterestRate.ToString("F2")</td>
+            <td>@user.CreatedBy</td>
+            <td>@user.CreatedAt.Value.ToString("dd/MMM/yyyy")</td>
+            <td>
+                <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 view-json" data-id="@user.Id">
+                    <span class="icon">
+                        <i class="fa fa-eye"></i>
+                    </span>
+                </button>
+            </td>
+        </tr>
+    }
+</tbody>

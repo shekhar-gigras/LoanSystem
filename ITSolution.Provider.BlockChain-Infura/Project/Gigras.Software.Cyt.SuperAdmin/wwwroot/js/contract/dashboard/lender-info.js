@@ -1,5 +1,5 @@
 ﻿async function GetAllLendderInfo() {
-    if (typeof loanContract == 'undefined')
+    if (!IsMetaMaskLoggedIn)
         await checkMetaMaskConnection();
     else {
         if (typeof window.ethereum !== 'undefined') {
@@ -16,10 +16,10 @@
                 try {
                     let isprocess = await loanContract.IsLendder();
                     if (isprocess) {
-                        await GetContractFund();
-                        await GetLenderBalance();
-                        await GetTotalActiveBorrower();
-                        await GetLenderAddress();
+                        //await GetContractFund();
+                        //await GetLenderBalance();
+                        //await GetTotalActiveBorrower();
+                        //await GetLenderAddress();
                         Swal.close();
                     }
                     else {

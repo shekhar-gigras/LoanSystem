@@ -112,6 +112,29 @@ namespace Gigras.Software.Generic.Repositories
                 .FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
         }
 
+        public async Task<T?> GetByIdAsync(
+            int? id,
+            Expression<Func<T, bool>> predicate,
+            Func<IQueryable<T>, IQueryable<T>>? include = null)
+        {
+            var query = _context.Set<T>().AsQueryable();
+
+            // Apply includes if provided
+            if (include != null)
+            {
+                query = include(query);
+            }
+
+            // Apply predicate if provided
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
+
+            // Find by ID if it is not null, otherwise return based on the predicate
+            return id.HasValue ? await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id) : await query.FirstOrDefaultAsync();
+        }
+
         public async Task<T> GetByIdAsync(int id, params Expression<Func<T, object?>>[] includes)
         {
             IQueryable<T> query = _context.Set<T>();
@@ -164,7 +187,6 @@ namespace Gigras.Software.Generic.Repositories
                                   .FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
             }
         }
-
 
         public async Task<T> GetByIdAsync(int id)
         {

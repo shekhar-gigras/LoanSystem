@@ -26,9 +26,25 @@ $(document).ready(function () {
 });
 
 async function ChangeSmartContractLendder(address) {
-    if (typeof loanContract == 'undefined')
+    if (!IsMetaMaskLoggedIn)
         await checkMetaMaskConnection();
     else {
+        try {
+            let response = await callAjaxWithSwal({
+                url: "/api/ethereum/change-lender", // Replace with your URL
+                method: 'POST',
+                data: JSON.stringify({ LenderAddress: accounts[0], RequestAddress: address }), // Replace with your data
+                confirmationText: 'Do you really want to proceed?',
+                successMessage: 'The operation was completed successfully!',
+                errorMessage: 'Failed to complete the operation.'
+            })
+            await sendTransactionToMetaMask(response.result);
+        }
+        catch (error) {
+            alert(`Transaction failed: ${error.message}`);
+        }
+
+        return;
         if (typeof window.ethereum !== 'undefined') {
             const accounts = await ethereum.request({ method: 'eth_accounts' });
             if (accounts.length > 0) {

@@ -35,6 +35,7 @@ namespace Gigras.Software.Cyt.Services
             services.AddScoped<IBorrowerLoanService, BorrowerLoanService>();
             services.AddScoped<ILoanDetailsService, LoanDetailsService>();
             services.AddScoped<ILoanTransDetailsService, LoanTransDetailsService>();
+            services.AddScoped<ILoanBuyInterestService, LoanBuyInterestService>();
         }
     }
 }

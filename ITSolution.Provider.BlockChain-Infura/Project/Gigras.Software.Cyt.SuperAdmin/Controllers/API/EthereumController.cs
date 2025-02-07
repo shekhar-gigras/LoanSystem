@@ -1,4 +1,6 @@
-﻿using Gigras.Software.Cyt.Services.CytServcies;
+﻿using Gigras.Software.BlockChain.Service;
+using Gigras.Software.Cyt.Services.CytServcies;
+using Gigras.Software.General.Model;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -11,14 +13,17 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.API
         private readonly ISmartContractAbiService _smartContractAbiService;
         private readonly ISmartContractAddressService _smartContractAddressService;
         private readonly IDynamicUserDataService _dynamicUserDataService;
+        private readonly ISmartContractService _smartContractService;
 
         public EthereumController(ISmartContractAbiService smartContractAbiService,
             ISmartContractAddressService smartContractAddressService,
+            ISmartContractService smartContractService,
             IDynamicUserDataService dynamicUserDataService)
         {
             _smartContractAbiService = smartContractAbiService;
             _smartContractAddressService = smartContractAddressService;
             _dynamicUserDataService = dynamicUserDataService;
+            _smartContractService = smartContractService;
         }
 
         [HttpPost("borrower-lists")]
@@ -67,11 +72,37 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.API
             var address = await _smartContractAddressService.GetAllAsync(x => x.IsActive && !x.IsDelete);
             return this.Ok(address.FirstOrDefault());
         }
-    }
 
-    public class RequestBorrows
-    {
-        public List<string>? RequestedBorrowers { get; set; }
-        public List<string>? ActiveBorrowers { get; set; }
+        [HttpGet("wallet-balance")]
+        public async Task<IActionResult> WalletBalance()
+        {
+            await _smartContractService.InitializeAsync();
+            var response = await _smartContractService.GetWalletAsync();
+            return this.Ok(response);
+        }
+
+        [HttpPost("add-wallet-fund")]
+        public async Task<IActionResult> AddWalletFund(RequestModel request)
+        {
+            await _smartContractService.InitializeAsync(true);
+            var response = await _smartContractService.AddContractFundDataAsync(request.SenderAddress!, request.AmountInEther!.Value);
+            return this.Ok(response);
+        }
+
+        [HttpPost("change-lender")]
+        public async Task<IActionResult> ChangeLender(RequestModel request)
+        {
+            await _smartContractService.InitializeAsync();
+            var response = await _smartContractService.ChangeContractOwnerDataAsync(request.SenderAddress!, request.RequestAddress!);
+            return this.Ok(response);
+        }
+
+        [HttpPost("prepare-transaction")]
+        public async Task<IActionResult> PrepareTransaction(TransactionRequestModel request)
+        {
+            await _smartContractService.InitializeAsync();
+            var response = await _smartContractService.PrepareTransaction(request);
+            return Ok(response);
+        }
     }
 }

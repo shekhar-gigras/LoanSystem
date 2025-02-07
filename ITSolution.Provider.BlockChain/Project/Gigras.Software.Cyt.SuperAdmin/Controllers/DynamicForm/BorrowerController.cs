@@ -4,10 +4,8 @@ using Gigras.Software.Database.Cyt.Entity.Models;
 using Gigras.Software.General.Helper;
 using Gigras.Software.General.Model;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Text;
 
 namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
 {
@@ -21,10 +19,13 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
         private readonly ILoanDetailsService _loanDetailsService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IConfiguration _configuration;
+        private readonly ILoanBuyInterestService _loanBuyInterestService;
 
         public BorrowerController(IDynamicFormService dynamicFormService, ICytAdminService cytAdminService,
             IDynamicUserDataService dynamicUserDataService, ISmartContractAbiService smartContractAbiService,
-            ISmartContractAddressService smartContractAddressService, ILoanDetailsService loanDetailsService, IWebHostEnvironment webHostEnvironment, IConfiguration configuration) : base(dynamicFormService, cytAdminService)
+            ISmartContractAddressService smartContractAddressService, ILoanDetailsService loanDetailsService,
+            IWebHostEnvironment webHostEnvironment, IConfiguration configuration,
+            ILoanBuyInterestService loanBuyInterestService) : base(dynamicFormService, cytAdminService)
         {
             _dynamicUserDataService = dynamicUserDataService;
             _smartContractAbiService = smartContractAbiService;
@@ -32,11 +33,12 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
             _loanDetailsService = loanDetailsService;
             _webHostEnvironment = webHostEnvironment;
             _configuration = configuration;
+            _loanBuyInterestService = loanBuyInterestService;
         }
 
         [Route("borrower/aau/{formname}")]
         [HttpGet]
-        [Authorize(Roles = "Admin,User")] // Specify multiple roles here
+        [Authorize(Roles = "Admin,Lender")] // Specify multiple roles here
         public async Task<IActionResult> BothFormList(string formname)
         {
             var objForm = new Form();
@@ -51,7 +53,7 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
 
         [Route("borrower/aau/form/{formname}")]
         [HttpGet]
-        [Authorize(Roles = "Admin,User")] // Specify multiple roles here
+        [Authorize(Roles = "Admin,Lender")] // Specify multiple roles here
         public async Task<IActionResult> BothForm(string formname)
         {
             var form = await _dynamicFormService.GetForm("form", formname);
@@ -60,10 +62,13 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
 
         [Route("borrower/aau/{formid}/get-userdata-list")]
         [HttpGet]
-        [Authorize(Roles = "Admin,User")] // Specify multiple roles here
+        [Authorize(Roles = "Admin,Lender")] // Specify multiple roles here
         public async Task<IActionResult> getBothUserDataList(int formid)
         {
             var userdetail = await _cytAdminService.GetUserDetails();
+            var IsEditLoan = await _cytAdminService.IsEditLoanAccess();
+            var IsDeleteLoan = await _cytAdminService.IsDeleteLoanAccess();
+
             try
             {
                 var objForm = await _dynamicFormService.GetByIdAsync(formid);
@@ -77,12 +82,13 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
                         var serviceMapping = new Dictionary<string, Func<Task<object>>>
                         {
                             { "loandetails", async () => await _loanDetailsService.GetList() },
+                            { "loanbuyinterest", async () => await _loanBuyInterestService.GetList() },
                         };
 
                         if (serviceMapping.TryGetValue(entityName, out var serviceCall))
                         {
                             var data = await serviceCall();
-                            return Ok(new { entity = entityName, isAdmin = userdetail.Roles.Contains("Admin"), data });
+                            return Ok(new { entity = entityName, IsEditLoan = IsEditLoan, IsDeleteLoan = IsDeleteLoan, isAdmin = userdetail.Roles.Contains("Admin"), data });
                         }
                     }
 
@@ -102,7 +108,7 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
 
         [Route("borrower/aau/{formid}/get-user-data")]
         [HttpGet]
-        [Authorize(Roles = "Admin,User")] // Specify multiple roles here
+        [Authorize(Roles = "Admin,Lender")] // Specify multiple roles here
         public async Task<IActionResult> GetBothJsonData(int formid, int id)
         {
             try
@@ -151,7 +157,7 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
 
         [Route("borrower/aau/{formid}/edit-form/{id:int}")]
         [HttpGet]
-        [Authorize(Roles = "Admin,User")] // Specify multiple roles here
+        [Authorize(Roles = "Admin,Lender")] // Specify multiple roles here
         public async Task<IActionResult> BothEditForm(int formid, int id)
         {
             try
@@ -212,7 +218,7 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
 
         [Route("borrower/aau/{formid}/{loanid}/submit-form")]
         [HttpPost]
-        [Authorize(Roles = "Admin,User")] // Specify multiple roles here
+        [Authorize(Roles = "Admin,Lender")] // Specify multiple roles here
         public async Task<IActionResult> SubmitForm(int formid, string loanid, Dictionary<string, List<string>> fieldValuesList)
         {
             try
@@ -225,6 +231,8 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
                 fieldValues["Id"] = (!fieldValues.ContainsKey("Id") || (fieldValues.ContainsKey("Id") && string.IsNullOrEmpty(fieldValues["Id"])) ? "0" : fieldValues["Id"]);
                 fieldValues["LoanId"] = loanid;
                 fieldValues["FormId"] = formid.ToString();
+                fieldValues["BorrowerId"] = (!fieldValues.ContainsKey("BorrowerId") || (fieldValues.ContainsKey("BorrowerId") && string.IsNullOrEmpty(fieldValues["BorrowerId"])) ? Guid.NewGuid().ToString() : fieldValues["BorrowerId"]);
+                fieldValues["LendderId"] = (!fieldValues.ContainsKey("LendderId") || (fieldValues.ContainsKey("LendderId") && string.IsNullOrEmpty(fieldValues["LendderId"])) ? await _cytAdminService.GetUserUniqueId() : fieldValues["LendderId"]);
                 var entity = fieldValues["Entity"].ToString();
                 var form = await _dynamicFormService.GetForm("any", formid.ToString());
                 var checkbox = form.FormsSections!.Select(x => x.FormFields!.Where(cv => cv.FieldType!.CtrlType!.ToLower() == "checkbox").Select(x => x.FieldType!.FieldName)).ToList();
@@ -241,10 +249,10 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
                     case "loandetails":
                         await _dynamicUserDataService.SubmitData(fieldValues);
                         await _loanDetailsService.SubmitData(fieldValues);
-                        var users= await _cytAdminService.GetAllAsync(x=>x.UserName.ToLower() == "admin");
+                        var users = await _cytAdminService.GetAllAsync(x => x.UserName.ToLower() == "admin");
                         var objUser = users.FirstOrDefault()!;
                         string rootpath = _webHostEnvironment.ContentRootPath + "//wwwroot";
-                        string template = await EmailHelper.ReadEmailTemplate(rootpath, "LoanRequest.html", "", "", "Loan request from "+ objUser.Name!);
+                        string template = await EmailHelper.ReadEmailTemplate(rootpath, "LoanRequest.html", "", "", "Loan request from " + objUser.Name!);
                         await EmailHelper.SendEmailAsync(_configuration, objUser.Name!, objUser.Email, "Loan request from " + objUser.Name!, template);
 
                         break;
@@ -310,7 +318,8 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
                                { "smartcontractabi", async () => await _smartContractAbiService.GetList() },
                                { "smartcontractaddress", async () => await _smartContractAddressService.GetList() },
                                { "loandetails", async () => await _loanDetailsService.GetTransList(q) },
-                      };
+                                { "dynamicadmins", async () => await _cytAdminService.GetUserList(q) },
+                     };
 
                         if (serviceMapping.TryGetValue(entityName, out var serviceCall))
                         {
@@ -453,10 +462,10 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
 
         //Admin
 
-        [Route("borrower/a/{formid}/{loanid}/submit-form")]
+        [Route("borrower/a/{formid}/submit-form")]
         [HttpPost]
         [Authorize(Roles = "Admin")] // Specify multiple roles here
-        public async Task<IActionResult> AdminSubmitForm(int formid, string loanid, Dictionary<string, List<string>> fieldValuesList)
+        public async Task<IActionResult> AdminSubmitForm(int formid, Dictionary<string, List<string>> fieldValuesList)
         {
             try
             {
@@ -464,11 +473,8 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
                             kvp => kvp.Key,
                             kvp => string.Join(",", kvp.Value)
                         );
-                fieldValues["Entity"] = (fieldValues.ContainsKey("Entity") ? fieldValues["Entity"] : "");
                 fieldValues["Id"] = (!fieldValues.ContainsKey("Id") || (fieldValues.ContainsKey("Id") && string.IsNullOrEmpty(fieldValues["Id"])) ? "0" : fieldValues["Id"]);
 
-                var entity = fieldValues["Entity"].ToString();
-                fieldValues["LoanId"] = loanid;
                 var form = await _dynamicFormService.GetForm("any", formid.ToString());
                 var checkbox = form.FormsSections!.Select(x => x.FormFields!.Where(cv => cv.FieldType!.CtrlType!.ToLower() == "checkbox").Select(x => x.FieldType!.FieldName)).ToList();
                 foreach (var item in checkbox)
@@ -479,25 +485,7 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
                         fieldValues[fieldKey] = string.Join(",", Request.Form[fieldKey]);
                     }
                 }
-                switch (entity.ToLower())
-                {
-                    case "contract-address":
-                        await _smartContractAddressService.SubmitData(fieldValues);
-                        break;
-
-                    case "contract-abi":
-                        await _smartContractAbiService.SubmitData(fieldValues);
-                        break;
-
-                    case "loandetails":
-                        await _dynamicUserDataService.SubmitData(fieldValues);
-                        await _loanDetailsService.SubmitData(fieldValues);
-                        break;
-
-                    default:
-                        await _dynamicUserDataService.SubmitData(fieldValues);
-                        break;
-                }
+                await _dynamicUserDataService.SubmitData(fieldValues);
                 return this.Ok();
             }
             catch (Exception ex)
@@ -507,6 +495,5 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.DynamicForm
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
-
     }
 }

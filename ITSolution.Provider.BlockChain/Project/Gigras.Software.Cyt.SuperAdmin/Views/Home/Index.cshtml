@@ -1,8 +1,10 @@
 ﻿@using Gigras.Software.General.Model
+@inject Gigras.Software.Cyt.Services.ICytServices.ICytAdminService cytAdmin
+
 @model LoanCountInfo
 @{
     ViewData["Title"] = "Home Page";
-    var usettype = User.IsInRole("Admin") ? "admin" : "user";
+    var usettype = User.IsInRole("Admin") ? "admin" : "lender";
 }
 <style>
 
@@ -29,7 +31,7 @@
             @await Html.PartialAsync("~/Views/Partial/Dashboard/Active-Borrower.cshtml")
             @* @await Html.PartialAsync("~/Views/Partial/Dashboard/Request-Borrower.cshtml") *@
         }
-        @if (User.IsInRole("Admin") || User.IsInRole("User"))
+        @if (User.IsInRole("Admin") || User.IsInRole("Lender"))
         {
             @await Html.PartialAsync("~/Views/Partial/UserDashboard/Requested-Borrower.cshtml",Model)
             @await Html.PartialAsync("~/Views/Partial/UserDashboard/Approved-Borrower.cshtml", Model)
@@ -40,6 +42,8 @@
             @await Html.PartialAsync("~/Views/Partial/UserDashboard/Rejected-BorrowerAmount.cshtml", Model)
             @await Html.PartialAsync("~/Views/Partial/UserDashboard/Deleted-BorrowerAmount.cshtml", Model)
         }
+
+        @await Html.PartialAsync("~/Views/Partial/UserDashboard/SellLoan.cshtml", Model)
     </div>
 </div>
 <script>
@@ -77,4 +81,5 @@
     <script src="~/js/contract/dashboard/requestd-borrower.js"></script>
     <script src="~/js/admin-website/dashboard.js"></script>
 }
+<script src="~/js/admin-website/module/loan-sell.js"></script>
 

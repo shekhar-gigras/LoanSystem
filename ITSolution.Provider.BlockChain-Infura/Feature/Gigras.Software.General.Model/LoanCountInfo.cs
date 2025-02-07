@@ -13,5 +13,10 @@ namespace Gigras.Software.General.Model
         public decimal ApprovedAmount { get; set; }
         public decimal RejectedAmount { get; set; }
         public decimal PendingAmount { get; set; }
+
+        public string? LenderAddress { get; set; }
+        public decimal? WalletBalance { get; set; }
+        public decimal? LenderBalance { get; set; }
+
     }
 }

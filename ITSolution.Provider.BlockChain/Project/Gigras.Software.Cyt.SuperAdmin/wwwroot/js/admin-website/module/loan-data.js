@@ -1,4 +1,4 @@
-﻿function DisplayLoanData(tbody, data, isadmin) {
+﻿function DisplayLoanData(tbody, data, isadmin, iseditloan, isdeleteloan) {
     const thead = $("#kt_category_table thead");
     thead.empty(); // Clear existing rows
     thead.append(`
@@ -35,48 +35,45 @@
                        <td>${user.createdBy}</td>
                         <td>${new Date(user.createdAt).toLocaleString()}</td>
                         <td>
-                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 view-json" data-id="${user.id}">
-                                  <span class="icon">
-                                    <i class="fa fa-eye"></i>
-                                 </span>
-                        </button>
-                           ${((!isadmin && !user.isApproved) || (isadmin && !user.isApproved && user.createdBy == "admin"))
-                ? `<button
-                                                    class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 edit-btn"
-                                                    data-id="${user.id}">
-                                                    <span class="icon">
-                                                        <i class="fas fa-pencil-alt"></i>
-                                                    </span>
-                                                </button>`
+                            ${(isadmin)
+                                ? `<button class="view-json" style="background-color: green; color: white; font-size: 10px; border: none; border-radius: 5px;" data-id="${user.id}">
+                                        View
+                                    </button>
+                                        `
+                                : ""
+                    }
+                    ${((!isadmin && !user.isApproved && iseditloan) || (isadmin && !user.isApproved && user.createdBy == "admin"))
+                        ? `<button class="edit-btn" style="background-color: green; color: white; font-size: 10px; border: none; border-radius: 5px;" data-id="${user.id}">
+                                    Edit
+                            </button>`
+                        : ""
+                    }
+                             ${((!isadmin && !user.isApproved && isdeleteloan) || (isadmin && !user.isApproved && user.createdBy == "admin"))
+                    ? `<button style="background-color: ${!user.isDelete ? 'green' : 'red'}; color: white; font-size: 10px; border: none; border-radius: 5px;" data-status='${user.isDelete}'
+                                        onclick="deleteRecord('${user.loanId}','loandetails')">
+                                        Delete
+                                    </button>`
+                        : ""
+                    }
+                    ${((!isadmin && user.isApproved) || (isadmin && !user.isApproved && user.createdBy == "admin"))
+                ? `<button style="background-color: ${!user.isLoanSell ? 'green' : 'blue'}; color: white; font-size: 10px; border: none; border-radius: 5px;" data-status='${user.isLoanSell}'
+                                        onclick="toggleUserStatus(this,'${user.loanId}', 'loandetails','sell')">
+                                        Sell
+                                    </button>`
                 : ""
-            }
-                             ${((!isadmin && !user.isApproved) || (isadmin && !user.isApproved && user.createdBy == "admin"))
-                ? `<button class="btn btn-icon btn-active-light-primary w-30px h-30px" onclick="deleteRecord('${user.loanId}','loandetails')">
-                                            <span class="icon">
-                                                ${user.isDelete
-                    ? "<i class='btn-danger fas fa-trash-alt'></i>"
-                    : "<i class='btn-success fas fa-trash-alt'></i>"
-                }
-                                            </span>
-                                        </button>`
-                : ""
-            }
-                                 ${isadmin && !user.isApproved && !user.isRejected
-                ? `<button class="btn btn-icon btn-active-light-primary w-30px h-30px" onclick="approveLoan('${user.loanId}','loandetails')">
-                                                        <span class="icon">
-                                                            <i class="fas fa-check"></i>
-                                                        </span>
-                                                   </button>`
-                : ""
-            }
-                                 ${isadmin && !user.isApproved && !user.isRejected
-                ? `<button class="btn btn-icon btn-active-light-primary w-30px h-30px" onclick="rejectLoan('${user.loanId}','loandetails')">
-                                                <span class="icon">
-                                                    <i class="fas fa-times"></i>
-                                                </span>
+                    }
+                    ${isadmin && !user.isApproved && !user.isRejected
+                    ? `<button style="background-color: ${!user.isApproved ? 'green' : 'blue'}; color: white; font-size: 10px; border: none; border-radius: 5px;" data-status='${user.isApproved}' onclick="approveLoan('${user.loanId}','loandetails')">
+                                                Approve
                                             </button>`
-                : ""
-            }
+                        : ""
+                    }
+                    ${isadmin && !user.isApproved && !user.isRejected
+                    ? `<button style="background-color: ${!user.isRejected ? 'green' : 'blue'}; color: white; font-size: 10px; border: none; border-radius: 5px;" data-status='${user.isRejected}' onclick="rejectLoan('${user.loanId}','loandetails')">
+                                    Reject
+                        </button>`
+                        : ""
+                    }
                         </td>
                     </tr>
                 `);
