@@ -15,7 +15,9 @@
         <div class="card-body p-9">
             <div class="fs-3 fw-bolder">Lendder</div>
             <div class="fs-5 text-red" id="lendder-address">Address : @Model.LenderAddress</div>
-            <div class="fs-5 text-red" id="lendder-balance">Balance : @Math.Round(Model!.LenderBalance!.Value,4)</div>
+            <div class="fs-5 text-red" id="lendder-balance">
+                Balance: @Math.Round(Model?.LenderBalance ?? 0, 4)
+            </div>
         </div>
     </div>
 </div>

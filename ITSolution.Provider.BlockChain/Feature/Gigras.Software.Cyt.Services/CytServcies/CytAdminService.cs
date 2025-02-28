@@ -61,6 +61,15 @@ namespace Gigras.Software.Cyt.Services.CytService
                 : null;
         }
 
+        public async Task<string?> GetLenderName()
+        {
+            var user = _httpContextAccessor.HttpContext?.User;
+
+            return user?.Identity?.IsAuthenticated == true
+                ? user.Claims.FirstOrDefault(c => c.Type == "LenderName")?.Value
+                : null;
+        }
+
         public async Task<string?> GetUserUniqueId()
         {
             var user = _httpContextAccessor.HttpContext?.User;
@@ -208,7 +217,8 @@ namespace Gigras.Software.Cyt.Services.CytService
                  new Claim("IsVisibleLoanSale", $"{user.IsVisibleLoanSale}"),
                  new Claim("IsConfirmLink", $"{user.IsConfirmLink}"),
                  new Claim("LastLogin", $"{user.LastLogin}"),
-           };
+                  new Claim("LenderName", $"{user.Name}"),
+          };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);

@@ -70,5 +70,9 @@ p {
     color: red;
 }
 
+.bigger-modal {
+    max-width: 700px !important; /* Makes modal even wider */
+    padding: 20px; /* Extra spacing */
+}
 
 

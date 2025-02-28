@@ -26,6 +26,8 @@ namespace Gigras.Software.Generic.DynamicControl
                         case "time":
                         case "url":
                         case "hidden":
+                        case "readonly":
+
                             htmlStringBuilder.AppendLine(TextBox.TextBoxControl(Field, Field.FieldType.CtrlType.ToLower()));
                             break;
 

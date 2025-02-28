@@ -88,6 +88,8 @@ namespace Gigras.Software.Cyt.Services.CytServcies
                 {
                     var obj = new LoanDetails();
                     ObjectPopulator.PopulateObject<LoanDetails>(obj, fieldValues);
+                    obj.DealAmount = 0;
+                    obj.Comments = "";
                     obj.IsLoanSell = false;
                     obj.IsApprovedTransferLoan = false;
                     obj.IsActive = true;
@@ -211,7 +213,7 @@ namespace Gigras.Software.Cyt.Services.CytServcies
         {
             var username = await _cytAdminService.GetUserName();
             var userdetail = await _cytAdminService.GetUserDetails();
-            var data = await _LoanDetailsRepository.GetAllAsync(x => (userdetail.Roles.Contains("User") && x.CreatedBy == username) || userdetail.Roles.Contains("Admin"));
+            var data = await _LoanDetailsRepository.GetAllAsync(x => (userdetail.Roles.Contains("Lender") && x.CreatedBy == username) || userdetail.Roles.Contains("Admin"));
 
             // Calculate counts
             var countDeleted = data.Count(x => x.IsDelete);

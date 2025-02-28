@@ -43,5 +43,9 @@ namespace Gigras.Software.Database.Cyt.Entity.Models
         [NotMapped]
         public string? LendderPhone { get; set; }
 
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal DealAmount { get; set; } = 0;
+        public string? Comments { get; set; } = "";
+
     }
 }

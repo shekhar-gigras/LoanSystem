@@ -60,6 +60,9 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
         public async Task<IActionResult> BothForm(string formname)
         {
             var form = await _dynamicFormService.GetForm("form", formname);
+            var lendername = await _cytAdminService.GetLenderName();
+            form.FieldValues = new Dictionary<string, object>();
+            form.FieldValues["LenderName"] = lendername;
             return View("~/Views/Borrower/Add.cshtml", form);
         }
 

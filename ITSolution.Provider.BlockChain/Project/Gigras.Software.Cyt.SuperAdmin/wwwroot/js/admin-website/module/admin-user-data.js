@@ -155,6 +155,15 @@ function toggleUserStatus(button, recordId, module, action) {
         cancelButtonText: 'No',
     }).then((result) => {
         if (result.isConfirmed) {
+            Swal.fire({
+                title: "",
+                text: "Please wait ....",
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                willOpen: () => {
+                    Swal.showLoading(); // Show the loading spinner while the deletion is in progress
+                }
+            });
             const payload = {
                 recordid: recordId // Boolean value based on the new status
             };
@@ -165,6 +174,7 @@ function toggleUserStatus(button, recordId, module, action) {
                 data: JSON.stringify(payload), // Send payload as JSON
                 contentType: 'application/json', // Content type is JSON
                 success: (response) => {
+                    Swal.close();
                     Swal.fire('Updated!', `Status changed to ${newStatus}.`, 'success').then(() => {
                         // Reload the page only after user clicks "OK"
                         window.location.reload();

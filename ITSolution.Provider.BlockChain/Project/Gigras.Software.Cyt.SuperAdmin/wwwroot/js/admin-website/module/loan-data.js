@@ -43,7 +43,7 @@
                                 : ""
                     }
                     ${((!isadmin && !user.isApproved && iseditloan) || (isadmin && !user.isApproved && user.createdBy == "admin"))
-                        ? `<button class="edit-btn" style="background-color: green; color: white; font-size: 10px; border: none; border-radius: 5px;" data-id="${user.id}">
+                        ? `<button class="edit-loan-btn" style="background-color: green; color: white; font-size: 10px; border: none; border-radius: 5px;" data-id="${user.id}">
                                     Edit
                             </button>`
                         : ""
@@ -78,6 +78,10 @@
                     </tr>
                 `);
     });
+    console.log("Edit Loan Buttons Count:", $(".edit-loan-btn").length);
+}
+
+$(document).ready(function () {
     $(document).on('click', '.edit-btn', function () {
         const id = $(this).data('id');
         const baseUrl = `/sadmin/Borrower`;
@@ -86,7 +90,7 @@
         const basedataUrl = `${baseUrl}/${formgroup}/${formid}`;
         location.href = `${basedataUrl}/edit-form/${id}`;
     });
-}
+});
 
 // Function to create an HTML table from JSON
 function createLoanDataTableFromJson(jsonData) {
@@ -236,7 +240,9 @@ async function MetaMaskProcess(id, module) {
                     await loanContract.showLoader();
                     await loanContract.getAddress();
                     let data = await getLoanApiDetails(id);
-                    let status = await loanContract.AddUpdateLoanDetail(id, data);
+                    let status = await loanContract.addLender(data);
+
+                    status = await loanContract.addBorrower(data);
                     let metamaskid = await loanContract.getAddress();
                     let dataconfirmation;
                     if (!status) {

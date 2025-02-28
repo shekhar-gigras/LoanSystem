@@ -8,7 +8,7 @@ class LoanContract {
 
     async getlendderAddress() {
         try {
-            let lenderaddress = await this.contract.methods.lender().call();
+            let lenderaddress = await this.contract.methods.Admin().call();
             return lenderaddress;
         } catch {
             return null;
@@ -18,7 +18,7 @@ class LoanContract {
     async IsLendder() {
         try {
             let address = (await this.getAddress()).toLowerCase();
-            let lenderAddress = (await this.contract.methods.lender().call()).toLowerCase();
+            let lenderAddress = (await this.contract.methods.Admin().call()).toLowerCase();
 
             return address === lenderAddress;
         } catch {
@@ -29,7 +29,7 @@ class LoanContract {
     async getContractBalance() {
         try {
             let address = await this.getAddress();
-            const balance = await this.contract.methods.checkBalanceOfSmartContract().call({
+            const balance = await this.contract.methods.getBalanceOfSmartContract().call({
                 from: address // Ensure this is the lender's address
             });
             //let balanceEther = this.web3.utils.fromWei(balance, 'ether');
@@ -45,7 +45,7 @@ class LoanContract {
             const lenderAddress = accounts[0];
 
             // Call fundContract method
-            let transaction  = await this.contract.methods.fundContract()
+            let transaction = await this.contract.methods.fundContract()
                 .send({ from: lenderAddress, value: this.web3.utils.toWei(amount.toString(), 'wei') });
             console.log("Transaction Hash:", transaction.transactionHash);
             console.log("Block Number:", transaction.blockNumber);
@@ -64,7 +64,7 @@ class LoanContract {
             const currentAddress = await this.getAddress();
 
             // Change lender
-            await this.contract.methods.changeLender(newLenderAddress).send({
+            await this.contract.methods.changeAdmin(newLenderAddress).send({
                 from: currentAddress // Only the current lender can call this
             });
             return true;
@@ -114,7 +114,7 @@ class LoanContract {
         try {
             const currentAddress = await this.getAddress();
             // Fetch the lender's address
-            const lenderAddress = await this.contract.methods.lender().call({
+            const lenderAddress = await this.contract.methods.Admin().call({
                 from: currentAddress // Only the current lender can call this
             });
 
@@ -317,16 +317,95 @@ class LoanContract {
         }
     }
 
-    async takeOutFunds() {
+    async takeOutFunds(fund) {
         try {
             // Get the accounts (assuming MetaMask or another Web3 provider is used)
             const accounts = await this.web3.eth.getAccounts();
             const lenderAddress = accounts[0]; // The lender is the first account
 
-            // Send the transaction to take out funds
-            const receipt = await this.contract.methods.takeOutContractFunds().send({ from: lenderAddress });
+            const receipt = await this.contract.methods.takeOutContractFunds(this.web3.utils.toWei(fund.toString(), 'wei'))
+                .send({ from: lenderAddress });
+
             return true;
         } catch {
+            return false;
+        }
+    }
+
+    async AddCommonLoanDetails(data) {
+        try {
+            const currentAddress = await this.getAddress();
+
+            // Change lender
+            await this.contract.methods.setCommonAndInterestDetails(
+                data.loanId,
+                data.emiPaymentStartDate,
+                data.principalAmount,
+                data.fixedInterestRate,
+                data.monthlyPaymentAmount,
+                data.maturityDate,
+                data.emiPaymentDay,
+                data.interestRateChangeDate,
+                data.lenderName,
+                data.borrowerName
+            ).send({
+                from: currentAddress // Only the current lender can call this
+            });
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    async addLender(data) {
+        try {
+            const currentAddress = await this.getAddress();
+
+            // Change lender
+            await this.contract.methods.addLender(
+                data.lendderId,
+                data.lenderName
+            ).send({
+                from: currentAddress // Only the current lender can call this
+            });
+            return true;
+        } catch {
+            return false;
+        }
+    }
+    async addNewLender(lendderId, lenderName) {
+        try {
+            const currentAddress = await this.getAddress();
+
+            // Change lender
+            await this.contract.methods.addLender(
+                lendderId,
+                lenderName
+            ).send({
+                from: currentAddress // Only the current lender can call this
+            });
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    async addBorrower(data) {
+        try {
+            const currentAddress = await this.getAddress();
+            let common = await this.getCommonLoanDetailForContract(data);
+            let payment = await this.getPaymentLoanDetailForContract(data);
+            let other = await this.getOtherLoanDetailForContract(data);
+            // Change lender
+            await this.contract.methods.addBorrower(
+                data.borrowerId,
+                data.lendderId,
+                data.id, common, payment,other               
+            ).send({
+                from: currentAddress // Only the current lender can call this
+            });
+            return true;
+        } catch (error) {
             return false;
         }
     }
@@ -480,5 +559,59 @@ class LoanContract {
     // Function to hide SweetAlert2 loading spinner
     async hideLoader() {
         Swal.close();
+    }
+
+    async getCommonLoanDetailForContract(jsonData) {
+        return {
+            emiPaymentStartDate: jsonData.eMIPaymentDate || "", // Extract from jsonData
+            principalAmount: jsonData.principalAmount || 0, // Extract from jsonData, default to 0
+            fixedInterestRate: jsonData.interestRate || 0, // Extract from jsonData, default to 0
+            monthlyPaymentAmount: jsonData.monthlyPaymentAmount || 0, // Extract from jsonData, default to 0
+            maturityDate: jsonData.maturityDate || "", // Extract from jsonData
+            emiPaymentDay: jsonData.dayOfMonth || 0, // Extract from jsonData, default to 0
+            interestRateChangeDate: jsonData.changeInterestRateDate || "", // Extract from jsonData
+            lenderName: jsonData.lenderName || "", // Extract from jsonData
+            borrowerName: jsonData.borrowerName || "" // Extract from jsonData
+        };
+    }
+
+    async getPaymentLoanDetailForContract(jsonData) {
+        return {
+            latePaymentGracePeriod: jsonData.latePaymentGracePeriod || 0,
+            lateChargePercentage: jsonData.lateChargePercentage || 0,
+            margin: jsonData.margin || 0,
+            currentIndex: jsonData.currentIndex || 0,
+            maxInterestRateAtFirstChange: jsonData.maxInterestRateAtFirstChange || 0,
+            minInterestRateAtFirstChange: jsonData.minInterestRateAtFirstChange || 0,
+            maxInterestRateAfterChange: jsonData.maxInterestRateAfterChange || 0,
+            minInterestRateAfterChange: jsonData.minInterestRateAfterChange || 0
+        };
+    }
+
+    async getOtherLoanDetailForContract(jsonData) {
+        return {
+            noteDate: jsonData.noteDate || "",
+            city: jsonData.city || "",
+            state: jsonData.state || "",
+            propertyAddress: jsonData.propertyAddress || "",
+            paymentLocation: jsonData.paymentLocation || ""
+        };
+    }
+
+    async TransferLoan(oldLenderID, newLenderID, borrowerID, loanID) {
+        try {
+            const currentAddress = await this.getAddress();
+            // Change lender
+            await this.contract.methods.transferLoan(
+                oldLenderID,
+                newLenderID,
+                borrowerID, loanID
+            ).send({
+                from: currentAddress // Only the current lender can call this
+            });
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 }

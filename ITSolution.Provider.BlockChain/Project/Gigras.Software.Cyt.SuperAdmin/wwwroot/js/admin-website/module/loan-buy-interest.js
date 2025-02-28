@@ -95,7 +95,6 @@ async function LoanBuyInterestApprove(button) {
         console.error(error); // Log error for debugging
     }
 }
-
 async function LoanBuyInterestReject(button) {
     try {
         // Display confirmation dialog using SweetAlert2
@@ -135,4 +134,151 @@ async function LoanBuyInterestReject(button) {
         Swal.fire("Error", "An error occurred while reject to buying the loan.", "error");
         console.error(error); // Log error for debugging
     }
+}
+
+async function AdminLoanBuyApprove(button, loanId, loainGuidId, sellerId, buyerId, borrowerId, buyername, recordId, module, action) {
+    Swal.fire({
+        title: '',
+        text: 'Please wait ....',
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        willOpen: () => {
+            Swal.showLoading();
+        }
+    });
+    await checkMetaMaskConnection();
+
+    if (!isContractSetupDone) {
+        Swal.fire("Error", "Please establish or check MetaMask connection", "error");
+        return;
+    }
+
+    let isprocess = await loanContract.IsLendder();
+    if (!isprocess) {
+        Swal.fire({
+            title: "Error!",
+            text: "Please login as a lender",
+            icon: "error",
+            confirmButtonText: "OK"
+        });
+        return;
+    }
+
+    const { value: formData } = await Swal.fire({
+        title: 'Enter Deal Amount and Comments',
+        width: '700px',
+        html: `
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; width: 100%;">
+                <input type="number" id="dealAmount" class="swal2-input" style="width: 95%; font-size: 16px; padding: 10px;" placeholder="Enter Deal Amount">
+                <textarea id="dealComments" class="swal2-textarea" 
+                    style="width: 95%; height: 200px; font-size: 16px; padding: 10px; resize: none; overflow: hidden;" 
+                    placeholder="Enter Comments"></textarea>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Approved',
+        cancelButtonText: 'Cancel',
+        customClass: {
+            popup: 'bigger-modal' // Custom CSS class for additional styling
+        },
+        preConfirm: async () => {
+            const dealAmount = document.getElementById('dealAmount').value;
+            const dealComments = document.getElementById('dealComments').value;
+
+            if (!dealAmount || isNaN(dealAmount) || dealAmount <= 0) {
+                Swal.showValidationMessage('Please enter a valid deal amount');
+                return false;
+            }
+            if (!dealComments.trim()) {
+                Swal.showValidationMessage('Please enter comments');
+                return false;
+            }
+            return { dealAmount, dealComments };
+        }
+    });
+
+    if (!formData) return; // If user cancels, stop execution
+
+    Swal.fire({
+        title: '',
+        text: 'Please wait ....',
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        willOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    await loanContract.showLoader();
+    await loanContract.getAddress();
+
+    let status = await loanContract.addNewLender(buyerId, buyername);
+    status = await loanContract.TransferLoan(sellerId, buyerId, borrowerId, loanId);
+
+    const payload = {
+        recordid: recordId,
+        dealAmount: formData.dealAmount,
+        comments: formData.dealComments
+    };
+
+    console.log(payload);
+
+    // AJAX request
+    $.ajax({
+        url: `/api/${module}/${action}`,
+        type: 'POST',
+        data: JSON.stringify(payload),
+        contentType: 'application/json',
+        success: (response) => {
+            Swal.close();
+            Swal.fire('Updated!', 'Loan has been transfered successfully.', 'success').then(() => {
+                window.location.reload();
+            });
+        },
+        error: () => {
+            Swal.fire('Error!', 'Failed to transfered the loan. Please try again.', 'error');
+        }
+    });
+}
+
+function AdminLoanBuyReject(button, recordId, module, action) {
+    Swal.fire({
+        title: `Do you want to reject this loan`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: "",
+                text: "Please wait ....",
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                willOpen: () => {
+                    Swal.showLoading(); // Show the loading spinner while the deletion is in progress
+                }
+            });
+            const payload = {
+                recordid: recordId // Boolean value based on the new status
+            };
+            // Make an AJAX call to update the status
+            $.ajax({
+                url: `/api/${module}/${action}`, // Include ID in the route
+                type: 'POST',
+                data: JSON.stringify(payload), // Send payload as JSON
+                contentType: 'application/json', // Content type is JSON
+                success: (response) => {
+                    Swal.close();
+                    Swal.fire('Updated!', `Loan has been reject successfully.`, 'success').then(() => {
+                        // Reload the page only after user clicks "OK"
+                        window.location.reload();
+                    });
+                },
+                error: () => {
+                    Swal.fire('Error!', 'Failed to reject the loan. Please try again.', 'error');
+                },
+            });
+        }
+    });
 }

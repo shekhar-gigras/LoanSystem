@@ -19,7 +19,7 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
         private readonly ILogger<SAuthController> _logger;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IConfiguration _configuration;
-        private readonly int _tokenExpireMin = 15;
+        private int _tokenExpireMin = 15;
 
         public SAuthController(ILogger<SAuthController> logger,
             IDNTCaptchaValidatorService validatorService, IOptions<DNTCaptchaOptions> options,
@@ -134,6 +134,7 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
                 return View(model);
             }
 
+            _tokenExpireMin = _configuration.GetValue<int>("TokenExpireMin");
             var expirationTime = DateTime.UtcNow.AddMinutes(_tokenExpireMin); // Set expiry time
 
             var verificationToken = PasswordHelper.GenerateVerificationToken(expirationTime);
@@ -195,6 +196,7 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
             // For now, we'll just mark the user as verified
             var objuser = await _cytAdminService.GetByIdAsync(user!.Id);
 
+            objuser.IsConfirmLink = true;
             objuser.IsActive = false; // Assuming you have an IsActive field for verification
             await _cytAdminService.UpdateAsync(objuser);
 

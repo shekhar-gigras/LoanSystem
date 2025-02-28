@@ -87,7 +87,8 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
                                { "smartcontractaddress", async () => await _smartContractAddressService.GetList() },
                                { "loandetails", async () => await _loanDetailsService.GetTransList(q) },
                                { "dynamicadmins", async () => await _cytAdminService.GetUserList(q) },
-                     };
+                               { "loanbuyinterest", async () => await _loanBuyInterestService.GetList() },
+                    };
 
                         if (serviceMapping.TryGetValue(entityName, out var serviceCall))
                         {
@@ -102,6 +103,8 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
                                 html = await RenderViewToString("Borrower/List/_ContractAddressList", data);
                             else if (entityName.ToLower() == "loandetails")
                                 html = await RenderViewToString("Borrower/List/_LoanTransList", data);
+                            else if (entityName.ToLower() == "loanbuyinterest")
+                                html = await RenderViewToString("Borrower/List/_LoanBuyList", data);
 
                             if (entityName.ToLower() == "loandetails")
                                 entityName = "loantransdetails";

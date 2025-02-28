@@ -33,7 +33,7 @@ namespace Gigras.Software.Database.Cyt.Entity.Models
         [MaxLength]
         public string? PropertyAddress { get; set; }
 
-        [Column(TypeName = "decimal(15, 2)")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal PrincipalAmount { get; set; }
 
         [MaxLength(100)]
@@ -42,7 +42,7 @@ namespace Gigras.Software.Database.Cyt.Entity.Models
         [MaxLength(100)]
         public string? BorrowerName { get; set; }
 
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal InterestRate { get; set; }
 
         [Column(TypeName = "date")]
@@ -61,31 +61,31 @@ namespace Gigras.Software.Database.Cyt.Entity.Models
 
         public int LatePaymentGracePeriod { get; set; }
 
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal LateChargePercentage { get; set; }
 
-        [Column(TypeName = "decimal(15, 2)")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal MonthlyPaymentAmount { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime? ChangeInterestRateDate { get; set; } // Nullable
 
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal? Margin { get; set; } // Nullable
 
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal? CurrentIndex { get; set; } // Nullable
 
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal? MaxInterestRateFirstChangeDate { get; set; } // Nullable
 
         [Column(TypeName = "decimal(5, 2)")]
         public decimal? MinInterestRateFirstChangeDate { get; set; } // Nullable
 
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal? MaxSubsequentInterestRateAfterChangeDate { get; set; } // Nullable
 
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal? MinSubsequentInterestRateAfterChangeDate { get; set; } // Nullable
 
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
@@ -104,5 +104,8 @@ namespace Gigras.Software.Database.Cyt.Entity.Models
         public bool IsRejected { get; set; } = false;
         public bool IsLoanSell { get; set; } = false;
         public bool IsApprovedTransferLoan { get; set; } = false;
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal DealAmount { get; set; } = 0;
+        public string? Comments { get; set; } = "";
     }
 }

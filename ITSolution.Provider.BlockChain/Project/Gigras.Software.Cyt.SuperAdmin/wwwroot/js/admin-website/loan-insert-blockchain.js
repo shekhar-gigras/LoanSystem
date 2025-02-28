@@ -71,6 +71,8 @@ async function getLoanApiDetails(loanid) {
         if (jsonData && Object.keys(jsonData).length > 0) {
             let loanData = {
                 loanId: loanid || "", // Use the loanid provided in the function
+                borrowerId: jsonData.borrowerId || "", // Extract from jsonData
+                lendderId: jsonData.lendderId || "", // Extract from jsonData
                 emiPaymentStartDate: jsonData.eMIPaymentDate || "", // Extract from jsonData
                 principalAmount: jsonData.principalAmount || 0, // Extract from jsonData, default to 0
                 fixedInterestRate: jsonData.interestRate || 0, // Extract from jsonData, default to 0
@@ -81,7 +83,7 @@ async function getLoanApiDetails(loanid) {
                 lenderName: jsonData.lenderName || "", // Extract from jsonData
                 borrowerName: jsonData.borrowerName || "" // Extract from jsonData
             };
-            return loanData;
+            return jsonData;
         } else {
             Swal.fire("No Data", "Loan details are unavailable.", "info");
             return null;

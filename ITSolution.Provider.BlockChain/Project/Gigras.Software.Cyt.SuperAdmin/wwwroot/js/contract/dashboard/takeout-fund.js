@@ -42,7 +42,7 @@ async function TakeOutFund(amount) {
                 try {
                     let isprocess = await loanContract.IsLendder();
                     if (isprocess) {
-                        let isprocess = await loanContract.takeOutFunds();
+                        let isprocess = await loanContract.takeOutFunds(amount);
                         if (isprocess != null) {
                             let balance = await loanContract.getContractBalance();
                             if (balance != null) {

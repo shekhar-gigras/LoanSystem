@@ -6,6 +6,7 @@
     bool isAdmin = await cytAdmin.IsAdmin();
     bool isEditLoan = await cytAdmin.IsEditLoanAccess();
     bool isDeleteLoan = await cytAdmin.IsDeleteLoanAccess();
+    bool isVisibleSellLoan = await cytAdmin.IsVisibleSaleLoanAccess();
     var loanList = Model as List<LoanDetails>;
 }
 
@@ -62,7 +63,7 @@
                         Delete
                     </button>
                 }
-                @if ((!isAdmin && user.IsApproved) || (isAdmin && !user.IsApproved && user.CreatedBy == "admin"))
+                @if ((!isAdmin && user.IsApproved) || (isAdmin && user.IsApproved && user.CreatedBy == "admin"))
                 {
                     <button style="background-color: @(user.IsLoanSell ? "blue" : "green"); color: white; font-size: 10px; border: none; border-radius: 5px;" data-status="@user.IsLoanSell"
                             onclick="toggleUserStatus(this,'@user.LoanId', 'loandetails','sell')">

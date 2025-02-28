@@ -52,12 +52,13 @@ namespace Gigras.Software.Generic.DynamicControl.Controls
                                 {(FieldType == "hidden" ? "style='display:none;'" : string.Empty)}
                             >
                             <label for='{fieldname}'>{Field.FieldType.FieldDescription}</label>
-                            <input type='{FieldType}' class='form-control' id='{fieldname}' name='{fieldname}'
+                            <input type='{(FieldType == "readonly" ? "text" : FieldType)}' class='form-control' id='{fieldname}' name='{fieldname}'
                             {validationString}
                              {(Field.FieldType.Steps.HasValue ? "step=" + Field.FieldType.Steps : string.Empty)}
                            {(Field.FieldType.MaxLength.HasValue ? "maxlength=" + Field.FieldType.MaxLength : string.Empty)}
                              {(Field.FieldType.MinValue.HasValue ? "minvalue=" + Field.FieldType.MinValue : string.Empty)}
                               {(Field.FieldType.MaxValue.HasValue ? "minvalue=" + Field.FieldType.MaxValue : string.Empty)}
+                                {(FieldType=="readonly" ? "readonly=readonly" : string.Empty)}
                                  value='{Field.FieldValue ?? string.Empty}'
                             />
                             {validationErrorLabel}

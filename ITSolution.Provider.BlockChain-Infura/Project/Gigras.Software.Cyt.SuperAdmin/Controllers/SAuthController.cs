@@ -74,6 +74,11 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
                 return View(model);
             }
             var user = await _cytAdminService.FindByUsernameAndPasswordAsync(model.Username, model.Password);
+            if (user == null)
+            {
+                ModelState.AddModelError("Username", "This email/username not registered.");
+                return View(model);
+            }
             await _cytAdminService.SignInUserAsync(user);
 
             // If the return URL is empty or invalid, redirect to the default page (Home/Index)
@@ -122,7 +127,15 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
 
             // Save data to database
             model.IsActive = false;
-            model.Phone = model.Phone;
+            model.Phone = model.Phone!;
+            model.IsDelete = false;
+            model.IsBlock = false;
+            model.IsAddLoan = false;
+            model.IsEditLoan = false;
+            model.IsDeleteLoan = false;
+            model.Phone = model.Phone!;
+            model.Phone = model.Phone!;
+            model.Role = "Lender";
             model.CreatedDate = DateTime.Now;
             model.Password = PasswordHelper.HashPassword(model.Password!);
             await _cytAdminService.AddAsync(model);

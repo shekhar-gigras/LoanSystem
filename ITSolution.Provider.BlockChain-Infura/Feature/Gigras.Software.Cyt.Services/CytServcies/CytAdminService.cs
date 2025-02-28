@@ -73,7 +73,7 @@ namespace Gigras.Software.Cyt.Services.CytService
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName!),
                 new Claim(ClaimTypes.Email, user.Email!), // Example of adding email claim
-                new Claim(ClaimTypes.Role, user.UserName == "admin"?"Admin":"User"), // Adding a role (e.g., "Admin")
+                new Claim(ClaimTypes.Role, user.Role!), // Adding a role (e.g., "Admin")
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

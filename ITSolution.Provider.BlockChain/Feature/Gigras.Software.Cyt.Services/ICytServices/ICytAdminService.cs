@@ -31,6 +31,8 @@ namespace Gigras.Software.Cyt.Services.ICytServices
 
         Task<bool> IsAdmin();
 
+        Task<string?> GetLenderName();
+
         // Additional methods for CytAdminService
     }
 }

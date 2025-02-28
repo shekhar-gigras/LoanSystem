@@ -45,7 +45,7 @@
                             <!--end::Svg Icon-->
                             <input type="text" data-kt-category-table-filter="loan-trans-search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Transaction" />
                         }
-                        else if (Model.EntityName.ToLower() == "dynamicadmins")
+                        else if (!string.IsNullOrEmpty(Model.EntityName) && (Model!.EntityName!.ToLower() == "dynamicadmins" || Model!.FormName!.ToLower() == "dynamicadmins"))
                         {
                             <!--end::Svg Icon-->
                             <input type="text" data-kt-category-table-filter="user-search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Users" />

@@ -5,11 +5,12 @@
 @{
     bool isAdmin = await cytAdmin.IsAdmin();
     var loanList = Model as List<LoanBuyInterest>;
+    var groupedLoans = loanList.GroupBy(x => x.LoanId); // Adjust the grouping key if necessary
 }
 <thead>
     <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
         <th class="min-w-125px">#</th>
-        <th>Loan Id</th>
+        <th style="display:none;">Loan Id</th>
         <th>Lender Name</th>
         <th>Lender Email</th>
         <th>Lender Phone</th>
@@ -21,42 +22,49 @@
     </tr>
 </thead>
 <tbody>
-    @foreach (var user in loanList)
+    @foreach (var group in groupedLoans)
     {
-        <tr>
-            <td>@user.Id</td>
-            <td>@user.LoanId</td>
-            <td>@user.LendderName</td>
-            <td>@user.LendderEmail</td>
-            <td>@user.LendderPhone</td>
-            <td>@user.LoanDetails!.BorrowerName</td>
-            <td>@user.LoanDetails!.PrincipalAmount.ToString("F2")</td>
-            <td>@user.CreatedBy</td>
-            <td>@user.CreatedAt.ToString("dd-MMM-yyyy")</td>
-            <td>
-                @if (!isAdmin && !user.IsSellerApproved)
-                {
-                    <button style="background-color: green; color: white; font-size: 10px; border: none; border-radius: 5px;"
-                            data-status="@user.IsSellerApproved"
-                            onclick="toggleUserStatus(this,'@user.Id', 'loandetails','sell-buy-interest-approved')">
-                        Approve
-                    </button>
-                }
-
-                @if (isAdmin && user.IsSellerApproved)
-                {
-                    <button style="background-color: blue; color: white; font-size: 10px; border: none; border-radius: 5px;"
-                            data-status="@user.IsSellerApproved"
-                            onclick="toggleUserStatus(this,'@user.Id', 'loandetails','admin-sell-buy-interest-approved')">
-                        Approve
-                    </button>
-                    <button style="background-color: red; color: white; font-size: 10px; border: none; border-radius: 5px;"
-                            data-status="@user.IsSellerApproved"
-                            onclick="toggleUserStatus(this,'@user.Id', 'loandetails','admin-sell-buy-interest-reject')">
-                        Reject
-                    </button>
-                }
-            </td>
+        <tr class="bg-light">
+            <td></td>
+            <td colspan="4"><strong>Loan ID: @group.Key.ToString()</strong></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
+        @foreach (var user in group)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td style="display:none;">@user.LoanId</td>
+                <td>@user.LendderName</td>
+                <td>@user.LendderEmail</td>
+                <td>@user.LendderPhone</td>
+                <td>@user.LoanDetails!.BorrowerName</td>
+                <td>@user.LoanDetails!.PrincipalAmount.ToString("F2")</td>
+                <td>@user.CreatedBy</td>
+                <td>@user.CreatedAt.ToString("dd-MMM-yyyy")</td>
+                <td>
+                    @if (isAdmin)
+                    {
+                        <button style="background-color: blue; color: white; font-size: 10px; border: none; border-radius: 5px;"
+                                data-status="@user.IsSellerApproved"
+                                onclick="AdminLoanBuyApprove(this,'@user.LoanDetailId','@user.LoanId','@user.SellerId','@user.BuyerId','@user.LoanDetails.BorrowerId','@user.LendderName','@user.Id', 'loandetails','admin-sell-buy-interest-approved')">
+                            Approve
+                        </button>
+                        <button style="background-color: red; color: white; font-size: 10px; border: none; border-radius: 5px;"
+                                data-status="@user.IsSellerApproved"
+                                onclick="AdminLoanBuyReject(this,'@user.Id', 'loandetails','admin-sell-buy-interest-reject')">
+                            Reject
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
     }
 </tbody>
+

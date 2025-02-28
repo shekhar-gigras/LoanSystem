@@ -433,18 +433,25 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers.API
                     {
                         foreach (var item in objSellers)
                         {
+                            item.IsDelete = true;
+                            objSeller!.IsSellerApproved = false;
                             item.IsClosedSellerLoan = true;
                             item.UpdatedBy = await _cytAdminService.GetUserName();
                             item.UpdatedAt = DateTime.Now;
                             await _loanBuyInterestService.UpdateAsync(item);
                         }
                     }
+                    objSeller!.DealAmount = request.dealAmount;
+                    objSeller!.Comments = request.comments;
+                    objSeller!.IsSellerApproved = true;
                     objSeller!.IsAdminApproved = true;
                     objSeller!.IsClosedSellerLoan = true;
                     objSeller.UpdatedBy = await _cytAdminService.GetUserName();
                     objSeller.UpdatedAt = DateTime.Now;
                     await _loanBuyInterestService.UpdateAsync(objSeller);
                     var objLoan = await _loanDetailsService.GetByIdAsync(0, x => x.LoanId == objSeller.LoanId);
+                    objLoan!.DealAmount = request.dealAmount;
+                    objLoan!.Comments = request.comments;
                     objLoan!.IsApprovedTransferLoan = true;
                     objLoan!.IsLoanSell = false;
                     objLoan.LendderId = objSeller.BuyerId;
