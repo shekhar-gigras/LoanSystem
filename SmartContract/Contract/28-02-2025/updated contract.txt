@@ -1,0 +1,1497 @@
+contract Address : 0xceC400afCe8b78De0187d96F13A9e44622736183
+--------------------------------------------------------------------------------------------------------------
+Listing all available functions in the contract:
+Function: addBorrower
+Function: addLender
+Function: changeAdmin
+Function: deleteBorrower
+Function: deleteLender
+Function: deleteLoan
+Function: fundContract
+Function: takeOutContractFunds
+Function: transferLoan
+Function: updateLoan
+Function: Admin
+Function: checkLender
+Function: getAdminBalance
+Function: getAllBorrowerIDsUnderLender
+Function: getAllLenderIDs
+Function: getBalanceOfSmartContract
+Function: getBorrowerData  -- return --> borrowerID, borrower's loanIds, borrower's loanCount
+Function: getBorrowerLoanDetails --return --> loan.commonDetails, loan.paymentDetails, loan.adjustableDetails
+Function: getLenderData -- return --> lender.name, lender.borrowerCount,lender.borrowerIds
+
+
+--------------------------------------------------------------------------------------------------------------
+ABI=[
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_borrowerID",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_lenderID",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_lenderName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_loanID",
+				"type": "string"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "emiPaymentStartDate",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "principalAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "fixedInterestRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "monthlyPaymentAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "maturityDate",
+						"type": "string"
+					},
+					{
+						"internalType": "uint8",
+						"name": "emiPaymentDay",
+						"type": "uint8"
+					},
+					{
+						"internalType": "string",
+						"name": "interestRateChangeDate",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "lenderName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "borrowerName",
+						"type": "string"
+					}
+				],
+				"internalType": "struct LendingAndLoanManagement.CommonAndInterestDetails",
+				"name": "_commonDetails",
+				"type": "tuple"
+			},
+			{
+				"components": [
+					{
+						"internalType": "uint8",
+						"name": "latePaymentGracePeriod",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lateChargePercentage",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "margin",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "currentIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maxInterestRateAtFirstChange",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "minInterestRateAtFirstChange",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maxInterestRateAfterChange",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "minInterestRateAfterChange",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct LendingAndLoanManagement.PaymentAndLateDetails",
+				"name": "_paymentDetails",
+				"type": "tuple"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "noteDate",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "city",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "state",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "propertyAddress",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "paymentLocation",
+						"type": "string"
+					}
+				],
+				"internalType": "struct LendingAndLoanManagement.AdjustableInterestRateDetails",
+				"name": "_adjustableDetails",
+				"type": "tuple"
+			}
+		],
+		"name": "addBorrower",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_lenderID",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			}
+		],
+		"name": "addLender",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "oldAdmin",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newAdmin",
+				"type": "address"
+			}
+		],
+		"name": "AdminChanged",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "lenderID",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "borrowerID",
+				"type": "string"
+			}
+		],
+		"name": "BorrowerAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "lenderID",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "borrowerID",
+				"type": "string"
+			}
+		],
+		"name": "BorrowerDeleted",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_admin",
+				"type": "address"
+			}
+		],
+		"name": "changeAdmin",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "Admin",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "ContractFunded",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_lenderID",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_borrowerID",
+				"type": "string"
+			}
+		],
+		"name": "deleteBorrower",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_lenderID",
+				"type": "string"
+			}
+		],
+		"name": "deleteLender",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_lenderID",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_borrowerID",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_loanID",
+				"type": "string"
+			}
+		],
+		"name": "deleteLoan",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "fundContract",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "Admin",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "FundsWithdrawn",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "lenderID",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "lenderName",
+				"type": "string"
+			}
+		],
+		"name": "LenderAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "lenderID",
+				"type": "string"
+			}
+		],
+		"name": "LenderDeleted",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "lenderID",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "borrowerID",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "loanID",
+				"type": "string"
+			}
+		],
+		"name": "LoanDeleted",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "oldLenderID",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "newLenderID",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "borrowerID",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "loanID",
+				"type": "string"
+			}
+		],
+		"name": "LoanTransferred",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "lenderID",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "borrowerID",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "loanID",
+				"type": "string"
+			}
+		],
+		"name": "LoanUpdated",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "takeOutContractFunds",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_oldLenderID",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_newLenderID",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_newLenderName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_borrowerID",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_loanID",
+				"type": "string"
+			}
+		],
+		"name": "transferLoan",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"stateMutability": "payable",
+		"type": "fallback"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_lenderID",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_borrowerID",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_loanID",
+				"type": "string"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "emiPaymentStartDate",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "principalAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "fixedInterestRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "monthlyPaymentAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "maturityDate",
+						"type": "string"
+					},
+					{
+						"internalType": "uint8",
+						"name": "emiPaymentDay",
+						"type": "uint8"
+					},
+					{
+						"internalType": "string",
+						"name": "interestRateChangeDate",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "lenderName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "borrowerName",
+						"type": "string"
+					}
+				],
+				"internalType": "struct LendingAndLoanManagement.CommonAndInterestDetails",
+				"name": "_newCommonDetails",
+				"type": "tuple"
+			},
+			{
+				"components": [
+					{
+						"internalType": "uint8",
+						"name": "latePaymentGracePeriod",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lateChargePercentage",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "margin",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "currentIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maxInterestRateAtFirstChange",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "minInterestRateAtFirstChange",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maxInterestRateAfterChange",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "minInterestRateAfterChange",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct LendingAndLoanManagement.PaymentAndLateDetails",
+				"name": "_newPaymentDetails",
+				"type": "tuple"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "noteDate",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "city",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "state",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "propertyAddress",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "paymentLocation",
+						"type": "string"
+					}
+				],
+				"internalType": "struct LendingAndLoanManagement.AdjustableInterestRateDetails",
+				"name": "_newAdjustableDetails",
+				"type": "tuple"
+			}
+		],
+		"name": "updateLoan",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"stateMutability": "payable",
+		"type": "receive"
+	},
+	{
+		"inputs": [],
+		"name": "Admin",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_lenderID",
+				"type": "string"
+			}
+		],
+		"name": "checkLender",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getAdminBalance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_lenderID",
+				"type": "string"
+			}
+		],
+		"name": "getAllBorrowerIDsUnderLender",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "",
+				"type": "string[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getAllLenderIDs",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "",
+				"type": "string[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getBalanceOfSmartContract",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_lenderID",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_borrowerID",
+				"type": "string"
+			}
+		],
+		"name": "getBorrowerData",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string[]",
+				"name": "",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_lenderID",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_borrowerID",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_loanID",
+				"type": "string"
+			}
+		],
+		"name": "getBorrowerLoanDetails",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "emiPaymentStartDate",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "principalAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "fixedInterestRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "monthlyPaymentAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "maturityDate",
+						"type": "string"
+					},
+					{
+						"internalType": "uint8",
+						"name": "emiPaymentDay",
+						"type": "uint8"
+					},
+					{
+						"internalType": "string",
+						"name": "interestRateChangeDate",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "lenderName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "borrowerName",
+						"type": "string"
+					}
+				],
+				"internalType": "struct LendingAndLoanManagement.CommonAndInterestDetails",
+				"name": "",
+				"type": "tuple"
+			},
+			{
+				"components": [
+					{
+						"internalType": "uint8",
+						"name": "latePaymentGracePeriod",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lateChargePercentage",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "margin",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "currentIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maxInterestRateAtFirstChange",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "minInterestRateAtFirstChange",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maxInterestRateAfterChange",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "minInterestRateAfterChange",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct LendingAndLoanManagement.PaymentAndLateDetails",
+				"name": "",
+				"type": "tuple"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "noteDate",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "city",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "state",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "propertyAddress",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "paymentLocation",
+						"type": "string"
+					}
+				],
+				"internalType": "struct LendingAndLoanManagement.AdjustableInterestRateDetails",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_lenderID",
+				"type": "string"
+			}
+		],
+		"name": "getLenderData",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "borrowerCount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string[]",
+				"name": "borrowerIds",
+				"type": "string[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+
+
+
+--------------------------------------------------------------------------------------------------------------
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+// Contract for managing lending and loan operations
+contract LendingAndLoanManagement {
+    // State variable to store the admin address
+    address public Admin;
+
+    // Constructor to set the Admin as the contract deployer
+    constructor() {
+        Admin = msg.sender; // Sets the contract deployer as the Admin
+    }
+
+    // Modifier to restrict access to only the Admin
+    modifier onlyAdmin() {
+        require(msg.sender == Admin, "Only Admin can perform this action");
+        _;
+    }
+
+    // Struct to store common and interest details of a loan
+    struct CommonAndInterestDetails {
+        string emiPaymentStartDate;
+        uint256 principalAmount;
+        uint256 fixedInterestRate;
+        uint256 monthlyPaymentAmount;
+        string maturityDate;
+        uint8 emiPaymentDay;
+        string interestRateChangeDate;
+        string lenderName;
+        string borrowerName;
+    }
+
+    // Struct to store payment and late payment details of a loan
+    struct PaymentAndLateDetails {
+        uint8 latePaymentGracePeriod;
+        uint256 lateChargePercentage;
+        uint256 margin;
+        uint256 currentIndex;
+        uint256 maxInterestRateAtFirstChange;
+        uint256 minInterestRateAtFirstChange;
+        uint256 maxInterestRateAfterChange;
+        uint256 minInterestRateAfterChange;
+    }
+
+    // Struct to store adjustable interest rate details of a loan
+    struct AdjustableInterestRateDetails {
+        string noteDate;
+        string city;
+        string state;
+        string propertyAddress;
+        string paymentLocation;
+    }
+
+    // Struct to combine all loan details
+    struct Loan {
+        CommonAndInterestDetails commonDetails;
+        PaymentAndLateDetails paymentDetails;
+        AdjustableInterestRateDetails adjustableDetails;
+    }
+
+    // Struct to store borrower details and their loans
+    struct Borrower {
+        string borrowerID;
+        string[] loanIds; // Array to store the loan IDs associated with this borrower
+        uint256 loanCount; // Number of loans this borrower has
+        mapping(string => Loan) loans; // Mapping from loan ID to loan details
+    }
+
+    // Struct to store lender details and their borrowers
+    struct Lender {
+        string lenderID;
+        string name;
+        string[] borrowerIds; // Array to store IDs of borrowers under this lender
+        uint256 borrowerCount; // Number of borrowers under this lender
+        mapping(string => Borrower) borrowers; //Mapping from borrower ID to borrower details
+    }
+
+    // Mapping to store lenders by their ID
+    mapping(string => Lender) internal lenders;
+    // Array to store all lender IDs
+    string[] internal lenderIDs;
+
+    // Events to log important actions for easier tracking
+    event LenderAdded(string lenderID, string lenderName);
+    event BorrowerAdded(string lenderID, string borrowerID);
+    event LenderDeleted(string lenderID);
+    event BorrowerDeleted(string lenderID, string borrowerID);
+    event LoanDeleted(string lenderID, string borrowerID, string loanID);
+    event ContractFunded(address Admin, uint256 amount);
+    event FundsWithdrawn(address Admin, uint256 amount);
+    event LoanTransferred(
+        string oldLenderID,
+        string newLenderID,
+        string borrowerID,
+        string loanID
+    );
+    event LoanUpdated(string lenderID, string borrowerID, string loanID);
+    event AdminChanged(address indexed oldAdmin, address indexed newAdmin);
+
+    // Change the Admin
+    function changeAdmin(address _admin) external onlyAdmin {
+        require(_admin != address(0), "New admin address cannot be zero");
+        emit AdminChanged(Admin, _admin); // Log the change
+        Admin = _admin;
+    }
+
+    // Function to add a new lender
+    function addLender(string memory _lenderID, string memory _name)
+        external
+        onlyAdmin
+    {
+        // Ensure the lender does not already exist
+        Lender storage lender = lenders[_lenderID];
+        require(bytes(lender.name).length == 0, "Lender already exists");
+
+        lender.lenderID = _lenderID;
+        lender.name = _name;
+        lenderIDs.push(_lenderID);
+
+        emit LenderAdded(_lenderID, _name); // Emit an event for tracking
+    }
+
+    // Function to add a new borrower and their loan details
+ function addBorrower(
+    string memory _borrowerID,
+    string memory _lenderID,
+    string memory _lenderName, // New argument for lender name
+    string memory _loanID,
+    CommonAndInterestDetails memory _commonDetails,
+    PaymentAndLateDetails memory _paymentDetails,
+    AdjustableInterestRateDetails memory _adjustableDetails
+) external onlyAdmin {
+    // Check if the lender exists, if not, add the lender
+    if (bytes(lenders[_lenderID].name).length == 0) {
+        lenders[_lenderID].lenderID = _lenderID;
+        lenders[_lenderID].name = _lenderName;
+        lenderIDs.push(_lenderID);
+        emit LenderAdded(_lenderID, _lenderName); // Emit event for new lender
+    }
+
+    // Add a new borrower if they don't exist
+    Borrower storage borrower = lenders[_lenderID].borrowers[_borrowerID];
+    if (bytes(borrower.borrowerID).length == 0) {
+        borrower.borrowerID = _borrowerID;
+        lenders[_lenderID].borrowerIds.push(_borrowerID);
+        lenders[_lenderID].borrowerCount++;
+    }
+
+    // Ensure the loan ID is unique for this borrower
+    require(
+        bytes(borrower.loans[_loanID].commonDetails.emiPaymentStartDate).length == 0,
+        "Loan ID already exists"
+    );
+
+    borrower.loanIds.push(_loanID); // Add the loan ID to the borrower's loanIds array
+    borrower.loanCount++;
+
+    // Assign loan details
+    Loan storage l = borrower.loans[_loanID];
+    l.commonDetails = _commonDetails;
+    l.paymentDetails = _paymentDetails;
+    l.adjustableDetails = _adjustableDetails;
+
+    emit BorrowerAdded(_lenderID, _borrowerID);
+}
+
+    // Function to update a loan's details
+    function updateLoan(
+        string memory _lenderID,
+        string memory _borrowerID,
+        string memory _loanID,
+        CommonAndInterestDetails memory _newCommonDetails,
+        PaymentAndLateDetails memory _newPaymentDetails,
+        AdjustableInterestRateDetails memory _newAdjustableDetails
+    ) external onlyAdmin {
+        // Ensure the lender exists
+        require(bytes(lenders[_lenderID].name).length > 0, "Lender does not exist");
+
+        // Ensure the borrower exists
+        require(
+            bytes(lenders[_lenderID].borrowers[_borrowerID].borrowerID).length > 0,
+            "Borrower does not exist"
+        );
+
+        // Ensure the loan exists
+        require(
+            bytes(lenders[_lenderID].borrowers[_borrowerID].loans[_loanID].commonDetails.emiPaymentStartDate).length > 0,
+            "Loan does not exist"
+        );
+
+        // Access the loan and update the details
+        Loan storage loan = lenders[_lenderID].borrowers[_borrowerID].loans[_loanID];
+        loan.commonDetails = _newCommonDetails;
+        loan.paymentDetails = _newPaymentDetails;
+        loan.adjustableDetails = _newAdjustableDetails;
+
+        emit LoanUpdated(_lenderID, _borrowerID, _loanID);
+    }
+
+    // Function to transfer a loan from one lender to another
+   function transferLoan(
+    string memory _oldLenderID,
+    string memory _newLenderID,
+    string memory _newLenderName, // New argument for new lender name
+    string memory _borrowerID,
+    string memory _loanID
+) external onlyAdmin {
+    // Ensure the old lender exists
+    require(
+        bytes(lenders[_oldLenderID].name).length > 0,
+        "Old lender does not exist"
+    );
+
+    // Check if the new lender exists, if not, add the new lender
+    if (bytes(lenders[_newLenderID].name).length == 0) {
+        lenders[_newLenderID].lenderID = _newLenderID;
+        lenders[_newLenderID].name = _newLenderName;
+        lenderIDs.push(_newLenderID);
+        emit LenderAdded(_newLenderID, _newLenderName); // Emit event for new lender
+    }
+
+    // Ensure the borrower exists under the old lender
+    require(
+        bytes(lenders[_oldLenderID].borrowers[_borrowerID].borrowerID).length > 0,
+        "Borrower does not exist"
+    );
+
+    // Ensure the loan exists under the old lender's borrower
+    require(
+        bytes(lenders[_oldLenderID].borrowers[_borrowerID].loans[_loanID].commonDetails.emiPaymentStartDate).length > 0,
+        "Loan does not exist"
+    );
+
+    Borrower storage oldBorrower = lenders[_oldLenderID].borrowers[_borrowerID];
+    Borrower storage newBorrower = lenders[_newLenderID].borrowers[_borrowerID];
+
+    // Add the borrower to the new lender if not already present
+    if (bytes(newBorrower.borrowerID).length == 0) {
+        newBorrower.borrowerID = _borrowerID;
+        newBorrower.loanCount = 0;
+        lenders[_newLenderID].borrowerIds.push(_borrowerID);
+        lenders[_newLenderID].borrowerCount++;
+    }
+
+    // Transfer the loan
+    newBorrower.loans[_loanID] = oldBorrower.loans[_loanID];
+    newBorrower.loanIds.push(_loanID);
+    newBorrower.loanCount++;
+
+    // Remove the loan from the old borrower
+    for (uint256 i = 0; i < oldBorrower.loanIds.length; i++) {
+        if (keccak256(bytes(oldBorrower.loanIds[i])) == keccak256(bytes(_loanID))) {
+            oldBorrower.loanIds[i] = oldBorrower.loanIds[oldBorrower.loanIds.length - 1];
+            oldBorrower.loanIds.pop();
+            break;
+        }
+    }
+    delete oldBorrower.loans[_loanID];
+    oldBorrower.loanCount--;
+
+    // Check if the borrower has no more loans under the old lender
+    if (oldBorrower.loanCount == 0) {
+        // Remove the borrower from the old lender
+        for (uint256 i = 0; i < lenders[_oldLenderID].borrowerIds.length; i++) {
+            if (
+                keccak256(bytes(lenders[_oldLenderID].borrowerIds[i])) ==
+                keccak256(bytes(_borrowerID))
+            ) {
+                lenders[_oldLenderID].borrowerIds[i] = lenders[_oldLenderID].borrowerIds[
+                    lenders[_oldLenderID].borrowerIds.length - 1
+                ];
+                lenders[_oldLenderID].borrowerIds.pop();
+                break;
+            }
+        }
+        lenders[_oldLenderID].borrowerCount--;
+        delete lenders[_oldLenderID].borrowers[_borrowerID];
+    }
+
+    emit LoanTransferred(_oldLenderID, _newLenderID, _borrowerID, _loanID);
+}
+
+    // Function to delete a borrower
+    function deleteBorrower(string memory _lenderID, string memory _borrowerID)
+        external
+        onlyAdmin
+    {
+        Lender storage lender = lenders[_lenderID];
+        require(bytes(lender.name).length > 0, "Lender does not exist");
+
+        Borrower storage borrower = lender.borrowers[_borrowerID];
+        require(
+            bytes(borrower.borrowerID).length > 0,
+            "Borrower does not exist"
+        );
+
+        delete lender.borrowers[_borrowerID];
+        for (uint256 i = 0; i < lender.borrowerIds.length; i++) {
+            if (
+                keccak256(bytes(lender.borrowerIds[i])) ==
+                keccak256(bytes(_borrowerID))
+            ) {
+                lender.borrowerIds[i] = lender.borrowerIds[
+                    lender.borrowerIds.length - 1
+                ];
+                lender.borrowerIds.pop();
+                break;
+            }
+        }
+        lender.borrowerCount--;
+
+        emit BorrowerDeleted(_lenderID, _borrowerID);
+    }
+
+    // Function to delete a loan
+    function deleteLoan(
+        string memory _lenderID,
+        string memory _borrowerID,
+        string memory _loanID
+    ) external onlyAdmin {
+        Lender storage lender = lenders[_lenderID];
+        require(bytes(lender.name).length > 0, "Lender does not exist");
+
+        Borrower storage borrower = lender.borrowers[_borrowerID];
+        require(
+            bytes(borrower.borrowerID).length > 0,
+            "Borrower does not exist"
+        );
+
+        require(
+            bytes(borrower.loans[_loanID].commonDetails.emiPaymentStartDate).length > 0,
+            "Loan does not exist"
+        );
+        delete borrower.loans[_loanID];
+
+        for (uint256 i = 0; i < borrower.loanIds.length; i++) {
+            if (keccak256(bytes(borrower.loanIds[i])) == keccak256(bytes(_loanID))) {
+                borrower.loanIds[i] = borrower.loanIds[
+                    borrower.loanIds.length - 1
+                ];
+                borrower.loanIds.pop();
+                break;
+            }
+        }
+
+        borrower.loanCount--;
+
+        emit LoanDeleted(_lenderID, _borrowerID, _loanID);
+    }
+
+    // Function to delete a lender
+    function deleteLender(string memory _lenderID) external onlyAdmin {
+        // Check if the lender exists
+        require(bytes(lenders[_lenderID].name).length > 0, "Lender does not exist");
+
+        // Get the lender
+        Lender storage lender = lenders[_lenderID];
+
+        // Loop through and delete all borrowers under the lender
+        for (uint256 i = 0; i < lender.borrowerIds.length; i++) {
+            string memory borrowerID = lender.borrowerIds[i];
+            delete lender.borrowers[borrowerID];
+        }
+
+        // Remove the lender's ID from the lenderIDs array
+        for (uint256 i = 0; i < lenderIDs.length; i++) {
+            if (
+                keccak256(bytes(lenderIDs[i])) ==
+                keccak256(bytes(_lenderID))
+            ) {
+                lenderIDs[i] = lenderIDs[lenderIDs.length - 1]; // Replace with the last element
+                lenderIDs.pop(); // Remove the last element
+                break;
+            }
+        }
+
+        // Delete the lender from the mapping
+        delete lenders[_lenderID];
+
+        emit LenderDeleted(_lenderID);
+    }
+
+    // Function to get borrower data
+    function getBorrowerData(string memory _lenderID, string memory _borrowerID)
+        external
+        view
+        returns (string memory, string[] memory, uint256)
+    {
+        require(bytes(lenders[_lenderID].name).length > 0, "Lender does not exist");
+        require(bytes(lenders[_lenderID].borrowers[_borrowerID].borrowerID).length > 0, "Borrower does not exist");
+
+        Borrower storage borrower = lenders[_lenderID].borrowers[_borrowerID];
+        return (borrower.borrowerID, borrower.loanIds, borrower.loanCount);
+    }
+
+    // Function to get loan details for a specific loan ID
+    function getBorrowerLoanDetails(
+        string memory _lenderID,
+        string memory _borrowerID,
+        string memory _loanID
+    ) external view returns (CommonAndInterestDetails memory, PaymentAndLateDetails memory, AdjustableInterestRateDetails memory) {
+        require(bytes(lenders[_lenderID].name).length > 0, "Lender does not exist");
+        require(bytes(lenders[_lenderID].borrowers[_borrowerID].borrowerID).length > 0, "Borrower does not exist");
+        require(bytes(lenders[_lenderID].borrowers[_borrowerID].loans[_loanID].commonDetails.emiPaymentStartDate).length > 0, "Loan does not exist");
+
+        Loan storage loan = lenders[_lenderID].borrowers[_borrowerID].loans[_loanID];
+        return (loan.commonDetails, loan.paymentDetails, loan.adjustableDetails);
+    }
+
+    // Function to get lender's data
+    function getLenderData(string memory _lenderID)
+        external
+        view
+        returns (string memory name, uint256 borrowerCount, string[] memory borrowerIds)
+    {
+        Lender storage lender = lenders[_lenderID];
+        require(bytes(lender.name).length > 0, "Lender does not exist");
+
+        return (lender.name, lender.borrowerCount, lender.borrowerIds);
+    }
+
+    // Function to get all lender IDs
+    function getAllLenderIDs() external view returns (string[] memory) {
+        return lenderIDs;
+    }
+
+    // Function to get all borrower IDs for a specific lender
+    function getAllBorrowerIDsUnderLender(string memory _lenderID)
+        external
+        view
+        returns (string[] memory)
+    {
+        Lender storage lender = lenders[_lenderID];
+        require(bytes(lender.name).length > 0, "Lender does not exist");
+
+        return lender.borrowerIds;
+    }
+
+    // Contract Fund Management
+
+    // Function to fund the contract with ETH
+    function fundContract() external payable onlyAdmin {
+        require(msg.value > 0, "Amount must be greater than zero");
+        emit ContractFunded(Admin, msg.value);
+    }
+
+    // Function to withdraw funds from the contract
+    function takeOutContractFunds(uint256 _amount) public onlyAdmin {
+        require(_amount <= address(this).balance, "Insufficient funds");
+        uint256 withdrawalAmount = _amount > 0
+            ? _amount
+            : address(this).balance;
+        payable(Admin).transfer(withdrawalAmount);
+        emit FundsWithdrawn(Admin, withdrawalAmount);
+    }
+
+    // Balance Check Functions
+
+    // Function to get the admin's balance
+    function getAdminBalance() public view onlyAdmin returns (uint256) {
+        return Admin.balance;
+    }
+
+    // Function to check the balance of the smart contract
+    function getBalanceOfSmartContract()
+        public
+        view
+        onlyAdmin
+        returns (uint256)
+    {
+        return address(this).balance;
+    }
+
+     // Function to check if a lender exists
+    function checkLender(string memory _lenderID) external view returns (bool) {
+        return bytes(lenders[_lenderID].name).length > 0;
+    }
+
+    // Fallback Functions
+
+    // Fallback function to receive ETH
+    receive() external payable {}
+
+    // Fallback function to handle unexpected calls
+    fallback() external payable {}
+}

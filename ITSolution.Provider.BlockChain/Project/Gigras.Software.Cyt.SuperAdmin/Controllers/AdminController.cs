@@ -242,10 +242,10 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
 
         //Admin
 
-        [Route("borrower/a/{formid}/submit-form")]
+        [Route("borrower/a/{formid}/{loanid}/submit-form")]
         [HttpPost]
         [Authorize(Roles = "Admin")] // Specify multiple roles here
-        public async Task<IActionResult> AdminSubmitForm(int formid, Dictionary<string, List<string>> fieldValuesList)
+        public async Task<IActionResult> AdminSubmitForm(int formid, string loanid, Dictionary<string, List<string>> fieldValuesList)
         {
             try
             {
@@ -253,8 +253,10 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
                             kvp => kvp.Key,
                             kvp => string.Join(",", kvp.Value)
                         );
+                fieldValues["Entity"] = (fieldValues.ContainsKey("Entity") ? fieldValues["Entity"] : "");
                 fieldValues["Id"] = (!fieldValues.ContainsKey("Id") || (fieldValues.ContainsKey("Id") && string.IsNullOrEmpty(fieldValues["Id"])) ? "0" : fieldValues["Id"]);
 
+                var entity = fieldValues["Entity"].ToString();
                 var form = await _dynamicFormService.GetForm("any", formid.ToString());
                 var checkbox = form.FormsSections!.Select(x => x.FormFields!.Where(cv => cv.FieldType!.CtrlType!.ToLower() == "checkbox").Select(x => x.FieldType!.FieldName)).ToList();
                 foreach (var item in checkbox)
@@ -265,7 +267,19 @@ namespace Gigras.Software.Cyt.SuperAdmin.Controllers
                         fieldValues[fieldKey] = string.Join(",", Request.Form[fieldKey]);
                     }
                 }
-                await _dynamicUserDataService.SubmitData(fieldValues);
+                switch (entity.ToLower())
+                {
+                    case "contract-address":
+                        await _smartContractAddressService.SubmitData(fieldValues);
+                        break;
+
+                    case "contract-abi":
+                        await _smartContractAbiService.SubmitData(fieldValues);
+                        break;
+                    default:
+                        await _dynamicUserDataService.SubmitData(fieldValues);
+                        break;
+                }
                 return this.Ok();
             }
             catch (Exception ex)

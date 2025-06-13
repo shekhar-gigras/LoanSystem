@@ -400,7 +400,8 @@ class LoanContract {
             await this.contract.methods.addBorrower(
                 data.borrowerId,
                 data.lendderId,
-                data.id, common, payment,other               
+                data.lenderName,
+                data.loanId, common, payment,other               
             ).send({
                 from: currentAddress // Only the current lender can call this
             });
@@ -563,7 +564,7 @@ class LoanContract {
 
     async getCommonLoanDetailForContract(jsonData) {
         return {
-            emiPaymentStartDate: jsonData.eMIPaymentDate || "", // Extract from jsonData
+            emiPaymentStartDate: jsonData.emiPaymentDate || "", // Extract from jsonData
             principalAmount: jsonData.principalAmount || 0, // Extract from jsonData, default to 0
             fixedInterestRate: jsonData.interestRate || 0, // Extract from jsonData, default to 0
             monthlyPaymentAmount: jsonData.monthlyPaymentAmount || 0, // Extract from jsonData, default to 0
@@ -598,13 +599,13 @@ class LoanContract {
         };
     }
 
-    async TransferLoan(oldLenderID, newLenderID, borrowerID, loanID) {
+    async TransferLoan(oldLenderID, newLenderID,buyername, borrowerID, loanID) {
         try {
             const currentAddress = await this.getAddress();
             // Change lender
             await this.contract.methods.transferLoan(
                 oldLenderID,
-                newLenderID,
+                newLenderID, buyername,
                 borrowerID, loanID
             ).send({
                 from: currentAddress // Only the current lender can call this

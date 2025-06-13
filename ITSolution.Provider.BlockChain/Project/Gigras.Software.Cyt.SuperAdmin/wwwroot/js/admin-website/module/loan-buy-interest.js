@@ -212,33 +212,36 @@ async function AdminLoanBuyApprove(button, loanId, loainGuidId, sellerId, buyerI
     await loanContract.showLoader();
     await loanContract.getAddress();
 
-    let status = await loanContract.addNewLender(buyerId, buyername);
-    status = await loanContract.TransferLoan(sellerId, buyerId, borrowerId, loanId);
+    let status = await loanContract.TransferLoan(sellerId, buyerId, buyername, borrowerId, loainGuidId);
+    if (status) {
+        const payload = {
+            recordid: recordId,
+            dealAmount: formData.dealAmount,
+            comments: formData.dealComments
+        };
 
-    const payload = {
-        recordid: recordId,
-        dealAmount: formData.dealAmount,
-        comments: formData.dealComments
-    };
+        console.log(payload);
 
-    console.log(payload);
-
-    // AJAX request
-    $.ajax({
-        url: `/api/${module}/${action}`,
-        type: 'POST',
-        data: JSON.stringify(payload),
-        contentType: 'application/json',
-        success: (response) => {
-            Swal.close();
-            Swal.fire('Updated!', 'Loan has been transfered successfully.', 'success').then(() => {
-                window.location.reload();
-            });
-        },
-        error: () => {
-            Swal.fire('Error!', 'Failed to transfered the loan. Please try again.', 'error');
-        }
-    });
+        // AJAX request
+        $.ajax({
+            url: `/api/${module}/${action}`,
+            type: 'POST',
+            data: JSON.stringify(payload),
+            contentType: 'application/json',
+            success: (response) => {
+                Swal.close();
+                Swal.fire('Updated!', 'Loan has been transfered successfully.', 'success').then(() => {
+                    window.location.reload();
+                });
+            },
+            error: () => {
+                Swal.fire('Error!', 'Failed to transfered the loan. Please try again.', 'error');
+            }
+        });
+    }
+    else {
+        Swal.fire('Error!', 'Failed to transfered the loan. Please try again.', 'error');
+   }
 }
 
 function AdminLoanBuyReject(button, recordId, module, action) {

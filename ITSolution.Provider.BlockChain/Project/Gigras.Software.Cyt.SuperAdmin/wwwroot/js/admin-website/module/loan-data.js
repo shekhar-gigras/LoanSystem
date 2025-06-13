@@ -238,12 +238,9 @@ async function MetaMaskProcess(id, module) {
                 let isprocess = await loanContract.IsLendder();
                 if (isprocess) {
                     await loanContract.showLoader();
-                    await loanContract.getAddress();
-                    let data = await getLoanApiDetails(id);
-                    let status = await loanContract.addLender(data);
-
-                    status = await loanContract.addBorrower(data);
                     let metamaskid = await loanContract.getAddress();
+                    let data = await getLoanApiDetails(id);
+                    let status = await loanContract.addBorrower(data);
                     let dataconfirmation;
                     if (!status) {
                         await loanContract.hideLoader();
