@@ -67,7 +67,7 @@
                 @if (User.IsInRole("Lender"))
                 {
                     var forms = ViewBag.Forms as List<Form>;
-                    @foreach (var item in forms!.Where(x => !string.IsNullOrEmpty(x.NavigationGroup) && x.NavigationGroup.ToLower() != "blank" && x.NavigationGroup.ToLower() != "admin" && x.NavigationGroup.ToLower() != "loanbuyrequest" && x.NavigationGroup.ToLower() != "lendders" && x.NavigationGroup.ToLower() != "transaction").Select(x => x.NavigationGroup).Distinct())
+                    @foreach (var item in forms!.Where(x => !string.IsNullOrEmpty(x.NavigationGroup) && x.NavigationGroup.ToLower() != "blank" && x.NavigationGroup.ToLower() != "admin" && x.NavigationGroup.ToLower() != "loanbuyrequest" && x.NavigationGroup.ToLower() != "lenders" && x.NavigationGroup.ToLower() != "transaction").Select(x => x.NavigationGroup).Distinct())
                     {
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                             <span class="menu-link">

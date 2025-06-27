@@ -59,7 +59,7 @@
                     <!--end::Search-->
                 </div>
                 <!--end::Card title-->
-                @if (ViewBag.FormDescription == null || (Model.FormDescription != null && (!Model.FormDescription!.ToLower().Contains("transaction") && !Model.FormDescription!.ToLower().Contains("lendders") && !Model.FormName!.ToLower().Contains("loanbuyrequest"))))
+                @if (ViewBag.FormDescription == null || (Model.FormDescription != null && (!Model.FormDescription!.ToLower().Contains("transaction") && !Model.FormDescription!.ToLower().Contains("lenders") && !Model.FormName!.ToLower().Contains("loanbuyrequest"))))
                 {
                     @if (User.IsInRole("Admin") || hasLoanAccess)
                     {
