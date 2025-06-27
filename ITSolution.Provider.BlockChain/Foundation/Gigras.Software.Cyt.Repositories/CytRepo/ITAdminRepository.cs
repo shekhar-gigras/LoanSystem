@@ -9,6 +9,8 @@ namespace Gigras.Software.Cyt.Repositories.CytRepo
     public interface ICytAdminRepository : IGenericCytRepository<ITAdmin>
     {
         Task<ITAdmin> FindByUsernameAndPasswordAsync(string username, string password);
+
+        Task<ITAdmin> FindByUsernameAsync(string username);
     }
 
     public class CytAdminRepository : GenericCytRepository<ITAdmin>, ICytAdminRepository
@@ -23,6 +25,23 @@ namespace Gigras.Software.Cyt.Repositories.CytRepo
             // Query the database to find the user based on username and password
             var user = await _context.DynamicAdmins
                                      .Where(a => a.IsActive && !a.IsDelete && !a.IsBlock && (a.UserName == username || a.Email == username) && a.Password == hashpassword)
+                                     .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                // Handle the case where no user is found
+                return null;
+            }
+
+            // Return the found user
+            return user;
+        }
+
+        public async Task<ITAdmin> FindByUsernameAsync(string username)
+        {
+            // Query the database to find the user based on username and password
+            var user = await _context.DynamicAdmins
+                                     .Where(a => a.IsActive && !a.IsDelete && !a.IsBlock && (a.UserName == username || a.Email == username))
                                      .FirstOrDefaultAsync();
 
             if (user == null)

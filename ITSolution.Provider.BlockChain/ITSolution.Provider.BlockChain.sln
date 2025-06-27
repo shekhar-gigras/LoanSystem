@@ -31,9 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gigras.Software.Cyt.Service
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gigras.Software.Cyt.SuperAdmin", "Project\Gigras.Software.Cyt.SuperAdmin\Gigras.Software.Cyt.SuperAdmin.csproj", "{20B96B92-AD0A-4F29-8023-2D5AD71D5ED0}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Gigras.Software.Cyt.SqlDatabase", "Foundation\Gigras.Software.Cyt.SqlDatabase\Gigras.Software.Cyt.SqlDatabase.sqlproj", "{D083FBCB-167C-494F-BCFD-8EEB5C67E84E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gigras.Software.BlockChain.Service", "Feature\Gigras.Software.BlockChain.Service\Gigras.Software.BlockChain.Service.csproj", "{926425F9-9AC9-4865-ADAE-7D9D108DD6DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gigras.Software.BlockChain.Service", "Feature\Gigras.Software.BlockChain.Service\Gigras.Software.BlockChain.Service.csproj", "{926425F9-9AC9-4865-ADAE-7D9D108DD6DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,11 +83,6 @@ Global
 		{20B96B92-AD0A-4F29-8023-2D5AD71D5ED0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20B96B92-AD0A-4F29-8023-2D5AD71D5ED0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20B96B92-AD0A-4F29-8023-2D5AD71D5ED0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D083FBCB-167C-494F-BCFD-8EEB5C67E84E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D083FBCB-167C-494F-BCFD-8EEB5C67E84E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{D083FBCB-167C-494F-BCFD-8EEB5C67E84E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D083FBCB-167C-494F-BCFD-8EEB5C67E84E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D083FBCB-167C-494F-BCFD-8EEB5C67E84E}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{926425F9-9AC9-4865-ADAE-7D9D108DD6DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{926425F9-9AC9-4865-ADAE-7D9D108DD6DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{926425F9-9AC9-4865-ADAE-7D9D108DD6DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -110,7 +103,6 @@ Global
 		{3720D9B6-3266-485E-861E-34AEB6D1298E} = {1C4B6A1D-F562-40A0-8683-03885EBF11F7}
 		{A76AB8CA-32AF-4027-AC9D-E88359213F36} = {1C4B6A1D-F562-40A0-8683-03885EBF11F7}
 		{20B96B92-AD0A-4F29-8023-2D5AD71D5ED0} = {26299B67-9160-4640-84CA-13B422550C08}
-		{D083FBCB-167C-494F-BCFD-8EEB5C67E84E} = {D54B2F1E-A627-41E7-A8E5-C546BF7D2EDB}
 		{926425F9-9AC9-4865-ADAE-7D9D108DD6DF} = {1C4B6A1D-F562-40A0-8683-03885EBF11F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

@@ -1,4 +1,4 @@
-﻿@using Gigras.Software.Cyt.ViewModel;
+@using Gigras.Software.Cyt.ViewModel;
 @model LoginViewModel
 
 @{
@@ -80,7 +80,7 @@
                                         <button type="submit" id="btnLogin" name="btnLogin" class="btn btn-primary btn-lg">Login</button>
                                     </div>
                                     <p>
-                                        <a class="" href="@Url.Action("ForgotPassword", "sauth")">Forget Password</a>
+                                        <i class="fas fa-user"></i>&nbsp; <a class="" href="@Url.Action("ForgotPassword", "sauth")">Forget Password</a>
                                     </p>
                                     <p>
                                         Don't have an account?
@@ -90,13 +90,11 @@
                                 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                             </div>
                             <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
-                               @*  <div class="text-center">
+                                 <div class="text-center">
                                     <div class="circle-container">
-                                        <img src="~/images/logo.jpg" alt="IT Solution Provider" class="circle-image">
+                                        <img src="~/images/Smart-Contracts-1.jpg" alt="" class="circle-image" width="100%">
                                     </div>
-                                    <h1 class="display-4">Welcome</h1>
-                                    <p><a href="https://www.webcolorzinfotech.com/" target="_blank">https://www.webcolorzinfotech.com/</a></p>
-                                </div> *@
+                                </div> 
                             </div>
                         </div>
                     </div>

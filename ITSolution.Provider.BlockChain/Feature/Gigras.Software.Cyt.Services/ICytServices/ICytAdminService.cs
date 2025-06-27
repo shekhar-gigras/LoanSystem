@@ -33,6 +33,8 @@ namespace Gigras.Software.Cyt.Services.ICytServices
 
         Task<string?> GetLenderName();
 
+        Task<ITAdmin> FindByUsernameAsync(string username);
+
         // Additional methods for CytAdminService
     }
 }

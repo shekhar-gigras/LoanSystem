@@ -11,13 +11,30 @@
 </style>
 @if (User.IsInRole("Admin"))
 {
-    <div id="meta-container">
+    <div id="meta-container" style="margin-left:20px; margin-right:20px; margin-top:-60px;">
         <h1>Login with MetaMask</h1>
         <button id="loginMetaMaskButton">Login For Lender In MetaMask</button>
         <p id="metamaskstatus" class="status-disconnected">Please connect to MetaMask to log in.</p>
     </div>
 }
 <br />
+
+<style>
+.dashcards{
+	background:#dddddd !important;
+	border-radius: 10px;
+}
+.dashcards .fas{
+    color: #cc0000;
+}
+.fw-bolder{
+	color:#333333;
+}
+.text-red{
+	color:#999999;
+}
+</style>
+
 <div id="kt_content_container" class="container-xxl dashboard-@usettype">
     <div class="row g-6 g-xl-9">
         <!-- Card 1 -->

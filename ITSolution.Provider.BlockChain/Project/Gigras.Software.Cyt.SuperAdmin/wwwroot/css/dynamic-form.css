@@ -6,12 +6,12 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0;
-    background: linear-gradient(135deg, #007bff, #6610f2);
-    color: white;
-    font-size: 3rem;
+    margin: -85px 0 0 0;
+    background: #ddd;
+    color: black;
+    font-size: 2rem;
     font-weight: bold;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    padding: 10px;
 }
 
 #form-wrapper {

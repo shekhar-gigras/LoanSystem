@@ -7,6 +7,7 @@ namespace Gigras.Software.General.Helper
     public static class PasswordHelper
     {
         private static readonly byte[] Key = Encoding.UTF8.GetBytes("Loan-2024-2030"); // Replace with a secret key
+
         public static string HashPassword(string password)
         {
             using (var sha256 = SHA256.Create())
@@ -69,6 +70,12 @@ namespace Gigras.Software.General.Helper
             {
                 return false; // Invalid token format
             }
+        }
+
+        public static bool VerifyPassword(string inputPassword, string storedHashedPassword)
+        {
+            var hashedInput = HashPassword(inputPassword);
+            return hashedInput == storedHashedPassword;
         }
     }
 }

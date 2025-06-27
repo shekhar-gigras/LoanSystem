@@ -234,5 +234,10 @@ namespace Gigras.Software.Cyt.Services.CytService
         }
 
         // Additional methods specific to CytAdmin
+
+        public async Task<ITAdmin> FindByUsernameAsync(string username)
+        {
+            return await _cytadminRepository.FindByUsernameAsync(username);
+        }
     }
 }
